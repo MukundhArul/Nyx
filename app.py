@@ -88,24 +88,26 @@ class PetWidget(QWidget):
         self.monitor.start()
 
     def setup_sprites(self):
-        asset_path = os.path.join(os.path.dirname(__file__), "assets", "Cat_Ginger.png")
+        asset_path = os.path.join(os.path.dirname(__file__), "assets", "Cat Sprite Sheet.png")
         self.sprite_sheet = QPixmap(asset_path)
         
-        alarm_path = os.path.join(os.path.dirname(__file__), "assets", "alarm_clock_cropped.png")
-        self.alarm_pixmap = QPixmap(alarm_path)
+        alarm_path = os.path.join(os.path.dirname(__file__), "assets", "updated clock.png")
+        full_pixmap = QPixmap(alarm_path)
+        # Dynamically crop the clock out of the 1920x1080 canvas
+        self.alarm_pixmap = full_pixmap.copy(470, 158, 997, 725)
         
         self.frame_width = 32
         self.frame_height = 32
-        self.scale_factor = 3 # 32x32 scaled to 96x96
+        self.scale_factor = 5 # 32x32 scaled to 160x160
         
         self.animations = {
             "IDLE": [(c, 0) for c in range(4)],          # Row 0
-            "SLEEPING": [(c, 30) for c in range(2)],     # Row 30
-            "DRAGGED": [(c, 56) for c in range(2)],      # Row 56
-            "TYPING": [(c, 32) for c in range(6)],       # Row 32
-            "VIBING": [(c, 45) for c in range(8)],       # Row 45
-            "WATCHING": [(c, 70) for c in range(10)],    # Row 70
-            "SCROLLING": [(c, 85) for c in range(6)]     # Row 85
+            "SLEEPING": [(c, 6) for c in range(4)],      # Row 6
+            "DRAGGED": [(c, 1) for c in range(4)],       # Row 1
+            "TYPING": [(c, 7) for c in range(6)],        # Row 7
+            "VIBING": [(c, 8) for c in range(7)],        # Row 8
+            "WATCHING": [(c, 9) for c in range(8)],      # Row 9
+            "SCROLLING": [(c, 4) for c in range(8)]      # Row 4
         }
         self.current_frame_index = 0
 
@@ -116,7 +118,7 @@ class PetWidget(QWidget):
             Qt.WindowType.Tool
         )
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.resize(300, 300) # Increased size significantly to prevent cutting off
+        self.resize(500, 300) # Increased size significantly to prevent cutting off
         self.setupTray()
 
     def setupTray(self):
@@ -227,8 +229,8 @@ class PetWidget(QWidget):
     def update_animation(self):
         self.tick_count += 1
         
-        # Advance sprite frame every 6 ticks (approx 5 FPS)
-        if self.tick_count % 6 == 0:
+        # Advance sprite frame every 3 ticks (approx 10 FPS)
+        if self.tick_count % 3 == 0:
             anim_name = self.get_current_animation_name()
             anim_list = self.animations.get(anim_name, self.animations["IDLE"])
             self.current_frame_index = (self.current_frame_index + 1) % len(anim_list)
@@ -287,8 +289,8 @@ class PetWidget(QWidget):
         # Alarm Timer (Image next to cat)
         if self.pomo_active:
             alarm_w = 60
-            alarm_h = 35
-            alarm_x = cx + 45
+            alarm_h = 44
+            alarm_x = cx + 45 # Bring very close to the cat
             alarm_y = cy + 20 + y_offset
             
             # Draw Alarm Clock Image
@@ -296,20 +298,15 @@ class PetWidget(QWidget):
                 painter.drawPixmap(alarm_x, alarm_y, alarm_w, alarm_h, self.alarm_pixmap)
                 
                 # Draw Text inside the screen
-                painter.setPen(QColor(20, 80, 20)) # Dark green digital text
-                painter.setFont(QFont("Consolas", 6, QFont.Weight.Bold))
+                painter.setPen(QColor(255, 255, 255)) # White digital text
+                painter.setFont(QFont("Consolas", 9, QFont.Weight.Bold))
                 
                 mins = self.pomo_seconds // 60
                 secs = self.pomo_seconds % 60
                 timer_str = f"{mins:02d}:{secs:02d}"
                 
                 # Screen bounding box for the green area (approximate)
-                screen_rect = QRect(
-                    alarm_x + int(alarm_w * 0.15),
-                    alarm_y + int(alarm_h * 0.25),
-                    int(alarm_w * 0.70),
-                    int(alarm_h * 0.40)
-                )
+                screen_rect = QRect(alarm_x, alarm_y, alarm_w, alarm_h)
                 
                 painter.drawText(screen_rect, Qt.AlignmentFlag.AlignCenter, timer_str)
 
