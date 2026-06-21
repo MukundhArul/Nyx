@@ -1,9 +1,12 @@
 import sys
 import time
 import math
+import os
+import threading
+import winsound
 from PyQt6.QtWidgets import QApplication, QWidget, QMenu, QInputDialog, QSystemTrayIcon
-from PyQt6.QtGui import QPainter, QColor, QAction, QPen, QFont, QPainterPath
-from PyQt6.QtCore import Qt, QPoint, QTimer, pyqtSignal, QThread
+from PyQt6.QtGui import QPainter, QColor, QAction, QPen, QFont, QPainterPath, QPixmap
+from PyQt6.QtCore import Qt, QPoint, QTimer, pyqtSignal, QThread, QRect
 from pynput import mouse, keyboard
 import pygetwindow as gw
 
@@ -62,6 +65,9 @@ class PetWidget(QWidget):
         self.stretch_timer = 0
         self.STRETCH_INTERVAL = 30 * 60 # 30 minutes in seconds
         
+        # Phase 5 Sprite states
+        self.setup_sprites()
+        
         self.initUI()
         
         # Animation loop (30 FPS)
@@ -81,6 +87,28 @@ class PetWidget(QWidget):
         self.monitor.active_window.connect(self.on_active_window)
         self.monitor.start()
 
+    def setup_sprites(self):
+        asset_path = os.path.join(os.path.dirname(__file__), "assets", "Cat_Ginger.png")
+        self.sprite_sheet = QPixmap(asset_path)
+        
+        alarm_path = os.path.join(os.path.dirname(__file__), "assets", "alarm_clock_cropped.png")
+        self.alarm_pixmap = QPixmap(alarm_path)
+        
+        self.frame_width = 32
+        self.frame_height = 32
+        self.scale_factor = 3 # 32x32 scaled to 96x96
+        
+        self.animations = {
+            "IDLE": [(c, 0) for c in range(4)],          # Row 0
+            "SLEEPING": [(c, 30) for c in range(2)],     # Row 30
+            "DRAGGED": [(c, 56) for c in range(2)],      # Row 56
+            "TYPING": [(c, 32) for c in range(6)],       # Row 32
+            "VIBING": [(c, 45) for c in range(8)],       # Row 45
+            "WATCHING": [(c, 70) for c in range(10)],    # Row 70
+            "SCROLLING": [(c, 85) for c in range(6)]     # Row 85
+        }
+        self.current_frame_index = 0
+
     def initUI(self):
         self.setWindowFlags(
             Qt.WindowType.FramelessWindowHint |
@@ -88,7 +116,7 @@ class PetWidget(QWidget):
             Qt.WindowType.Tool
         )
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.resize(200, 160) # Increased size for text bubbles
+        self.resize(300, 300) # Increased size significantly to prevent cutting off
         self.setupTray()
 
     def setupTray(self):
@@ -100,13 +128,13 @@ class PetWidget(QWidget):
         show_action = QAction("Show", self)
         set_pin_action = QAction("Set Pinned Message", self)
         clear_pin_action = QAction("Clear Pinned Message", self)
-        toggle_pomo_action = QAction("Toggle Pomodoro (25m)", self)
+        toggle_alarm_action = QAction("Toggle Alarm Timer", self)
         quit_action = QAction("Exit", self)
         
         show_action.triggered.connect(self.show)
         set_pin_action.triggered.connect(self.prompt_pinned_message)
         clear_pin_action.triggered.connect(self.clear_pinned_message)
-        toggle_pomo_action.triggered.connect(self.toggle_pomodoro)
+        toggle_alarm_action.triggered.connect(self.toggle_alarm)
         quit_action.triggered.connect(QApplication.instance().quit)
         
         # Menu
@@ -116,7 +144,7 @@ class PetWidget(QWidget):
         tray_menu.addAction(set_pin_action)
         tray_menu.addAction(clear_pin_action)
         tray_menu.addSeparator()
-        tray_menu.addAction(toggle_pomo_action)
+        tray_menu.addAction(toggle_alarm_action)
         tray_menu.addSeparator()
         tray_menu.addAction(quit_action)
         
@@ -132,12 +160,21 @@ class PetWidget(QWidget):
     def clear_pinned_message(self):
         self.pinned_message = ""
 
-    def toggle_pomodoro(self):
+    def toggle_alarm(self):
         if self.pomo_active:
             self.pomo_active = False
         else:
-            self.pomo_active = True
-            self.pomo_seconds = 25 * 60
+            mins, ok = QInputDialog.getInt(self, "Set Alarm", "Enter minutes for the alarm:", 1, 1, 120)
+            if ok:
+                self.pomo_active = True
+                self.pomo_seconds = mins * 60
+
+    def play_alarm_sound(self):
+        def beep_thread():
+            for _ in range(5): # beep 5 times
+                winsound.Beep(800, 200)
+                winsound.Beep(1200, 200)
+        threading.Thread(target=beep_thread, daemon=True).start()
 
     # --- Signals ---
     def on_input_activity(self):
@@ -159,6 +196,13 @@ class PetWidget(QWidget):
         else:
             self.active_app_state = ""
 
+    def get_current_animation_name(self):
+        if self.state == "SLEEPING": return "SLEEPING"
+        if self.state == "DRAGGED": return "DRAGGED"
+        if self.is_typing: return "TYPING"
+        if self.active_app_state != "": return self.active_app_state
+        return "IDLE"
+
     # --- Logic Updates ---
     def update_logic(self):
         if not self.is_dragging:
@@ -172,7 +216,8 @@ class PetWidget(QWidget):
                 self.pomo_seconds -= 1
             else:
                 self.pomo_active = False
-                self.pinned_message = "Pomodoro Finished!"
+                self.pinned_message = "⏰ ALARM! ⏰"
+                self.play_alarm_sound()
                 
         self.stretch_timer += 1
         if self.stretch_timer >= self.STRETCH_INTERVAL:
@@ -181,10 +226,18 @@ class PetWidget(QWidget):
 
     def update_animation(self):
         self.tick_count += 1
+        
+        # Advance sprite frame every 6 ticks (approx 5 FPS)
+        if self.tick_count % 6 == 0:
+            anim_name = self.get_current_animation_name()
+            anim_list = self.animations.get(anim_name, self.animations["IDLE"])
+            self.current_frame_index = (self.current_frame_index + 1) % len(anim_list)
+
         if self.typing_timer > 0:
             self.typing_timer -= 1
             if self.typing_timer <= 0:
                 self.is_typing = False
+                
         self.update() # triggers paintEvent
 
     # --- Drawing ---
@@ -193,13 +246,11 @@ class PetWidget(QWidget):
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         
         # Center offsets for drawing the cat
-        cx, cy = 60, 60
+        cx, cy = 150, 150
         y_offset = 0
         
         if self.state == "DRAGGED":
             y_offset = -10 # Dangle effect
-        elif self.active_app_state == "VIBING" and self.state != "SLEEPING":
-            y_offset = int(math.sin(self.tick_count * 0.4) * 5)
             
         # --- Draw Productivity Elements ---
         painter.setFont(QFont("Arial", 10, QFont.Weight.Bold))
@@ -233,85 +284,63 @@ class PetWidget(QWidget):
             painter.setPen(QColor(50, 50, 50))
             painter.drawText(int(bubble_x + 10), int(bubble_y + msg_rect.height() + 2), self.pinned_message)
 
-        # Pomodoro Timer (Clock next to cat)
+        # Alarm Timer (Image next to cat)
         if self.pomo_active:
-            clock_cx, clock_cy = cx + 60, cy + 10 + y_offset
-            clock_radius = 16
+            alarm_w = 60
+            alarm_h = 35
+            alarm_x = cx + 45
+            alarm_y = cy + 20 + y_offset
             
-            # Background circle
-            painter.setBrush(QColor(240, 240, 240))
-            painter.setPen(QPen(QColor(100, 100, 100), 2))
-            painter.drawEllipse(clock_cx - clock_radius, clock_cy - clock_radius, clock_radius * 2, clock_radius * 2)
-            
-            # Pie for time remaining
-            fraction = self.pomo_seconds / (25 * 60)
-            painter.setBrush(QColor(255, 100, 100))
-            painter.setPen(Qt.PenStyle.NoPen)
-            # drawPie takes (x, y, w, h, startAngle, spanAngle). Angles are in 1/16th of a degree.
-            # 90 degrees (12 o'clock) is 90 * 16. We draw backwards (negative span)
-            painter.drawPie(clock_cx - clock_radius, clock_cy - clock_radius, clock_radius * 2, clock_radius * 2, 90 * 16, int(-360 * fraction * 16))
-            
-            # Draw text below clock
-            painter.setPen(QColor(0, 0, 0))
-            mins = self.pomo_seconds // 60
-            secs = self.pomo_seconds % 60
-            timer_str = f"{mins:02d}:{secs:02d}"
-            painter.drawText(clock_cx - 15, clock_cy + 32, timer_str)
+            # Draw Alarm Clock Image
+            if not self.alarm_pixmap.isNull():
+                painter.drawPixmap(alarm_x, alarm_y, alarm_w, alarm_h, self.alarm_pixmap)
+                
+                # Draw Text inside the screen
+                painter.setPen(QColor(20, 80, 20)) # Dark green digital text
+                painter.setFont(QFont("Consolas", 6, QFont.Weight.Bold))
+                
+                mins = self.pomo_seconds // 60
+                secs = self.pomo_seconds % 60
+                timer_str = f"{mins:02d}:{secs:02d}"
+                
+                # Screen bounding box for the green area (approximate)
+                screen_rect = QRect(
+                    alarm_x + int(alarm_w * 0.15),
+                    alarm_y + int(alarm_h * 0.25),
+                    int(alarm_w * 0.70),
+                    int(alarm_h * 0.40)
+                )
+                
+                painter.drawText(screen_rect, Qt.AlignmentFlag.AlignCenter, timer_str)
 
-        # --- Draw Cat ---
-        cat_color = QColor(250, 180, 100) # Orange cat
+        # --- Draw Cat Sprite ---
+        anim_name = self.get_current_animation_name()
+        anim_list = self.animations.get(anim_name, self.animations["IDLE"])
         
-        # Body
-        painter.setBrush(cat_color)
-        painter.setPen(Qt.PenStyle.NoPen)
-        painter.drawEllipse(cx - 40, cy - 20 + y_offset, 80, 60)
+        # Safety check
+        if self.current_frame_index >= len(anim_list):
+            self.current_frame_index = 0
+            
+        col, row = anim_list[self.current_frame_index]
         
-        # Ears
-        painter.drawPolygon(QPoint(cx - 30, cy - 10 + y_offset), QPoint(cx - 25, cy - 40 + y_offset), QPoint(cx - 10, cy - 15 + y_offset))
-        painter.drawPolygon(QPoint(cx + 10, cy - 15 + y_offset), QPoint(cx + 25, cy - 40 + y_offset), QPoint(cx + 30, cy - 10 + y_offset))
+        source_rect = QRect(col * self.frame_width, row * self.frame_height, self.frame_width, self.frame_height)
         
-        # Eyes
-        painter.setBrush(QColor(0, 0, 0))
-        if self.state == "SLEEPING":
-            # Sleepy eyes
-            pen = QPen(QColor(0, 0, 0))
-            pen.setWidth(3)
-            painter.setPen(pen)
-            painter.drawLine(cx - 25, cy + y_offset, cx - 15, cy + y_offset)
-            painter.drawLine(cx + 15, cy + y_offset, cx + 25, cy + y_offset)
-        elif self.active_app_state == "WATCHING":
-            # Big eyes
-            painter.drawEllipse(cx - 25, cy - 5 + y_offset, 14, 14)
-            painter.drawEllipse(cx + 11, cy - 5 + y_offset, 14, 14)
+        # Target drawing area (scaled)
+        dest_width = self.frame_width * self.scale_factor
+        dest_height = self.frame_height * self.scale_factor
+        
+        dest_x = cx - (dest_width // 2)
+        dest_y = cy - (dest_height // 2) + y_offset
+        dest_rect = QRect(dest_x, dest_y, dest_width, dest_height)
+        
+        # Disable smooth scaling to keep pixel art crisp
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, False)
+        
+        if not self.sprite_sheet.isNull():
+            painter.drawPixmap(dest_rect, self.sprite_sheet, source_rect)
         else:
-            # Normal eyes
-            painter.drawEllipse(cx - 25, cy - 5 + y_offset, 10, 10)
-            painter.drawEllipse(cx + 15, cy - 5 + y_offset, 10, 10)
-            
-        # Paws
-        paw_color = QColor(255, 220, 180)
-        painter.setBrush(paw_color)
-        painter.setPen(Qt.PenStyle.NoPen)
-        
-        paw_y_left = cy + 30 + y_offset
-        paw_y_right = cy + 30 + y_offset
-        
-        if self.is_typing and self.state != "SLEEPING":
-            paw_y_left += int(math.sin(self.tick_count) * 5)
-            paw_y_right += int(math.cos(self.tick_count) * 5)
-        elif self.active_app_state == "SCROLLING" and self.state != "SLEEPING":
-            paw_y_right += int(math.sin(self.tick_count * 0.5) * 10)
-            
-        painter.drawEllipse(cx - 30, paw_y_left, 20, 15)
-        painter.drawEllipse(cx + 10, paw_y_right, 20, 15)
-        
-        # Zzz for sleeping
-        if self.state == "SLEEPING":
-            painter.setPen(QPen(QColor(100, 100, 100), 2))
-            z_offset = (self.tick_count % 60) / 2
-            painter.drawText(cx + 20 + int(z_offset), cy - 30 - int(z_offset), "z")
-            if self.tick_count % 60 > 20:
-                painter.drawText(cx + 35 + int(z_offset), cy - 45 - int(z_offset), "Z")
+            painter.setPen(QColor(255, 0, 0))
+            painter.drawText(dest_x, dest_y + 20, "Missing Sprite!")
 
     # --- Drag and Drop Mechanics ---
     def mousePressEvent(self, event):
