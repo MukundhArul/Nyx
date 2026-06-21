@@ -2,7 +2,7 @@ import sys
 import time
 import math
 from PyQt6.QtWidgets import QApplication, QWidget, QMenu, QInputDialog, QSystemTrayIcon
-from PyQt6.QtGui import QPainter, QColor, QAction, QPen, QFont
+from PyQt6.QtGui import QPainter, QColor, QAction, QPen, QFont, QPainterPath
 from PyQt6.QtCore import Qt, QPoint, QTimer, pyqtSignal, QThread
 from pynput import mouse, keyboard
 import pygetwindow as gw
@@ -204,23 +204,59 @@ class PetWidget(QWidget):
         # --- Draw Productivity Elements ---
         painter.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         
-        # Pinned Message (above head)
+        # Pinned Message (Speech Bubble)
         if self.pinned_message:
-            painter.setPen(QColor(0, 0, 0))
-            painter.setBrush(QColor(255, 255, 200)) # Yellow sticky note
             msg_rect = painter.fontMetrics().boundingRect(self.pinned_message)
-            bubble_x = max(0, cx - msg_rect.width() // 2 + 30)
-            bubble_y = max(0, cy - 30 + y_offset - 25)
-            painter.drawRoundedRect(bubble_x - 5, bubble_y - 5, msg_rect.width() + 10, msg_rect.height() + 10, 5, 5)
-            painter.drawText(bubble_x, bubble_y + msg_rect.height() - 2, self.pinned_message)
+            bubble_width = msg_rect.width() + 20
+            bubble_height = msg_rect.height() + 15
+            bubble_x = max(5, cx - bubble_width // 2)
+            bubble_y = max(5, cy - 30 + y_offset - bubble_height - 15)
+            
+            # Create bubble path
+            bubble_path = QPainterPath()
+            bubble_path.addRoundedRect(float(bubble_x), float(bubble_y), float(bubble_width), float(bubble_height), 10.0, 10.0)
+            
+            # Create tail path
+            tail_path = QPainterPath()
+            tail_path.moveTo(float(cx), float(cy - 25 + y_offset)) # tip near cat
+            tail_path.lineTo(float(cx - 8), float(bubble_y + bubble_height))
+            tail_path.lineTo(float(cx + 8), float(bubble_y + bubble_height))
+            
+            # Combine paths
+            final_path = bubble_path.united(tail_path)
+            
+            painter.setPen(QPen(QColor(200, 200, 200), 2))
+            painter.setBrush(QColor(255, 255, 255))
+            painter.drawPath(final_path)
+            
+            # Draw text
+            painter.setPen(QColor(50, 50, 50))
+            painter.drawText(int(bubble_x + 10), int(bubble_y + msg_rect.height() + 2), self.pinned_message)
 
-        # Pomodoro Timer (next to cat)
+        # Pomodoro Timer (Clock next to cat)
         if self.pomo_active:
-            painter.setPen(QColor(255, 50, 50))
+            clock_cx, clock_cy = cx + 60, cy + 10 + y_offset
+            clock_radius = 16
+            
+            # Background circle
+            painter.setBrush(QColor(240, 240, 240))
+            painter.setPen(QPen(QColor(100, 100, 100), 2))
+            painter.drawEllipse(clock_cx - clock_radius, clock_cy - clock_radius, clock_radius * 2, clock_radius * 2)
+            
+            # Pie for time remaining
+            fraction = self.pomo_seconds / (25 * 60)
+            painter.setBrush(QColor(255, 100, 100))
+            painter.setPen(Qt.PenStyle.NoPen)
+            # drawPie takes (x, y, w, h, startAngle, spanAngle). Angles are in 1/16th of a degree.
+            # 90 degrees (12 o'clock) is 90 * 16. We draw backwards (negative span)
+            painter.drawPie(clock_cx - clock_radius, clock_cy - clock_radius, clock_radius * 2, clock_radius * 2, 90 * 16, int(-360 * fraction * 16))
+            
+            # Draw text below clock
+            painter.setPen(QColor(0, 0, 0))
             mins = self.pomo_seconds // 60
             secs = self.pomo_seconds % 60
             timer_str = f"{mins:02d}:{secs:02d}"
-            painter.drawText(cx + 60, cy + 30 + y_offset, timer_str)
+            painter.drawText(clock_cx - 15, clock_cy + 32, timer_str)
 
         # --- Draw Cat ---
         cat_color = QColor(250, 180, 100) # Orange cat
