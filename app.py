@@ -26,6 +26,7 @@ DEFAULT_SETTINGS = {
     "pomo_break_min": 5,
     "reminders": [],
     "matrix_mode": False,
+    "wear_sunglasses": False,
     "matrix_r": 198,
     "matrix_g": 154,
     "matrix_b": 150
@@ -566,6 +567,11 @@ class SettingsWindow(QWidget):
         self.matrix_cb.stateChanged.connect(self.on_matrix_changed)
         layout.addWidget(self.matrix_cb)
         
+        self.sunglasses_cb = QCheckBox("Wear Sunglasses")
+        self.sunglasses_cb.setChecked(self.pet.settings.get("wear_sunglasses", False))
+        self.sunglasses_cb.stateChanged.connect(self.on_sunglasses_changed)
+        layout.addWidget(self.sunglasses_cb)
+        
 
         # --- Matrix Mode Colors ---
         color_group = QGroupBox("Matrix Cat Color")
@@ -693,6 +699,10 @@ class SettingsWindow(QWidget):
 
     def on_matrix_changed(self, val):
         self.pet.settings["matrix_mode"] = bool(val)
+        self.pet.save_and_apply_settings()
+        
+    def on_sunglasses_changed(self, val):
+        self.pet.settings["wear_sunglasses"] = bool(val)
         self.pet.save_and_apply_settings()
         
     def on_stretch_changed(self, val):
@@ -1038,28 +1048,60 @@ class PetWidget(QWidget):
         painter.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         
         if self.pinned_message:
-            msg_rect = painter.fontMetrics().boundingRect(self.pinned_message)
-            bubble_width = msg_rect.width() + 20
-            bubble_height = msg_rect.height() + 15
-            bubble_x = max(5, cx - bubble_width // 2)
-            bubble_y = max(5, cy - 30 + y_offset - bubble_height - 15)
-            
-            bubble_path = QPainterPath()
-            bubble_path.addRoundedRect(float(bubble_x), float(bubble_y), float(bubble_width), float(bubble_height), 10.0, 10.0)
-            
-            tail_path = QPainterPath()
-            tail_path.moveTo(float(cx), float(cy - 25 + y_offset))
-            tail_path.lineTo(float(cx - 8), float(bubble_y + bubble_height))
-            tail_path.lineTo(float(cx + 8), float(bubble_y + bubble_height))
-            
-            final_path = bubble_path.united(tail_path)
-            
-            painter.setPen(QPen(QColor(200, 200, 200), 2))
-            painter.setBrush(QColor(255, 255, 255))
-            painter.drawPath(final_path)
-            
-            painter.setPen(QColor(50, 50, 50))
-            painter.drawText(int(bubble_x + 10), int(bubble_y + msg_rect.height() + 2), self.pinned_message)
+            if self.settings.get("matrix_mode", False):
+                font = QFont("Courier", 12, QFont.Weight.Bold)
+                painter.setFont(font)
+                msg_rect = painter.fontMetrics().boundingRect(self.pinned_message)
+                bubble_w = msg_rect.width() + 20
+                bubble_h = msg_rect.height() + 15
+                
+                cat_height = 16 * self.settings.get("scale_factor", 5.0)
+                dest_y = cy - cat_height / 2
+                
+                bx = max(5, cx - bubble_w / 2)
+                by = max(5, dest_y - bubble_h - 35)
+                
+                painter.setBrush(Qt.GlobalColor.black)
+                painter.setPen(Qt.PenStyle.NoPen)
+                painter.drawRect(int(bx - 4), int(by - 4), int(bubble_w + 8), int(bubble_h + 8))
+                
+                painter.setBrush(Qt.GlobalColor.white)
+                painter.drawRect(int(bx), int(by), int(bubble_w), int(bubble_h))
+                
+                painter.setBrush(Qt.GlobalColor.black)
+                painter.drawRect(int(cx - 5), int(by + bubble_h), 16, 12)
+                painter.drawRect(int(cx - 1), int(by + bubble_h + 12), 12, 12)
+                painter.drawRect(int(cx + 3), int(by + bubble_h + 24), 8, 12)
+                
+                painter.setBrush(Qt.GlobalColor.white)
+                painter.drawRect(int(cx - 1), int(by + bubble_h), 8, 12)
+                painter.drawRect(int(cx + 3), int(by + bubble_h + 12), 4, 12)
+                
+                painter.setPen(Qt.GlobalColor.black)
+                painter.drawText(int(bx + 10), int(by + msg_rect.height() + 2), self.pinned_message)
+            else:
+                msg_rect = painter.fontMetrics().boundingRect(self.pinned_message)
+                bubble_width = msg_rect.width() + 20
+                bubble_height = msg_rect.height() + 15
+                bubble_x = max(5, cx - bubble_width // 2)
+                bubble_y = max(5, cy - 30 + y_offset - bubble_height - 15)
+                
+                bubble_path = QPainterPath()
+                bubble_path.addRoundedRect(float(bubble_x), float(bubble_y), float(bubble_width), float(bubble_height), 10.0, 10.0)
+                
+                tail_path = QPainterPath()
+                tail_path.moveTo(float(cx), float(cy - 25 + y_offset))
+                tail_path.lineTo(float(cx - 8), float(bubble_y + bubble_height))
+                tail_path.lineTo(float(cx + 8), float(bubble_y + bubble_height))
+                
+                final_path = bubble_path.united(tail_path)
+                
+                painter.setPen(QPen(QColor(200, 200, 200), 2))
+                painter.setBrush(QColor(255, 255, 255))
+                painter.drawPath(final_path)
+                
+                painter.setPen(QColor(50, 50, 50))
+                painter.drawText(int(bubble_x + 10), int(bubble_y + msg_rect.height() + 2), self.pinned_message)
 
         if self.pomo_active:
             alarm_w = 60
@@ -1160,6 +1202,25 @@ class PetWidget(QWidget):
                     pupil_h = pixel_size * 2.0
                     
                     painter.drawRect(int(pupil_cx - pupil_w/2), int(pupil_cy - pupil_h/2), int(pupil_w), int(pupil_h))
+                    
+            if self.settings.get("wear_sunglasses", False) and anim_name != "SLEEPING":
+                if not left_eye_pixels or not right_eye_pixels:
+                    min_r = 5 if anim_name == "DRAGGED" else 4
+                    min_cl = 5
+                    min_cr = 11
+                else:
+                    min_r = min(p[1] for p in left_eye_pixels + right_eye_pixels)
+                    min_cl = min(p[0] for p in left_eye_pixels)
+                    min_cr = min(p[0] for p in right_eye_pixels)
+                    
+                painter.setBrush(Qt.GlobalColor.black)
+                painter.drawRect(int(dest_x + (min_cl-1)*pixel_size), int(dest_y + min_r*pixel_size), int(5*pixel_size), int(2*pixel_size))
+                painter.drawRect(int(dest_x + (min_cr-1)*pixel_size), int(dest_y + min_r*pixel_size), int(5*pixel_size), int(2*pixel_size))
+                painter.drawRect(int(dest_x + (min_cl+4)*pixel_size), int(dest_y + min_r*pixel_size), int((min_cr - min_cl - 4)*pixel_size), int(pixel_size))
+                
+                painter.setBrush(Qt.GlobalColor.white)
+                painter.drawRect(int(dest_x + min_cl*pixel_size), int(dest_y + min_r*pixel_size), int(pixel_size), int(pixel_size))
+                painter.drawRect(int(dest_x + min_cr*pixel_size), int(dest_y + min_r*pixel_size), int(pixel_size), int(pixel_size))
         else:
             anim_name = self.get_current_animation_name()
             anim_list = self.animations.get(anim_name, self.animations["IDLE"])
@@ -1202,7 +1263,6 @@ class PetWidget(QWidget):
             self.is_dragging = False
             self.state = "IDLE"
             self.idle_time = 0
-            self.clear_pinned_message()
 
 if __name__ == '__main__':
     import traceback
