@@ -38,498 +38,106 @@ MATRIX_COLORS = {
     'W': QColor(255, 255, 255), # White
     'B': QColor(34, 34, 34),    # Black
     'K': QColor(180, 180, 180), # Keyboard Box
+    'Z': QColor(255, 255, 255), # Zzzs
+    'M': QColor(40, 40, 40),    # Headphones
+    'U': QColor(255, 215, 0),   # Starstruck Eyes
+    'G': QColor(0, 255, 0),     # Glowing Green
+    'O': QColor(50, 50, 50),    # Dark Hoodie
+    'H': QColor(255, 255, 255), # Hoodie String
+    'S': QColor(160, 110, 110), # Shading (Darker Pinkish Brown)
 }
 
-MATRIX_FRAMES = {
-    "IDLE": [
+MATRIX_FRAMES = {'IDLE': [
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPPPS..S.', '....SPPPPPPPPPPS.S..', '....SPPS....SPPSSS..', '....SPPS....SPPS....', '....SPPS....SPPS....', '....SPPS....SPPS....', '.....SS......SS.....', '....................'],
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPSSS.', '...SPPPPPPPPPPPPS...', '....SPPPPPPPPPPS.S..', '....SPPPPPPPPPPS..S.', '....SPPS....SPPSSS..', '....SPPS....SPPS....', '....SPPS....SPPS....', '....SPPS....SPPS....', '.....SS......SS.....', '....................'],
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS...', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPPPS.S..', '....SPPPPPPPPPPS.S..', '....SPPS....SPPSSS..', '....SPPS....SPPS....', '....SPPS....SPPS....', '....SPPS....SPPS....', '.....SS......SS.....', '....................']
+    ],
+    'SLEEPING': [
+        ['....................', '....................', '....................', '....................', '....................', '....................', '....................', '....................', '.......WWW..........', '.........W..........', '.......WWW..........', '......PPPPPPPP......', '.....PPBPPPPBPP.....', '....PPPPPPPPPPPP....', '..DD.PPPPPPPPPP.DD..', '..DDDDDDDDDDDDDDDD..'],
+        ['....................', '....................', '....................', '....................', '....................', '....................', '....................', '....................', '.......WWW..........', '.........W..........', '.......WWW..........', '......PPPPPPPP......', '.....PPBPPPPBPP.....', '....PPPPPPPPPPPP....', '..DD.PPPPPPPPPP.DD..', '..DDDDDDDDDDDDDDDD..']
+    ],
+    'DRAGGED': [
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS...', '...SPPPPPPPPPPPPS...', '....SPPPPPPPPPPS....', '....SPPPPPPPPPPS....', '....SPP......SPP....', '....SPP......SPP....', '....SPP......SPP....', '.....SS.......SS....']
+    ],
+    'TYPING': [
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '...SSPPPPPPPPPPS..S.', '...SSPPPPPPPPPPS.S..', '............SPPSSS..', '............SPPS....', '.............SS.....', '....................'],
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPSS...S.', '....SPPPPPPPPSS..S..', '....SPPS.......SSS..', '....SPPS............', '.....SS.............', '....................']
+    ],
+    'CODING_IDLE': [
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HGGGGGGGGGGGGGS..', '...SPGGGGGGGGGGGS...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '...SSPPPPPPPPPPS..S.', '...SSPPPPPPPPPPS.S..', '............SPPSSS..', '............SPPS....', '.............SS.....', '....................']
+    ],
+    'CODING_TYPING': [
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HGGGGGGGGGGGGGS..', '...SPGGGGGGGGGGGS...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '...SSPPPPPPPPPPS..S.', '...SSPPPPPPPPPPS.S..', '............SPPSSS..', '............SPPS....', '.............SS.....', '....................'],
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HGGGGGGGGGGGGGS..', '...SPGGGGGGGGGGGS...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPSS...S.', '....SPPPPPPPPSS..S..', '....SPPS.......SSS..', '....SPPS............', '.....SS.............', '....................']
+    ],
+    'CHATTING': [
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '...SSPPPPPPPPPPS..S.', '...SSPPPPPPPPPPS.S..', '............SPPSSS..', '............SPPS....', '.............SS.....', '....................'],
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPSS...S.', '....SPPPPPPPPSS..S..', '....SPPS.......SSS..', '....SPPS............', '.....SS.............', '....................']
+    ],
+    'PURRING': [
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPBBBBPPBBBBS...', '...SPPBBBBPPBBBBS...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPPPS..S.', '....SPPPPPPPPPPS.S..', '....SPPS....SPPSSS..', '....SPPS....SPPS....', '....SPPS....SPPS....', '....SPPS....SPPS....', '.....SS......SS.....', '....................']
+    ],
+    'VIBING': [
         [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.DD..",
-            ".....PPPPPPPPPP..D..",
-            ".....PPPPPPPPP...D..",
-            "....DPPPD..DPPPD.DD.",
-            "....DPPPD..DPPPD....",
-            "...................."
+            "....................",
+            "...MMM........MMM...",
+            "..MM.PH......HP.MM..",
+            "..M..PPSP....PPSP..M",
+            "..M..HPPPHHHPPPHS..M",
+            "..M..PPEEEEPPEEEE..M",
+            "..MMMPEEEEPPEEEEMMM.",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "....SPPPPPPPPPPS..S.",
+            "....SPPPPPPPPPPS.S..",
+            "....SPPS....SPPSSS..",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            ".....SS......SS....."
         ],
         [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP...D.",
-            ".....PPPPPPPPPP..DD.",
-            ".....PPPPPPPPP...D..",
-            "....DPPPD..DPPPD.DD.",
-            "....DPPPD..DPPPD....",
-            "...................."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.DD..",
-            ".....PPPPPPPPPP..D..",
-            ".....PPPPPPPPP...D..",
-            "....DPPPD..DPPPD.DD.",
-            "....DPPPD..DPPPD....",
-            "...................."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPPPPPPPPPPPPP...",
-            "...PPBBBBPPBBBBPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.DD..",
-            ".....PPPPPPPPPP..D..",
-            ".....PPPPPPPPP...D..",
-            "....DPPPD..DPPPD.DD.",
-            "....DPPPD..DPPPD....",
+            "...MMM........MMM...",
+            "..MM.PH......HP.MM..",
+            "..M..PPSP....PPSP..M",
+            "..M..HPPPHHHPPPHS..M",
+            "..M..PPEEEEPPEEEE..M",
+            "..MMMPEEEEPPEEEEMMM.",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "....SPPPPPPPPPPS..S.",
+            "....SPPPPPPPPPPS.S..",
+            "....SPPS....SPPSSS..",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            ".....SS......SS.....",
             "...................."
         ]
     ],
-    "SLEEPING": [
+    'WATCHING': [
         [
             "....................",
-            "....................",
-            "....................",
-            "..WWWW..............",
-            ".....W..............",
-            "....W...............",
-            "..WWWW....PP....PP..",
-            ".........PDBP..PDBP.",
-            ".D.PPPPPPPPPPPPPPPP.",
-            "DDPPPPPBBBBPPBBBBPP.",
-            "DDPPPPPPPPPPPPPPPPP."
-        ],
-        [
-            "....................",
-            "..WWWW..............",
-            ".....W..............",
-            "....W...............",
-            "..WWWW..............",
-            "....................",
-            "..........PP....PP..",
-            ".........PDBP..PDBP.",
-            ".D.PPPPPPPPPPPPPPPP.",
-            "DDPPPPPBBBBPPBBBBPP.",
-            "DDPPPPPPPPPPPPPPPPP."
-        ],
-        [
-            "..WWWW..............",
-            ".....W..............",
-            "....W...............",
-            "..WWWW....PP....PP..",
-            ".........PDBP..PDBP.",
-            ".D.PPPPPPPPPPPPPPPP.",
-            "DDPPPPPPPPPPPPPPPPP.",
-            "DDPPPPPBBBBPPBBBBPP.",
-            "DDPPPPPPPPPPPPPPPPP.",
-            "DDPPPPPPPPPPPPPPPPP.",
-            "DDPPPPPPPPPPPPPPPPP."
-        ],
-        [
-            "....................",
-            "....................",
-            "....................",
-            "..........PP....PP..",
-            ".........PDBP..PDBP.",
-            ".D.PPPPPPPPPPPPPPPP.",
-            "DDPPPPPPPPPPPPPPPPP.",
-            "DDPPPPPBBBBPPBBBBPP.",
-            "DDPPPPPPPPPPPPPPPPP.",
-            "DDPPPPPPPPPPPPPPPPP.",
-            "DDPPPPPPPPPPPPPPPPP."
-        ],
-        [
-            "....................",
-            "....................",
-            "....................",
-            "....................",
-            "....................",
-            "....................",
-            "..........PP....PP..",
-            ".........PDBP..PDBP.",
-            ".D.PPPPPPPPPPPPPPPP.",
-            "DDPPPPPBBBBPPBBBBPP.",
-            "DDPPPPPPPPPPPPPPPPP."
-        ],
-        [
-            "....................",
-            "....................",
-            "....................",
-            "....................",
-            "....................",
-            "....................",
-            "..........PP....PP..",
-            ".........PDBP..PDBP.",
-            ".D.PPPPPPPPPPPPPPPP.",
-            "DDPPPPPBBBBPPBBBBPP.",
-            "DDPPPPPPPPPPPPPPPPP."
-        ]
-    ],
-    "WALKING": [
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPPPPPPP....",
-            "......P........P....",
-            ".......P........P..."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPPPPPPP....",
-            ".....P........P.....",
-            ".....P........P....."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPPPPPPP....",
-            "....P........P......",
-            "...P........P......."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPPPPPPP....",
-            ".....P........P.....",
-            ".....P........P....."
-        ]
-    ],
-    "DRAGGED": [
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.....",
-            ".....P........P.....",
-            ".....P........P.....",
-            "....P..........P....",
-            "....D..........D....",
-            "....................",
-            "...................."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.....",
-            ".....P........P.....",
-            ".....P........P.....",
-            ".....P........P.....",
-            ".....D........D.....",
-            "....................",
-            "...................."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.....",
-            ".....P........P.....",
-            ".....P........P.....",
-            "......P........P....",
-            "......D........D....",
-            "....................",
-            "...................."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.....",
-            ".....P........P.....",
-            ".....P........P.....",
-            ".....P........P.....",
-            ".....D........D.....",
-            "....................",
+            ".....PH......HP.....",
+            "....PPSP....PPSP....",
+            "....HPPPHHHPPPHS....",
+            "...HPPUUUUPPUUUUS...",
+            "...SPPUUUUPPUUUUS...",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "....SPPPPPPPPPPS..S.",
+            "....SPPPPPPPPPPS.S..",
+            "....SPPS....SPPSSS..",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            ".....SS......SS.....",
             "...................."
         ]
     ],
-    "TYPING": [
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            "..............DD....",
-            ".....PPPPPPPP.P.DD..",
-            ".....PPPPPPPP.P..D..",
-            ".....PPPPPPPPP...D..",
-            "....DPPPD..PPPP.DD..",
-            "....DPPPD..BKKKB....",
-            "....BKKKB..BBBBB...."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.DD..",
-            ".....PPPPPPPPPP..D..",
-            ".....PPPPPPPPP...D..",
-            "....DPPPD..DPPPD.DD.",
-            "....DPPPD..DPPPD....",
-            "....BKKKB..BKKKB...."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            "....DD..............",
-            "....P.PPPPPPPP..DD..",
-            "....P.PPPPPPPP...D..",
-            ".....PPPPPPPPP...D..",
-            ".....PPPP..DPPPD.DD.",
-            "....BKKKB..DPPPD....",
-            "....BBBBB..BKKKB...."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.DD..",
-            ".....PPPPPPPPPP..D..",
-            ".....PPPPPPPPP...D..",
-            "....DPPPD..DPPPD.DD.",
-            "....DPPPD..DPPPD....",
-            "....BKKKB..BKKKB...."
-        ]
-    ],
-    "WATCHING": [
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.DD..",
-            ".....PPPPPPPPPP..D..",
-            ".....PPPPPPPPP...D..",
-            "....DPPPD..DPPPD.DD.",
-            "....DPPPD..DPPPD....",
-            "...................."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            "....PPPPPPPPPPPP....",
-            "....PPPPPPPPPPPP....",
-            "....PPPPPPPPPPPP.DD.",
-            ".....PPPPPPPPPP..D..",
-            ".....PPPPPPPPP...D..",
-            "....DPPPD..DPPPD.DD.",
-            "....DPPPD..DPPPD....",
-            "...................."
-        ]
-    ],
-    "VIBING": [
-        [
-            "....PP......PP......",
-            "...PDBP....PDBP.....",
-            "...PPPPPPPPPPPP.....",
-            "..PPPPPPPPPPPPPP....",
-            "..PPEEEEPPEEEEPP....",
-            "..PPEEEEPPEEEEPP....",
-            "..PPPPPPPPPPPPPP....",
-            "...PPPPPPBPPPPP.....",
-            "....PPPPPPPPPP......",
-            "..D.PPPPPPPPPP......",
-            ".P..PPPPPPPPPP.DD...",
-            "P...PPPPPPPPPP..D...",
-            "P...PPPPPPPPP...D...",
-            "....DPPPD..DPPPD.DD.",
-            "....DPPPD..DPPPD....",
-            "...................."
-        ],
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.....",
-            ".....PPPPPPPPPP.DD..",
-            ".....PPPPPPPPPP..D..",
-            ".....PPPPPPPPP...D..",
-            "....DPPPD..DPPPD.DD.",
-            "....DPPPD..DPPPD....",
-            "...................."
-        ],
-        [
-            "......PP......PP....",
-            ".....PDBP....PDBP...",
-            ".....PPPPPPPPPPPP...",
-            "....PPPPPPPPPPPPPP..",
-            "....PPEEEEPPEEEEPP..",
-            "....PPEEEEPPEEEEPP..",
-            "....PPPPPPPPPPPPPP..",
-            ".....PPPPPPBPPPPP...",
-            "......PPPPPPPPPP....",
-            "......PPPPPPPPPP.D..",
-            "......PPPPPPPPPP..P.",
-            "......PPPPPPPPPP...P",
-            "......PPPPPPPPP....P",
-            "....DPPPD..DPPPD.DD.",
-            "....DPPPD..DPPPD....",
-            "...................."
-        ],
-        [
-            "....................",
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            "....PPPPPPPPPPPP....",
-            "....PPPPPPPPPPPP....",
-            "....PPPPPPPPPPPP.DD.",
-            ".....PPPPPPPPP...D..",
-            "....DPPPD..DPPPD.DD.",
-            "....DPPPD..DPPPD....",
-            "...................."
-        ]
-    ],
-    "SCROLLING": [
-        [
-            ".....PP......PP.....",
-            "....PDBP....PDBP....",
-            "....PPPPPPPPPPPP....",
-            "...PPPPPPPPPPPPPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPEEEEPPEEEEPP...",
-            "...PPPPPPPPPPPPPP...",
-            "....PPPPPPBPPPPP....",
-            ".....PPPPPPPPPP.....",
-            "..............DD....",
-            ".....PPPPPPPP.P.DD..",
-            ".....PPPPPPPP.P..D..",
-            ".....PPPPPPPPP...D..",
-            "....DPPPD..PPPP.DD..",
-            "....DPPPD..BKKKB....",
-            "....BKKKB..BBBBB...."
-        ]
-    ]
-}
+    'SCROLLING': [
+        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPPPS..S.', '....SPPPPPPPPPPS.S..', '....SPPS....SPPSSS..', '....SPPS....SPPS....', '....SPPS....SPPS....', '....SPPS....SPPS....', '.....SS......SS.....', '....................']
+    ]}
 
 def load_settings():
     if os.path.exists(SETTINGS_FILE):
@@ -622,50 +230,32 @@ class SettingsWindow(QWidget):
         layout.addWidget(self.typing_cb)
         
         # Matrix Mode
-        self.matrix_cb = QCheckBox("Use Code-Generated Pixel Art (Matrix Mode)")
-        self.matrix_cb.setChecked(self.pet.settings.get("matrix_mode", False))
-        self.matrix_cb.stateChanged.connect(self.on_matrix_changed)
-        layout.addWidget(self.matrix_cb)
         
         self.sunglasses_cb = QCheckBox("Wear Sunglasses")
         self.sunglasses_cb.setChecked(self.pet.settings.get("wear_sunglasses", False))
         self.sunglasses_cb.stateChanged.connect(self.on_sunglasses_changed)
         layout.addWidget(self.sunglasses_cb)
-        
 
         # --- Matrix Mode Colors ---
         color_group = QGroupBox("Matrix Cat Color")
         color_layout = QVBoxLayout()
         
-        r_row = QHBoxLayout()
-        r_row.addWidget(QLabel("Red:"))
-        self.r_slider = QSlider(Qt.Orientation.Horizontal)
-        self.r_slider.setRange(0, 255)
-        self.r_slider.setValue(self.pet.settings.get("matrix_r", 198))
-        self.r_slider.valueChanged.connect(self.on_color_changed)
-        r_row.addWidget(self.r_slider)
-        color_layout.addLayout(r_row)
+        self.color_preview = QLabel()
+        self.color_preview.setFixedSize(50, 50)
+        self.update_color_preview(self.pet.settings.get("matrix_r", 198), self.pet.settings.get("matrix_g", 154), self.pet.settings.get("matrix_b", 150))
         
-        g_row = QHBoxLayout()
-        g_row.addWidget(QLabel("Green:"))
-        self.g_slider = QSlider(Qt.Orientation.Horizontal)
-        self.g_slider.setRange(0, 255)
-        self.g_slider.setValue(self.pet.settings.get("matrix_g", 154))
-        self.g_slider.valueChanged.connect(self.on_color_changed)
-        g_row.addWidget(self.g_slider)
-        color_layout.addLayout(g_row)
+        self.color_btn = QPushButton("Pick Custom Color")
+        self.color_btn.clicked.connect(self.pick_color)
         
-        b_row = QHBoxLayout()
-        b_row.addWidget(QLabel("Blue:"))
-        self.b_slider = QSlider(Qt.Orientation.Horizontal)
-        self.b_slider.setRange(0, 255)
-        self.b_slider.setValue(self.pet.settings.get("matrix_b", 150))
-        self.b_slider.valueChanged.connect(self.on_color_changed)
-        b_row.addWidget(self.b_slider)
-        color_layout.addLayout(b_row)
+        row = QHBoxLayout()
+        row.addWidget(self.color_preview)
+        row.addWidget(self.color_btn)
         
+        color_layout.addLayout(row)
         color_group.setLayout(color_layout)
         layout.addWidget(color_group)
+        
+
         
         # Reminders
         rem_group = QGroupBox("Reminders")
@@ -751,11 +341,49 @@ class SettingsWindow(QWidget):
         self.pet.save_and_apply_settings()
         
 
-    def on_color_changed(self):
-        self.pet.settings["matrix_r"] = self.r_slider.value()
-        self.pet.settings["matrix_g"] = self.g_slider.value()
-        self.pet.settings["matrix_b"] = self.b_slider.value()
-        self.pet.save_and_apply_settings()
+
+    def update_color_preview(self, r, g, b):
+        self.color_preview.setStyleSheet(f"background-color: rgb({r}, {g}, {b}); border: 1px solid black; border-radius: 5px;")
+
+    def pick_color(self):
+        from PyQt6.QtWidgets import QColorDialog
+        from PyQt6.QtGui import QColor
+        r = self.pet.settings.get("matrix_r", 198)
+        g = self.pet.settings.get("matrix_g", 154)
+        b = self.pet.settings.get("matrix_b", 150)
+        current = QColor(r, g, b)
+        
+        color = QColorDialog.getColor(current, self, "Pick Matrix Cat Color")
+        if color.isValid():
+            self.pet.settings["matrix_r"] = color.red()
+            self.pet.settings["matrix_g"] = color.green()
+            self.pet.settings["matrix_b"] = color.blue()
+            self.update_color_preview(color.red(), color.green(), color.blue())
+            self.pet.save_and_apply_settings()
+            self.pet.update()
+
+    def pick_color(self):
+        from PyQt6.QtWidgets import QColorDialog
+        from PyQt6.QtGui import QColor
+        current = QColor(self.r_slider.value(), self.g_slider.value(), self.b_slider.value())
+        color = QColorDialog.getColor(current, self, "Pick Matrix Cat Color")
+        if color.isValid():
+            self.r_slider.setValue(color.red())
+            self.g_slider.setValue(color.green())
+            self.b_slider.setValue(color.blue())
+
+
+
+    def pick_color(self):
+        from PyQt6.QtWidgets import QColorDialog
+        from PyQt6.QtGui import QColor
+        current = QColor(self.r_slider.value(), self.g_slider.value(), self.b_slider.value())
+        color = QColorDialog.getColor(current, self, "Pick Matrix Cat Color")
+        if color.isValid():
+            self.r_slider.setValue(color.red())
+            self.g_slider.setValue(color.green())
+            self.b_slider.setValue(color.blue())
+
 
     def on_matrix_changed(self, val):
         self.pet.settings["matrix_mode"] = bool(val)
@@ -840,6 +468,8 @@ class PetWidget(QWidget):
         self.SLEEP_THRESHOLD = 30 # Sleep after 30s of inactivity
         
         self.is_dragging = False
+        self.is_petting = False
+        self.hearts = []
         self.oldPos = self.pos()
         self.tick_count = 0
         
@@ -901,7 +531,151 @@ class PetWidget(QWidget):
             "WALKING": [(c, 2) for c in range(8)],       # Row 2
             "DRAGGED": [(c, 1) for c in range(4)],       # Row 1
             "TYPING": [(c, 7) for c in range(6)],        # Row 7
-            "VIBING": [(c, 8) for c in range(7)],        # Row 8
+        "CODING_IDLE": [
+        [
+            "....................",
+            ".....PH......HP.....",
+            "....PPSP....PPSP....",
+            "....HPPPHHHPPPHS....",
+            "...HGGGGGGGGGGGGGS..",
+            "...SPGGGGGGGGGGGS...",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "...SSPPPPPPPPPPS..S.",
+            "...SSPPPPPPPPPPS.S..",
+            "............SPPSSS..",
+            "............SPPS....",
+            ".............SS.....",
+            "...................."
+        ]
+    ],
+    "CODING_TYPING": [
+        [
+            "....................",
+            ".....PH......HP.....",
+            "....PPSP....PPSP....",
+            "....HPPPHHHPPPHS....",
+            "...HGGGGGGGGGGGGGS..",
+            "...SPGGGGGGGGGGGS...",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "...SSPPPPPPPPPPS..S.",
+            "...SSPPPPPPPPPPS.S..",
+            "............SPPSSS..",
+            "............SPPS....",
+            ".............SS.....",
+            "...................."
+        ],
+        [
+            "....................",
+            ".....PH......HP.....",
+            "....PPSP....PPSP....",
+            "....HPPPHHHPPPHS....",
+            "...HGGGGGGGGGGGGGS..",
+            "...SPGGGGGGGGGGGS...",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "....SPPPPPPPPSS...S.",
+            "....SPPPPPPPPSS..S..",
+            "....SPPS.......SSS..",
+            "....SPPS............",
+            ".....SS.............",
+            "...................."
+        ]
+    ],
+    "PURRING": [
+        [
+            "....................",
+            ".....PH......HP.....",
+            "....PPSP....PPSP....",
+            "....HPPPHHHPPPHS....",
+            "...HPPBBBBPPBBBBS...",
+            "...SPPBBBBPPBBBBS...",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "....SPPPPPPPPPPS..S.",
+            "....SPPPPPPPPPPS.S..",
+            "....SPPS....SPPSSS..",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            ".....SS......SS.....",
+            "...................."
+        ]
+    ],
+    "CODING_IDLE": [
+        [
+            "....................",
+            ".....PH......HP.....",
+            "....PPSP....PPSP....",
+            "....HPPPHHHPPPHS....",
+            "...HGGGGGGGGGGGGGS..",
+            "...SPGGGGGGGGGGGS...",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "...SSPPPPPPPPPPS..S.",
+            "...SSPPPPPPPPPPS.S..",
+            "............SPPSSS..",
+            "............SPPS....",
+            ".............SS.....",
+            "...................."
+        ]
+    ],
+    "CODING_TYPING": [
+        [
+            "....................",
+            ".....PH......HP.....",
+            "....PPSP....PPSP....",
+            "....HPPPHHHPPPHS....",
+            "...HGGGGGGGGGGGGGS..",
+            "...SPGGGGGGGGGGGS...",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "...SSPPPPPPPPPPS..S.",
+            "...SSPPPPPPPPPPS.S..",
+            "............SPPSSS..",
+            "............SPPS....",
+            ".............SS.....",
+            "...................."
+        ],
+        [
+            "....................",
+            ".....PH......HP.....",
+            "....PPSP....PPSP....",
+            "....HPPPHHHPPPHS....",
+            "...HGGGGGGGGGGGGGS..",
+            "...SPGGGGGGGGGGGS...",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "....SPPPPPPPPSS...S.",
+            "....SPPPPPPPPSS..S..",
+            "....SPPS.......SSS..",
+            "....SPPS............",
+            ".....SS.............",
+            "...................."
+        ]
+    ],
+    "PURRING": [
+        [
+            "....................",
+            ".....PH......HP.....",
+            "....PPSP....PPSP....",
+            "....HPPPHHHPPPHS....",
+            "...HPPBBBBPPBBBBS...",
+            "...SPPBBBBPPBBBBS...",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "....SPPPPPPPPPPS..S.",
+            "....SPPPPPPPPPPS.S..",
+            "....SPPS....SPPSSS..",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            ".....SS......SS.....",
+            "...................."
+        ]
+    ],
+    "VIBING": [(c, 8) for c in range(7)],        # Row 8
             "WATCHING": [(c, 9) for c in range(8)],      # Row 9
             "SCROLLING": [(c, 4) for c in range(8)]      # Row 4
         }
@@ -968,16 +742,9 @@ class PetWidget(QWidget):
             
         self.pomo_active = not self.pomo_active
         if self.pomo_active:
-            self.pomo_seconds = self.settings["pomo_focus_min"] * 60
+            self.pomo_seconds = self.settings.get("pomo_focus_min", 25) * 60
         else:
             self.pomo_seconds = 0
-
-    def play_alarm_sound(self):
-        def beep_thread():
-            for _ in range(5):
-                winsound.Beep(800, 200)
-                winsound.Beep(1200, 200)
-        threading.Thread(target=beep_thread, daemon=True).start()
 
     # --- Signals ---
     def on_input_activity(self):
@@ -989,25 +756,37 @@ class PetWidget(QWidget):
         if not self.settings.get("react_to_typing", True):
             return
         self.is_typing = True
-        self.typing_timer = 10
+        self.typing_timer = 3
         
     def on_active_window(self, title):
+        title = title.lower()
         if "spotify" in title:
             self.active_app_state = "VIBING"
         elif "youtube" in title:
             self.active_app_state = "WATCHING"
-        elif "instagram" in title or "twitter" in title or "x" in title:
-            self.active_app_state = "SCROLLING"
+        elif any(app in title for app in ["discord", "whatsapp", "instagram", "twitter", "x"]):
+            self.active_app_state = "CHATTING"
+        elif any(app in title for app in ["code", "visual studio", "antigravity", "cursor", "word", "excel", "powerpoint"]):
+            self.active_app_state = "CODING"
         else:
             self.active_app_state = ""
 
     def get_current_animation_name(self):
         if self.state == "SLEEPING": return "SLEEPING"
         if self.state == "DRAGGED": return "DRAGGED"
-        if self.is_typing: return "TYPING"
-        if self.active_app_state != "": return self.active_app_state
-        if self.state in ["IDLE", "IDLE_2", "IDLE_3", "IDLE_4"]: return self.state
-        return "IDLE"
+        if hasattr(self, 'is_petting') and self.is_petting: return "PURRING"
+        
+        app_state = getattr(self, 'active_app_state', "")
+        is_typing = getattr(self, 'is_typing', False)
+        
+        if is_typing:
+            if app_state == "CODING": return "CODING_TYPING"
+            if app_state == "CHATTING": return "CHATTING"
+            return "TYPING"
+            
+        if app_state == "CODING": return "CODING_IDLE"
+        if app_state != "": return app_state
+        return self.state
 
     # --- Logic Updates ---
     def update_logic(self):
@@ -1016,9 +795,11 @@ class PetWidget(QWidget):
             if self.idle_time > self.SLEEP_THRESHOLD:
                 self.state = "SLEEPING"
             elif self.idle_time % 6 == 0:
-                self.state = random.choice(["IDLE", "IDLE_2", "IDLE_3", "IDLE_4"])
+                self.state = "IDLE"
                 self.current_frame_index = 0
                 
+
+        
 
         
         # Reminders
@@ -1028,7 +809,7 @@ class PetWidget(QWidget):
             try:
                 rt = datetime.fromisoformat(r["time"])
                 if now >= rt:
-                    self.pinned_message = f"🔔 {r['message']}"
+                    self.pinned_message = f"≡ƒöö {r['message']}"
                     self.play_alarm_sound()
                 else:
                     reminders_to_keep.append(r)
@@ -1063,17 +844,40 @@ class PetWidget(QWidget):
                 self.pomo_seconds -= 1
             else:
                 self.pomo_active = False
+                self.pinned_message = "ΓÅ░ POMODORO DONE! ΓÅ░"
+                self.play_alarm_sound()
+
+        # Productivity Logic
+        if getattr(self, 'pomo_active', False):
+            if getattr(self, 'pomo_seconds', 0) > 0:
+                self.pomo_seconds -= 1
+            else:
+                self.pomo_active = False
                 self.pinned_message = "⏰ POMODORO DONE! ⏰"
                 self.play_alarm_sound()
 
     def update_animation(self):
         self.tick_count += 1
         
+        if hasattr(self, 'hearts'):
+            for h in self.hearts:
+                h[1] -= h[3]
+                h[2] -= 4.0
+            self.hearts = [h for h in self.hearts if h[2] > 0]
+            
+            if hasattr(self, 'is_petting') and self.is_petting and self.tick_count % 3 == 0:
+                import random
+                self.hearts.append([random.randint(-20, 20), random.randint(-40, -10), 255.0, random.uniform(1.0, 2.0)])
+
         anim_name = self.get_current_animation_name()
         
         # Determine speed (matrix mode allows variable speed)
         speed = 2 # 60ms
-        if self.settings.get("matrix_mode", False):
+        # Determine y_offset. If in CODING state, offset so cat doesn't bounce off screen
+        anim_name = self.get_current_animation_name()
+        y_offset = -10 if anim_name in ["CODING", "CODING_TYPING", "CODING_IDLE", "CHATTING_IDLE", "CHATTING_TYPING", "CHATTING"] else 0
+
+        if True:
             if anim_name == "TYPING":
                 speed = 1 # 30ms (Super fast)
             elif anim_name == "SLEEPING":
@@ -1109,7 +913,7 @@ class PetWidget(QWidget):
         painter.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         
         if self.pinned_message:
-            if self.settings.get("matrix_mode", False):
+            if True:
                 font = QFont("Courier", 12, QFont.Weight.Bold)
                 painter.setFont(font)
                 msg_rect = painter.fontMetrics().boundingRect(self.pinned_message)
@@ -1123,6 +927,12 @@ class PetWidget(QWidget):
                 by = max(5, dest_y - bubble_h - 35)
                 
                 painter.setBrush(Qt.GlobalColor.black)
+                # Override body color with settings
+                custom_r = self.settings.get("matrix_r", 198)
+                custom_g = self.settings.get("matrix_g", 154)
+                custom_b = self.settings.get("matrix_b", 150)
+                MATRIX_COLORS['P'] = QColor(custom_r, custom_g, custom_b)
+                
                 painter.setPen(Qt.PenStyle.NoPen)
                 painter.drawRect(int(bx - 4), int(by - 4), int(bubble_w + 8), int(bubble_h + 8))
                 
@@ -1164,26 +974,9 @@ class PetWidget(QWidget):
                 painter.setPen(QColor(50, 50, 50))
                 painter.drawText(int(bubble_x + 10), int(bubble_y + msg_rect.height() + 2), self.pinned_message)
 
-        if self.pomo_active:
-            alarm_w = 60
-            alarm_h = 44
-            alarm_x = cx + 45
-            alarm_y = cy + 20 + y_offset
-            
-            if not self.alarm_pixmap.isNull():
-                painter.drawPixmap(alarm_x, alarm_y, alarm_w, alarm_h, self.alarm_pixmap)
-                
-                painter.setPen(QColor(255, 255, 255))
-                painter.setFont(QFont("Consolas", 9, QFont.Weight.Bold))
-                
-                mins = self.pomo_seconds // 60
-                secs = self.pomo_seconds % 60
-                timer_str = f"{mins:02d}:{secs:02d}"
-                
-                screen_rect = QRect(alarm_x, alarm_y, alarm_w, alarm_h)
-                painter.drawText(screen_rect, Qt.AlignmentFlag.AlignCenter, timer_str)
 
-        if self.settings.get("matrix_mode", False):
+
+        if True:
             # MATRIX MODE RENDERING
             anim_name = self.get_current_animation_name()
             if anim_name not in MATRIX_FRAMES:
@@ -1201,7 +994,7 @@ class PetWidget(QWidget):
             dest_width = grid_w * pixel_size
             dest_height = grid_h * pixel_size
             dest_x = cx - (dest_width // 2)
-            dest_y = cy - (dest_height // 2) + y_offset
+            dest_y = cy - (dest_height // 2) + getattr(self, "y_offset", y_offset) + y_offset
             
             # Override body color with settings
             custom_r = self.settings.get("matrix_r", 198)
@@ -1211,6 +1004,12 @@ class PetWidget(QWidget):
             
             left_eye_pixels = []
             right_eye_pixels = []
+            
+            # Override body color with settings
+            custom_r = self.settings.get("matrix_r", 198)
+            custom_g = self.settings.get("matrix_g", 154)
+            custom_b = self.settings.get("matrix_b", 150)
+            MATRIX_COLORS['P'] = QColor(custom_r, custom_g, custom_b)
             
             painter.setPen(Qt.PenStyle.NoPen)
             for r, row_str in enumerate(frame_data):
@@ -1282,45 +1081,91 @@ class PetWidget(QWidget):
                 painter.setBrush(Qt.GlobalColor.white)
                 painter.drawRect(int(dest_x + min_cl*pixel_size), int(dest_y + min_r*pixel_size), int(pixel_size), int(pixel_size))
                 painter.drawRect(int(dest_x + min_cr*pixel_size), int(dest_y + min_r*pixel_size), int(pixel_size), int(pixel_size))
-        else:
-            anim_name = self.get_current_animation_name()
-            anim_list = self.animations.get(anim_name, self.animations["IDLE"])
+
+
+        # Determine msg_to_draw
+        msg_to_draw = None
+        if hasattr(self, 'pinned_message') and self.pinned_message:
+            msg_to_draw = self.pinned_message
+        elif hasattr(self, 'pomo_active') and self.pomo_active:
+            mins = self.pomo_seconds // 60
+            secs = self.pomo_seconds % 60
+            msg_to_draw = f"🍅 {mins:02d}:{secs:02d} 🍅"
+
+        if msg_to_draw:
+            painter.setFont(QFont("Consolas", 10, QFont.Weight.Bold))
+            fm = painter.fontMetrics()
+            msg_rect = fm.boundingRect(msg_to_draw)
+            bubble_w = msg_rect.width() + 20
+            bubble_h = msg_rect.height() + 10
             
-            if self.current_frame_index >= len(anim_list):
-                self.current_frame_index = 0
-                
-            col, row = anim_list[self.current_frame_index]
-            source_rect = QRect(col * self.frame_width, row * self.frame_height, self.frame_width, self.frame_height)
+            cat_height = 16 * self.settings.get("scale_factor", 5.0)
+            dest_y = cy - cat_height / 2
             
-            dest_width = int(self.frame_width * self.scale_factor)
-            dest_height = int(self.frame_height * self.scale_factor)
+            bx = max(5, cx - bubble_w / 2)
+            by = max(5, dest_y - bubble_h - 35)
             
-            dest_x = cx - (dest_width // 2)
-            dest_y = cy - (dest_height // 2) + y_offset
-            dest_rect = QRect(dest_x, dest_y, dest_width, dest_height)
+            painter.setBrush(Qt.GlobalColor.black)
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.drawRect(int(bx - 4), int(by - 4), int(bubble_w + 8), int(bubble_h + 8))
             
-            painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, False)
+            painter.setBrush(Qt.GlobalColor.white)
+            painter.drawRect(int(bx), int(by), int(bubble_w), int(bubble_h))
             
-            if not self.sprite_sheet.isNull():
-                painter.drawPixmap(dest_rect, self.sprite_sheet, source_rect)
-            else:
-                painter.setPen(QColor(255, 0, 0))
-                painter.drawText(dest_x, dest_y + 20, "Missing Sprite!")
+            painter.setBrush(Qt.GlobalColor.black)
+            painter.drawRect(int(cx - 5), int(by + bubble_h), 16, 12)
+            painter.drawRect(int(cx - 1), int(by + bubble_h + 12), 12, 12)
+            painter.drawRect(int(cx + 3), int(by + bubble_h + 24), 8, 12)
+            
+            painter.setBrush(Qt.GlobalColor.white)
+            painter.drawRect(int(cx - 1), int(by + bubble_h), 8, 12)
+            painter.drawRect(int(cx + 3), int(by + bubble_h + 12), 4, 12)
+            
+            painter.setPen(Qt.GlobalColor.black)
+            painter.drawText(int(bx + 10), int(by + msg_rect.height() + 2), msg_to_draw)
+
+        if hasattr(self, 'hearts') and self.hearts:
+
+            # Override body color with settings
+            custom_r = self.settings.get("matrix_r", 198)
+            custom_g = self.settings.get("matrix_g", 154)
+            custom_b = self.settings.get("matrix_b", 150)
+            MATRIX_COLORS['P'] = QColor(custom_r, custom_g, custom_b)
+            
+            painter.setPen(Qt.PenStyle.NoPen)
+            for h in self.hearts:
+                alpha = int(max(0, min(255, h[2])))
+                painter.setBrush(QColor(255, 50, 50, alpha))
+                hx = int(cx + h[0])
+                hy = int(cy + h[1] + y_offset)
+                ps = 2
+                painter.drawRect(hx-1*ps, hy-1*ps, ps, ps)
+                painter.drawRect(hx+1*ps, hy-1*ps, ps, ps)
+                painter.drawRect(hx-1*ps, hy, 3*ps, ps)
+                painter.drawRect(hx, hy+1*ps, ps, ps)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            self.is_dragging = True
-            self.state = "DRAGGED"
+            self.is_petting = True
+            self.is_dragging = False
             self.oldPos = event.globalPosition().toPoint()
 
     def mouseMoveEvent(self, event):
-        if self.is_dragging:
+        from PyQt6.QtCore import QPoint
+        if hasattr(self, 'is_petting') and self.is_petting:
+            delta = QPoint(event.globalPosition().toPoint() - self.oldPos)
+            if delta.manhattanLength() > 5:
+                self.is_petting = False
+                self.is_dragging = True
+                self.state = "DRAGGED"
+        if getattr(self, 'is_dragging', False):
             delta = QPoint(event.globalPosition().toPoint() - self.oldPos)
             self.move(self.x() + delta.x(), self.y() + delta.y())
             self.oldPos = event.globalPosition().toPoint()
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
+            self.is_petting = False
             self.is_dragging = False
             self.state = "IDLE"
             self.idle_time = 0
