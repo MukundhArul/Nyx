@@ -26,6 +26,7 @@ DEFAULT_SETTINGS = {
     "pomo_break_min": 5,
     "reminders": [],
     "matrix_mode": False,
+    "wear_sunglasses": False,
     "matrix_r": 198,
     "matrix_g": 154,
     "matrix_b": 150
@@ -120,7 +121,7 @@ MATRIX_FRAMES = {
             '.....SS......SS.....', 
             '....................'
         ]
-    ] * 3 + [
+    ] * 45 + [
         [
             '....................', 
             '.....PH......HP.....', 
@@ -139,7 +140,7 @@ MATRIX_FRAMES = {
             '.....SS......SS.....', 
             '....................'
         ]
-    ],
+    ] * 2,
     'SLEEPING': [
         [
             "....................",
@@ -483,11 +484,20 @@ class SettingsWindow(QWidget):
                 padding: 0 3px;
                 color: #a0a0a0;
             }
-            QLineEdit, QSpinBox, QDateTimeEdit {
+            QLineEdit, QDateTimeEdit {
                 background-color: #2b2b36;
                 border: 1px solid #444;
                 padding: 5px;
                 border-radius: 4px;
+            }
+            QSpinBox {
+                background-color: #2b2b36;
+                border: 1px solid #444;
+                padding: 2px;
+                border-radius: 4px;
+            }
+            QSpinBox::up-button, QSpinBox::down-button {
+                width: 20px;
             }
             QPushButton {
                 background-color: #5c6bc0;
@@ -533,25 +543,42 @@ class SettingsWindow(QWidget):
         self.typing_cb.stateChanged.connect(self.on_typing_changed)
         layout.addWidget(self.typing_cb)
         
+        self.sunglasses_cb = QCheckBox("Wear Sunglasses")
+        self.sunglasses_cb.setChecked(self.pet.settings.get("wear_sunglasses", False))
+        self.sunglasses_cb.stateChanged.connect(self.on_sunglasses_changed)
+        layout.addWidget(self.sunglasses_cb)
+        
         # Matrix Mode
         
 
         # --- Matrix Mode Colors ---
-        color_group = QGroupBox("Matrix Cat Color")
+        color_group = QGroupBox("Matrix Cat Colors")
         color_layout = QVBoxLayout()
         
-        self.color_preview = QLabel()
-        self.color_preview.setFixedSize(50, 50)
-        self.update_color_preview(self.pet.settings.get("matrix_r", 198), self.pet.settings.get("matrix_g", 154), self.pet.settings.get("matrix_b", 150))
+        # Body Color
+        body_row = QHBoxLayout()
+        body_row.addWidget(QLabel("Body:"))
+        self.body_preview = QLabel()
+        self.body_preview.setFixedSize(25, 25)
+        self.update_body_preview(self.pet.settings.get("matrix_r", 198), self.pet.settings.get("matrix_g", 154), self.pet.settings.get("matrix_b", 150))
+        self.body_btn = QPushButton("Pick")
+        self.body_btn.clicked.connect(self.pick_body_color)
+        body_row.addWidget(self.body_preview)
+        body_row.addWidget(self.body_btn)
+        color_layout.addLayout(body_row)
         
-        self.color_btn = QPushButton("Pick Custom Color")
-        self.color_btn.clicked.connect(self.pick_color)
+        # Outline Color
+        outline_row = QHBoxLayout()
+        outline_row.addWidget(QLabel("Outline:"))
+        self.outline_preview = QLabel()
+        self.outline_preview.setFixedSize(25, 25)
+        self.update_outline_preview(self.pet.settings.get("matrix_outline_r", 160), self.pet.settings.get("matrix_outline_g", 110), self.pet.settings.get("matrix_outline_b", 110))
+        self.outline_btn = QPushButton("Pick")
+        self.outline_btn.clicked.connect(self.pick_outline_color)
+        outline_row.addWidget(self.outline_preview)
+        outline_row.addWidget(self.outline_btn)
+        color_layout.addLayout(outline_row)
         
-        row = QHBoxLayout()
-        row.addWidget(self.color_preview)
-        row.addWidget(self.color_btn)
-        
-        color_layout.addLayout(row)
         color_group.setLayout(color_layout)
         layout.addWidget(color_group)
         
@@ -639,13 +666,20 @@ class SettingsWindow(QWidget):
     def on_typing_changed(self, val):
         self.pet.settings["react_to_typing"] = bool(val)
         self.pet.save_and_apply_settings()
+
+    def on_sunglasses_changed(self, val):
+        self.pet.settings["wear_sunglasses"] = bool(val)
+        self.pet.save_and_apply_settings()
         
 
 
-    def update_color_preview(self, r, g, b):
-        self.color_preview.setStyleSheet(f"background-color: rgb({r}, {g}, {b}); border: 1px solid black; border-radius: 5px;")
+    def update_body_preview(self, r, g, b):
+        self.body_preview.setStyleSheet(f"background-color: rgb({r}, {g}, {b}); border: 1px solid black; border-radius: 5px;")
+        
+    def update_outline_preview(self, r, g, b):
+        self.outline_preview.setStyleSheet(f"background-color: rgb({r}, {g}, {b}); border: 1px solid black; border-radius: 5px;")
 
-    def pick_color(self):
+    def pick_body_color(self):
         from PyQt6.QtWidgets import QColorDialog
         from PyQt6.QtGui import QColor
         r = self.pet.settings.get("matrix_r", 198)
@@ -653,37 +687,30 @@ class SettingsWindow(QWidget):
         b = self.pet.settings.get("matrix_b", 150)
         current = QColor(r, g, b)
         
-        color = QColorDialog.getColor(current, self, "Pick Matrix Cat Color")
+        color = QColorDialog.getColor(current, self, "Pick Body Color")
         if color.isValid():
             self.pet.settings["matrix_r"] = color.red()
             self.pet.settings["matrix_g"] = color.green()
             self.pet.settings["matrix_b"] = color.blue()
-            self.update_color_preview(color.red(), color.green(), color.blue())
+            self.update_body_preview(color.red(), color.green(), color.blue())
+            self.pet.save_and_apply_settings()
+
+    def pick_outline_color(self):
+        from PyQt6.QtWidgets import QColorDialog
+        from PyQt6.QtGui import QColor
+        r = self.pet.settings.get("matrix_outline_r", 160)
+        g = self.pet.settings.get("matrix_outline_g", 110)
+        b = self.pet.settings.get("matrix_outline_b", 110)
+        current = QColor(r, g, b)
+        
+        color = QColorDialog.getColor(current, self, "Pick Outline Color")
+        if color.isValid():
+            self.pet.settings["matrix_outline_r"] = color.red()
+            self.pet.settings["matrix_outline_g"] = color.green()
+            self.pet.settings["matrix_outline_b"] = color.blue()
+            self.update_outline_preview(color.red(), color.green(), color.blue())
             self.pet.save_and_apply_settings()
             self.pet.update()
-
-    def pick_color(self):
-        from PyQt6.QtWidgets import QColorDialog
-        from PyQt6.QtGui import QColor
-        current = QColor(self.r_slider.value(), self.g_slider.value(), self.b_slider.value())
-        color = QColorDialog.getColor(current, self, "Pick Matrix Cat Color")
-        if color.isValid():
-            self.r_slider.setValue(color.red())
-            self.g_slider.setValue(color.green())
-            self.b_slider.setValue(color.blue())
-
-
-
-    def pick_color(self):
-        from PyQt6.QtWidgets import QColorDialog
-        from PyQt6.QtGui import QColor
-        current = QColor(self.r_slider.value(), self.g_slider.value(), self.b_slider.value())
-        color = QColorDialog.getColor(current, self, "Pick Matrix Cat Color")
-        if color.isValid():
-            self.r_slider.setValue(color.red())
-            self.g_slider.setValue(color.green())
-            self.b_slider.setValue(color.blue())
-
 
     def on_matrix_changed(self, val):
         self.pet.settings["matrix_mode"] = bool(val)
@@ -713,10 +740,16 @@ class SettingsWindow(QWidget):
         msg = self.rem_input.text().strip()
         if not msg: return
         dt = self.rem_date.dateTime().toPyDateTime()
+        
+        if "reminders" not in self.pet.settings:
+            self.pet.settings["reminders"] = []
+            
         self.pet.settings["reminders"].append({
             "time": dt.isoformat(),
             "message": msg
         })
+        self.pet.save_and_apply_settings()
+        self.rem_input.setText("")
         self.pet.save_and_apply_settings()
         self.rem_input.clear()
 
@@ -1054,6 +1087,13 @@ class PetWidget(QWidget):
         self.is_typing = True
         self.typing_timer = 3
         
+    def play_alarm_sound(self):
+        try:
+            import winsound
+            winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS | winsound.SND_ASYNC)
+        except:
+            pass
+
     def on_active_window(self, title):
         title = title.lower()
         if "spotify" in title:
@@ -1137,15 +1177,6 @@ class PetWidget(QWidget):
                 self.pinned_message = "ΓÅ░ POMODORO DONE! ΓÅ░"
                 self.play_alarm_sound()
 
-        # Productivity Logic
-        if getattr(self, 'pomo_active', False):
-            if getattr(self, 'pomo_seconds', 0) > 0:
-                self.pomo_seconds -= 1
-            else:
-                self.pomo_active = False
-                self.pinned_message = "⏰ POMODORO DONE! ⏰"
-                self.play_alarm_sound()
-
     def update_animation(self):
         self.tick_count += 1
         
@@ -1202,69 +1233,6 @@ class PetWidget(QWidget):
             
         painter.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         
-        if self.pinned_message:
-            if True:
-                font = QFont("Courier", 12, QFont.Weight.Bold)
-                painter.setFont(font)
-                msg_rect = painter.fontMetrics().boundingRect(self.pinned_message)
-                bubble_w = msg_rect.width() + 20
-                bubble_h = msg_rect.height() + 15
-                
-                cat_height = 16 * self.settings.get("scale_factor", 5.0)
-                dest_y = cy - cat_height / 2
-                
-                bx = max(5, cx - bubble_w / 2)
-                by = max(5, dest_y - bubble_h - 35)
-                
-                painter.setBrush(Qt.GlobalColor.black)
-                # Override body color with settings
-                custom_r = self.settings.get("matrix_r", 198)
-                custom_g = self.settings.get("matrix_g", 154)
-                custom_b = self.settings.get("matrix_b", 150)
-                MATRIX_COLORS['P'] = QColor(custom_r, custom_g, custom_b)
-                
-                painter.setPen(Qt.PenStyle.NoPen)
-                painter.drawRect(int(bx - 4), int(by - 4), int(bubble_w + 8), int(bubble_h + 8))
-                
-                painter.setBrush(Qt.GlobalColor.white)
-                painter.drawRect(int(bx), int(by), int(bubble_w), int(bubble_h))
-                
-                painter.setBrush(Qt.GlobalColor.black)
-                painter.drawRect(int(cx - 5), int(by + bubble_h), 16, 12)
-                painter.drawRect(int(cx - 1), int(by + bubble_h + 12), 12, 12)
-                painter.drawRect(int(cx + 3), int(by + bubble_h + 24), 8, 12)
-                
-                painter.setBrush(Qt.GlobalColor.white)
-                painter.drawRect(int(cx - 1), int(by + bubble_h), 8, 12)
-                painter.drawRect(int(cx + 3), int(by + bubble_h + 12), 4, 12)
-                
-                painter.setPen(Qt.GlobalColor.black)
-                painter.drawText(int(bx + 10), int(by + msg_rect.height() + 2), self.pinned_message)
-            else:
-                msg_rect = painter.fontMetrics().boundingRect(self.pinned_message)
-                bubble_width = msg_rect.width() + 20
-                bubble_height = msg_rect.height() + 15
-                bubble_x = max(5, cx - bubble_width // 2)
-                bubble_y = max(5, cy - 30 + y_offset - bubble_height - 15)
-                
-                bubble_path = QPainterPath()
-                bubble_path.addRoundedRect(float(bubble_x), float(bubble_y), float(bubble_width), float(bubble_height), 10.0, 10.0)
-                
-                tail_path = QPainterPath()
-                tail_path.moveTo(float(cx), float(cy - 25 + y_offset))
-                tail_path.lineTo(float(cx - 8), float(bubble_y + bubble_height))
-                tail_path.lineTo(float(cx + 8), float(bubble_y + bubble_height))
-                
-                final_path = bubble_path.united(tail_path)
-                
-                painter.setPen(QPen(QColor(200, 200, 200), 2))
-                painter.setBrush(QColor(255, 255, 255))
-                painter.drawPath(final_path)
-                
-                painter.setPen(QColor(50, 50, 50))
-                painter.drawText(int(bubble_x + 10), int(bubble_y + msg_rect.height() + 2), self.pinned_message)
-
-
 
         if True:
             # MATRIX MODE RENDERING
@@ -1292,6 +1260,11 @@ class PetWidget(QWidget):
             custom_b = self.settings.get("matrix_b", 150)
             MATRIX_COLORS['P'] = QColor(custom_r, custom_g, custom_b)
             
+            out_r = self.settings.get("matrix_outline_r", 160)
+            out_g = self.settings.get("matrix_outline_g", 110)
+            out_b = self.settings.get("matrix_outline_b", 110)
+            MATRIX_COLORS['S'] = QColor(out_r, out_g, out_b)
+            
             left_eye_pixels = []
             right_eye_pixels = []
             
@@ -1300,6 +1273,11 @@ class PetWidget(QWidget):
             custom_g = self.settings.get("matrix_g", 154)
             custom_b = self.settings.get("matrix_b", 150)
             MATRIX_COLORS['P'] = QColor(custom_r, custom_g, custom_b)
+            
+            out_r = self.settings.get("matrix_outline_r", 160)
+            out_g = self.settings.get("matrix_outline_g", 110)
+            out_b = self.settings.get("matrix_outline_b", 110)
+            MATRIX_COLORS['S'] = QColor(out_r, out_g, out_b)
             
             painter.setPen(Qt.PenStyle.NoPen)
             for r, row_str in enumerate(frame_data):
@@ -1353,6 +1331,25 @@ class PetWidget(QWidget):
                     
                     painter.drawRect(int(pupil_cx - pupil_w/2), int(pupil_cy - pupil_h/2), int(pupil_w), int(pupil_h))
                     
+            if self.settings.get("wear_sunglasses", False) and anim_name != "SLEEPING":
+                if not left_eye_pixels or not right_eye_pixels:
+                    min_r = 5 if anim_name == "DRAGGED" else 4
+                    min_cl = 5
+                    min_cr = 11
+                else:
+                    min_r = min(p[1] for p in left_eye_pixels + right_eye_pixels)
+                    min_cl = min(p[0] for p in left_eye_pixels)
+                    min_cr = min(p[0] for p in right_eye_pixels)
+                    
+                painter.setBrush(Qt.GlobalColor.black)
+                painter.drawRect(int(dest_x + (min_cl-1)*pixel_size), int(dest_y + min_r*pixel_size), int(5*pixel_size), int(2*pixel_size))
+                painter.drawRect(int(dest_x + (min_cr-1)*pixel_size), int(dest_y + min_r*pixel_size), int(5*pixel_size), int(2*pixel_size))
+                painter.drawRect(int(dest_x + (min_cl+4)*pixel_size), int(dest_y + min_r*pixel_size), int((min_cr - min_cl - 4)*pixel_size), int(pixel_size))
+                
+                painter.setBrush(Qt.GlobalColor.white)
+                painter.drawRect(int(dest_x + min_cl*pixel_size), int(dest_y + min_r*pixel_size), int(pixel_size), int(pixel_size))
+                painter.drawRect(int(dest_x + min_cr*pixel_size), int(dest_y + min_r*pixel_size), int(pixel_size), int(pixel_size))
+                    
         # Determine msg_to_draw
         msg_to_draw = None
         if hasattr(self, 'pinned_message') and self.pinned_message:
@@ -1366,8 +1363,8 @@ class PetWidget(QWidget):
             painter.setFont(QFont("Consolas", 10, QFont.Weight.Bold))
             fm = painter.fontMetrics()
             msg_rect = fm.boundingRect(msg_to_draw)
-            bubble_w = msg_rect.width() + 20
-            bubble_h = msg_rect.height() + 10
+            bubble_w = msg_rect.width() + 10
+            bubble_h = msg_rect.height() + 4
             
             cat_height = 16 * self.settings.get("scale_factor", 5.0)
             dest_y = cy - cat_height / 2
@@ -1377,7 +1374,7 @@ class PetWidget(QWidget):
             
             painter.setBrush(Qt.GlobalColor.black)
             painter.setPen(Qt.PenStyle.NoPen)
-            painter.drawRect(int(bx - 4), int(by - 4), int(bubble_w + 8), int(bubble_h + 8))
+            painter.drawRect(int(bx - 2), int(by - 2), int(bubble_w + 4), int(bubble_h + 4))
             
             painter.setBrush(Qt.GlobalColor.white)
             painter.drawRect(int(bx), int(by), int(bubble_w), int(bubble_h))
@@ -1392,7 +1389,7 @@ class PetWidget(QWidget):
             painter.drawRect(int(cx + 3), int(by + bubble_h + 12), 4, 12)
             
             painter.setPen(Qt.GlobalColor.black)
-            painter.drawText(int(bx + 10), int(by + msg_rect.height() + 2), msg_to_draw)
+            painter.drawText(int(bx + 5), int(by + msg_rect.height()), msg_to_draw)
 
         if hasattr(self, 'hearts') and self.hearts:
 
@@ -1401,6 +1398,11 @@ class PetWidget(QWidget):
             custom_g = self.settings.get("matrix_g", 154)
             custom_b = self.settings.get("matrix_b", 150)
             MATRIX_COLORS['P'] = QColor(custom_r, custom_g, custom_b)
+            
+            out_r = self.settings.get("matrix_outline_r", 160)
+            out_g = self.settings.get("matrix_outline_g", 110)
+            out_b = self.settings.get("matrix_outline_b", 110)
+            MATRIX_COLORS['S'] = QColor(out_r, out_g, out_b)
             
             painter.setPen(Qt.PenStyle.NoPen)
             for h in self.hearts:

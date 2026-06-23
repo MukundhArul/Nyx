@@ -1,0 +1,21 @@
+{
+    "scale_factor": 5.0,
+    "react_to_typing": true,
+    "stretch_interval_min": 26,
+    "water_interval_min": 60,
+    "pomodoro_enabled": true,
+    "pomo_focus_min": 25,
+    "pomo_break_min": 5,
+    "reminders": [],
+    "matrix_mode": true,
+    "matrix_r": 255,
+    "matrix_g": 108,
+    "matrix_b": 78,
+    "wear_sunglasses": false,
+    "matrix_sr": 160,
+    "matrix_sg": 68,
+    "matrix_sb": 68,
+    "matrix_outline_r": 190,
+    "matrix_outline_g": 111,
+    "matrix_outline_b": 86
+}
