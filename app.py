@@ -758,6 +758,7 @@ class MonitorThread(QThread):
     input_activity = pyqtSignal()
     typing_activity = pyqtSignal()
     active_window = pyqtSignal(str)
+    spotify_status = pyqtSignal(bool)
 
     def run(self):
         def on_move(x, y):
@@ -781,6 +782,10 @@ class MonitorThread(QThread):
                 window = gw.getActiveWindow()
                 title = window.title if window else ""
                 self.active_window.emit(title.lower())
+                
+                import subprocess
+                output = subprocess.check_output('tasklist', shell=True, creationflags=subprocess.CREATE_NO_WINDOW).decode('utf-8', errors='ignore').lower()
+                self.spotify_status.emit('spotify' in output)
             except Exception:
                 pass
             time.sleep(1)
@@ -838,6 +843,7 @@ class PetWidget(QWidget):
         self.monitor.input_activity.connect(self.on_input_activity)
         self.monitor.typing_activity.connect(self.on_typing_activity)
         self.monitor.active_window.connect(self.on_active_window)
+        self.monitor.spotify_status.connect(self.on_spotify_status)
         self.monitor.start()
         
     def save_and_apply_settings(self):
@@ -1097,6 +1103,9 @@ class PetWidget(QWidget):
         except:
             pass
 
+    def on_spotify_status(self, is_playing):
+        self.is_listening_to_music = is_playing
+
     def on_active_window(self, title):
         title = title.lower()
         if "spotify" in title:
@@ -1227,12 +1236,6 @@ class PetWidget(QWidget):
             self.is_angry = False
 
         if self.tick_count % 10 == 0:
-            import subprocess
-            try:
-                output = subprocess.check_output('tasklist', shell=True, creationflags=subprocess.CREATE_NO_WINDOW).decode('utf-8', errors='ignore').lower()
-                self.is_listening_to_music = 'spotify' in output
-            except Exception:
-                pass
             if self.typing_timer <= 0:
                 self.is_typing = False
                 
@@ -1368,6 +1371,23 @@ class PetWidget(QWidget):
                 painter.drawRect(int(dest_x + min_cl*pixel_size), int(dest_y + min_r*pixel_size), int(pixel_size), int(pixel_size))
                 painter.drawRect(int(dest_x + min_cr*pixel_size), int(dest_y + min_r*pixel_size), int(pixel_size), int(pixel_size))
                     
+            if getattr(self, 'is_listening_to_music', False) and anim_name != "SLEEPING":
+                hp_frame = [
+                    "......MMMMMMMM......",
+                    ".....M........M.....",
+                    "....MM..........MM..",
+                    "...MM............MM.",
+                    "...MM............MM.",
+                    "...MM............MM.",
+                    "....M............M.."
+                ]
+                painter.setPen(Qt.PenStyle.NoPen)
+                for r, row_str in enumerate(hp_frame):
+                    for c, char in enumerate(row_str):
+                        if char == 'M':
+                            painter.setBrush(MATRIX_COLORS['M'])
+                            painter.drawRect(int(dest_x + c*pixel_size), int(dest_y + r*pixel_size + y_offset), int(pixel_size), int(pixel_size))
+
         # Determine msg_to_draw
         msg_to_draw = None
         if hasattr(self, 'pinned_message') and self.pinned_message:
