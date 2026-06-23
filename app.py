@@ -1215,6 +1215,21 @@ class PetWidget(QWidget):
 
         if self.typing_timer > 0:
             self.typing_timer -= 1
+            
+        current_time = time.time()
+        self.recent_typing_events = [t for t in self.recent_typing_events if current_time - t < 2.0]
+        if len(self.recent_typing_events) > 8:
+            self.is_angry = True
+        else:
+            self.is_angry = False
+
+        if self.tick_count % 10 == 0:
+            import subprocess
+            try:
+                output = subprocess.check_output('tasklist', shell=True, creationflags=subprocess.CREATE_NO_WINDOW).decode('utf-8', errors='ignore').lower()
+                self.is_listening_to_music = 'spotify' in output
+            except Exception:
+                pass
             if self.typing_timer <= 0:
                 self.is_typing = False
                 
