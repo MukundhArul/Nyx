@@ -805,6 +805,9 @@ class PetWidget(QWidget):
         self.active_app_state = ""
         self.is_typing = False
         self.typing_timer = 0
+        self.recent_typing_events = []
+        self.is_angry = False
+        self.is_listening_to_music = False
         
         # Phase 4 Productivity states
         self.pinned_message = ""
