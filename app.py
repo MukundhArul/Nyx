@@ -1139,7 +1139,7 @@ class PetWidget(QWidget):
             try:
                 rt = datetime.fromisoformat(r["time"])
                 if now >= rt:
-                    self.pinned_message = f"≡ƒöö {r['message']}"
+                    self.pinned_message = r['message']
                     self.play_alarm_sound()
                 else:
                     reminders_to_keep.append(r)
