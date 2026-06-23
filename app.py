@@ -26,7 +26,6 @@ DEFAULT_SETTINGS = {
     "pomo_break_min": 5,
     "reminders": [],
     "matrix_mode": False,
-    "wear_sunglasses": False,
     "matrix_r": 198,
     "matrix_g": 154,
     "matrix_b": 150
@@ -47,45 +46,261 @@ MATRIX_COLORS = {
     'S': QColor(160, 110, 110), # Shading (Darker Pinkish Brown)
 }
 
-MATRIX_FRAMES = {'IDLE': [
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPPPS..S.', '....SPPPPPPPPPPS.S..', '....SPPS....SPPSSS..', '....SPPS....SPPS....', '....SPPS....SPPS....', '....SPPS....SPPS....', '.....SS......SS.....', '....................'],
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPSSS.', '...SPPPPPPPPPPPPS...', '....SPPPPPPPPPPS.S..', '....SPPPPPPPPPPS..S.', '....SPPS....SPPSSS..', '....SPPS....SPPS....', '....SPPS....SPPS....', '....SPPS....SPPS....', '.....SS......SS.....', '....................'],
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS...', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPPPS.S..', '....SPPPPPPPPPPS.S..', '....SPPS....SPPSSS..', '....SPPS....SPPS....', '....SPPS....SPPS....', '....SPPS....SPPS....', '.....SS......SS.....', '....................']
+MATRIX_FRAMES = {
+    'IDLE': [
+        [
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPEEEEPPEEEES...', 
+            '...SPPEEEEPPEEEES...', 
+            '...SPPPPPPPPPPPPS..S', 
+            '...SPPPPPPPPPPPPS.S.', 
+            '....SPPPPPPPPPPS..S.', 
+            '....SPPPPPPPPPPS.S..', 
+            '....SPPS....SPPSSS..', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '.....SS......SS.....', 
+            '....................'
+        ],
+        [
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPEEEEPPEEEES...', 
+            '...SPPEEEEPPEEEES...', 
+            '...SPPPPPPPPPPPPSSS.', 
+            '...SPPPPPPPPPPPPS...', 
+            '....SPPPPPPPPPPS.S..', 
+            '....SPPPPPPPPPPS..S.', 
+            '....SPPS....SPPSSS..', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '.....SS......SS.....', 
+            '....................'
+        ],
+        [
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPEEEEPPEEEES...', 
+            '...SPPEEEEPPEEEES...', 
+            '...SPPPPPPPPPPPPS...', 
+            '...SPPPPPPPPPPPPS.S.', 
+            '....SPPPPPPPPPPS.S..', 
+            '....SPPPPPPPPPPS.S..', 
+            '....SPPS....SPPSSS..', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '.....SS......SS.....', 
+            '....................'
+        ],
+        [
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPEEEEPPEEEES...', 
+            '...SPPEEEEPPEEEES...', 
+            '...SPPPPPPPPPPPPSSS.', 
+            '...SPPPPPPPPPPPPS...', 
+            '....SPPPPPPPPPPS.S..', 
+            '....SPPPPPPPPPPS..S.', 
+            '....SPPS....SPPSSS..', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '.....SS......SS.....', 
+            '....................'
+        ]
+    ] * 3 + [
+        [
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPBBBBPPBBBBS...', 
+            '...SPPBBBBPPBBBBS...', 
+            '...SPPPPPPPPPPPPS..S', 
+            '...SPPPPPPPPPPPPS.S.', 
+            '....SPPPPPPPPPPS..S.', 
+            '....SPPPPPPPPPPS.S..', 
+            '....SPPS....SPPSSS..', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '.....SS......SS.....', 
+            '....................'
+        ]
     ],
     'SLEEPING': [
-        ['....................', '....................', '....................', '....................', '....................', '....................', '....................', '....................', '.......WWW..........', '.........W..........', '.......WWW..........', '......PPPPPPPP......', '.....PPBPPPPBPP.....', '....PPPPPPPPPPPP....', '..DD.PPPPPPPPPP.DD..', '..DDDDDDDDDDDDDDDD..'],
-        ['....................', '....................', '....................', '....................', '....................', '....................', '....................', '....................', '.......WWW..........', '.........W..........', '.......WWW..........', '......PPPPPPPP......', '.....PPBPPPPBPP.....', '....PPPPPPPPPPPP....', '..DD.PPPPPPPPPP.DD..', '..DDDDDDDDDDDDDDDD..']
-    ],
-    'DRAGGED': [
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS...', '...SPPPPPPPPPPPPS...', '....SPPPPPPPPPPS....', '....SPPPPPPPPPPS....', '....SPP......SPP....', '....SPP......SPP....', '....SPP......SPP....', '.....SS.......SS....']
+        [
+            "....................",
+            ".......S............",
+            "....................",
+            "....................",
+            "......PH......HP....",
+            ".....PPSP....PPSP...",
+            ".....HPPPHHHPPPHS...",
+            "....HPPBBBPPPBBBPS..",
+            "....SPPBBBPPPBBBPS..",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "...SPPPPPPPPPPPS..S.",
+            "...SPPPPPPPPPPPS.S..",
+            "....SPPPPPPPPPSSSS..",
+            "....SSSSSSSSSSSS....",
+            "...................."
+        ],
+        [
+            ".........S..........",
+            ".......S............",
+            "....................",
+            "....................",
+            "......PH......HP....",
+            ".....PPSP....PPSP...",
+            ".....HPPPHHHPPPHS...",
+            "....HPPBBBPPPBBBPS..",
+            "....SPPBBBPPPBBBPS..",
+            "...SSPPPPPPPPPPPS..S",
+            "...SSPPPPPPPPPPPS.S.",
+            "...SPPPPPPPPPPPS..S.",
+            "...SPPPPPPPPPPPS.S..",
+            "....SPPPPPPPPPSSSS..",
+            "....SSSSSSSSSSSS....",
+            "...................."
+        ],
+        [
+            "...........S........",
+            ".........S..........",
+            ".......S............",
+            "....................",
+            "......PH......HP....",
+            ".....PPSP....PPSP...",
+            ".....HPPPHHHPPPHS...",
+            "....HPPBBBPPPBBBPS..",
+            "....SPPBBBPPPBBBPS..",
+            "...SPPPPPPPPPPPPS..S",
+            "...SPPPPPPPPPPPPS.S.",
+            "...SPPPPPPPPPPPS..S.",
+            "...SPPPPPPPPPPPS.S..",
+            "....SPPPPPPPPPSSSS..",
+            "....SSSSSSSSSSSS....",
+            "...................."
+        ],
+        [
+            ".............S......",
+            "...........S........",
+            ".........S..........",
+            "....................",
+            "......PH......HP....",
+            ".....PPSP....PPSP...",
+            ".....HPPPHHHPPPHS...",
+            "....HPPBBBPPPBBBPS..",
+            "....SPPBBBPPPBBBPS..",
+            "...SSPPPPPPPPPPPS..S",
+            "...SSPPPPPPPPPPPS.S.",
+            "...SPPPPPPPPPPPS..S.",
+            "...SPPPPPPPPPPPS.S..",
+            "....SPPPPPPPPPSSSS..",
+            "....SSSSSSSSSSSS....",
+            "...................."
+        ]
     ],
     'TYPING': [
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '...SSPPPPPPPPPPS..S.', '...SSPPPPPPPPPPS.S..', '............SPPSSS..', '............SPPS....', '.............SS.....', '....................'],
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPSS...S.', '....SPPPPPPPPSS..S..', '....SPPS.......SSS..', '....SPPS............', '.....SS.............', '....................']
+        [
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPEEEEPPEEEES...', 
+            '...SPPEEEEPPEEEES...', 
+            '...SPPPPPPPPPPPPS..S', 
+            '...SPPPPPPPPPPPPS.S.', 
+            '...SSPPPPPPPPPPS..S.', 
+            '...SSPPPPPPPPPPS.S..', 
+            '............SPPSSS..', 
+            '............SPPS....', 
+            '.............SS.....', 
+            '....................',
+            '....................',
+            '....................'
+        ],
+        [
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPEEEEPPEEEES...', 
+            '...SPPEEEEPPEEEES...', 
+            '...SPPPPPPPPPPPPS..S', 
+            '...SPPPPPPPPPPPPS.S.', 
+            '....SPPPPPPPPSS...S.', 
+            '....SPPPPPPPPSS..S..', 
+            '....SPPS.......SSS..', 
+            '....SPPS............', 
+            '.....SS.............', 
+            '....................',
+            '....................',
+            '....................'
+        ]
     ],
-    'CODING_IDLE': [
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HGGGGGGGGGGGGGS..', '...SPGGGGGGGGGGGS...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '...SSPPPPPPPPPPS..S.', '...SSPPPPPPPPPPS.S..', '............SPPSSS..', '............SPPS....', '.............SS.....', '....................']
-    ],
-    'CODING_TYPING': [
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HGGGGGGGGGGGGGS..', '...SPGGGGGGGGGGGS...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '...SSPPPPPPPPPPS..S.', '...SSPPPPPPPPPPS.S..', '............SPPSSS..', '............SPPS....', '.............SS.....', '....................'],
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HGGGGGGGGGGGGGS..', '...SPGGGGGGGGGGGS...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPSS...S.', '....SPPPPPPPPSS..S..', '....SPPS.......SSS..', '....SPPS............', '.....SS.............', '....................']
-    ],
-    'CHATTING': [
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '...SSPPPPPPPPPPS..S.', '...SSPPPPPPPPPPS.S..', '............SPPSSS..', '............SPPS....', '.............SS.....', '....................'],
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPSS...S.', '....SPPPPPPPPSS..S..', '....SPPS.......SSS..', '....SPPS............', '.....SS.............', '....................']
+    'DRAGGED': [
+        [
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPEEEEPPEEEES...', 
+            '...SPPEEEEPPEEEES...', 
+            '...SPPPPPPPPPPPPS...', 
+            '...SPPPPPPPPPPPPS...', 
+            '....SPPPPPPPPPPS....', 
+            '....SPPPPPPPPPPS....', 
+            '....SPP......SPP....', 
+            '....SPP......SPP....', 
+            '....SPP......SPP....', 
+            '.....SS.......SS....',
+            '....................',
+            '....................'
+        ]
     ],
     'PURRING': [
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPBBBBPPBBBBS...', '...SPPBBBBPPBBBBS...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPPPS..S.', '....SPPPPPPPPPPS.S..', '....SPPS....SPPSSS..', '....SPPS....SPPS....', '....SPPS....SPPS....', '....SPPS....SPPS....', '.....SS......SS.....', '....................']
+        [
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPBBBBPPBBBBS...', 
+            '...SPPBBBBPPBBBBS...', 
+            '...SPPPPPPPPPPPPS..S', 
+            '...SPPPPPPPPPPPPS.S.', 
+            '....SPPPPPPPPPPS..S.', 
+            '....SPPPPPPPPPPS.S..', 
+            '....SPPS....SPPSSS..', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '.....SS......SS.....', 
+            '....................'
+        ]
     ],
     'VIBING': [
         [
-            "....................",
-            "...MMM........MMM...",
-            "..MM.PH......HP.MM..",
-            "..M..PPSP....PPSP..M",
-            "..M..HPPPHHHPPPHS..M",
-            "..M..PPEEEEPPEEEE..M",
-            "..MMMPEEEEPPEEEEMMM.",
+            "......MMMMMMMM......",
+            ".....M........M.....",
+            "....MMPH......HPMM..",
+            "...MM.PSP....PPSP.MM",
+            "...MM.PPHHHPPPHS..MM",
+            "...MMPEEEEPPEEEES.MM",
+            "...SMPEEEEPPEEEES.M.",
             "...SPPPPPPPPPPPPS..S",
             "...SPPPPPPPPPPPPS.S.",
             "....SPPPPPPPPPPS..S.",
@@ -97,47 +312,136 @@ MATRIX_FRAMES = {'IDLE': [
             ".....SS......SS....."
         ],
         [
-            "...MMM........MMM...",
-            "..MM.PH......HP.MM..",
-            "..M..PPSP....PPSP..M",
-            "..M..HPPPHHHPPPHS..M",
-            "..M..PPEEEEPPEEEE..M",
-            "..MMMPEEEEPPEEEEMMM.",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
+            "......MMMMMMMM......",
+            ".....M........M.....",
+            "....MMPH......HPMM..",
+            ".B.MM.PSP....PPSP.MM",
+            ".B.MM.PPHHHPPPHS..MM",
+            "BB.MMPEEEEPPEEEES.MM",
+            "...SMPEEEEPPEEEES.M.",
+            "...SPPPPPPPPPPPPSSS.",
+            "...SPPPPPPPPPPPPS...",
+            "....SPPPPPPPPPPS.S..",
             "....SPPPPPPPPPPS..S.",
+            "....SPPS....SPPSSS..",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            ".....SS......SS....."
+        ],
+        [
+            "......MMMMMMMM......",
+            ".B...M........M.....",
+            ".B..MMPH......HPMM..",
+            "BB.MM.PSP....PPSP.MM",
+            "...MM.PPHHHPPPHS..MM",
+            "...MMPEEEEPPEEEES.MM",
+            "...SMPEEEEPPEEEES.M.",
+            "...SPPPPPPPPPPPPS...",
+            "...SPPPPPPPPPPPPS.S.",
+            "....SPPPPPPPPPPS.S..",
             "....SPPPPPPPPPPS.S..",
             "....SPPS....SPPSSS..",
             "....SPPS....SPPS....",
             "....SPPS....SPPS....",
             "....SPPS....SPPS....",
-            ".....SS......SS.....",
-            "...................."
+            ".....SS......SS....."
+        ],
+        [
+            ".B....MMMMMMMM......",
+            ".B...M........M.....",
+            "BB..MMPH......HPMM..",
+            "...MM.PSP....PPSP.MM",
+            "...MM.PPHHHPPPHS..MM",
+            "...MMPEEEEPPEEEES.MM",
+            "...SMPEEEEPPEEEES.M.",
+            "...SPPPPPPPPPPPPSSS.",
+            "...SPPPPPPPPPPPPS...",
+            "....SPPPPPPPPPPS.S..",
+            "....SPPPPPPPPPPS..S.",
+            "....SPPS....SPPSSS..",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            "....SPPS....SPPS....",
+            ".....SS......SS....."
         ]
     ],
     'WATCHING': [
         [
-            "....................",
-            ".....PH......HP.....",
-            "....PPSP....PPSP....",
-            "....HPPPHHHPPPHS....",
-            "...HPPUUUUPPUUUUS...",
-            "...SPPUUUUPPUUUUS...",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "....SPPPPPPPPPPS..S.",
-            "....SPPPPPPPPPPS.S..",
-            "....SPPS....SPPSSS..",
-            "....SPPS....SPPS....",
-            "....SPPS....SPPS....",
-            "....SPPS....SPPS....",
-            ".....SS......SS.....",
-            "...................."
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPUUUUPPUUUUS...', 
+            '...SPPUUUUPPUUUUS...', 
+            '...SPPPPPPPPPPPPS..S', 
+            '...SPPPPPPPPPPPPS.S.', 
+            '....SPPPPPPPPPPS..S.', 
+            '....SPPPPPPPPPPS.S..', 
+            '....SPPS....SPPSSS..', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '.....SS......SS.....', 
+            '....................'
+        ],
+        [
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPUUUUPPUUUUS...', 
+            '...SPPUUUUPPUUUUS...', 
+            '...SPPPPPPPPPPPPSSS.', 
+            '...SPPPPPPPPPPPPS...', 
+            '....SPPPPPPPPPPS.S..', 
+            '....SPPPPPPPPPPS..S.', 
+            '....SPPS....SPPSSS..', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '.....SS......SS.....', 
+            '....................'
+        ],
+        [
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPUUUUPPUUUUS...', 
+            '...SPPUUUUPPUUUUS...', 
+            '...SPPPPPPPPPPPPS...', 
+            '...SPPPPPPPPPPPPS.S.', 
+            '....SPPPPPPPPPPS.S..', 
+            '....SPPPPPPPPPPS.S..', 
+            '....SPPS....SPPSSS..', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '.....SS......SS.....', 
+            '....................'
+        ],
+        [
+            '....................', 
+            '.....PH......HP.....', 
+            '....PPSP....PPSP....', 
+            '....HPPPHHHPPPHS....', 
+            '...HPPUUUUPPUUUUS...', 
+            '...SPPUUUUPPUUUUS...', 
+            '...SPPPPPPPPPPPPSSS.', 
+            '...SPPPPPPPPPPPPS...', 
+            '....SPPPPPPPPPPS.S..', 
+            '....SPPPPPPPPPPS..S.', 
+            '....SPPS....SPPSSS..', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '....SPPS....SPPS....', 
+            '.....SS......SS.....', 
+            '....................'
         ]
-    ],
-    'SCROLLING': [
-        ['....................', '.....PH......HP.....', '....PPSP....PPSP....', '....HPPPHHHPPPHS....', '...HPPEEEEPPEEEES...', '...SPPEEEEPPEEEES...', '...SPPPPPPPPPPPPS..S', '...SPPPPPPPPPPPPS.S.', '....SPPPPPPPPPPS..S.', '....SPPPPPPPPPPS.S..', '....SPPS....SPPSSS..', '....SPPS....SPPS....', '....SPPS....SPPS....', '....SPPS....SPPS....', '.....SS......SS.....', '....................']
-    ]}
+    ]
+}
+MATRIX_FRAMES['SCROLLING'] = MATRIX_FRAMES['WATCHING']
 
 def load_settings():
     if os.path.exists(SETTINGS_FILE):
@@ -231,10 +535,6 @@ class SettingsWindow(QWidget):
         
         # Matrix Mode
         
-        self.sunglasses_cb = QCheckBox("Wear Sunglasses")
-        self.sunglasses_cb.setChecked(self.pet.settings.get("wear_sunglasses", False))
-        self.sunglasses_cb.stateChanged.connect(self.on_sunglasses_changed)
-        layout.addWidget(self.sunglasses_cb)
 
         # --- Matrix Mode Colors ---
         color_group = QGroupBox("Matrix Cat Color")
@@ -387,10 +687,6 @@ class SettingsWindow(QWidget):
 
     def on_matrix_changed(self, val):
         self.pet.settings["matrix_mode"] = bool(val)
-        self.pet.save_and_apply_settings()
-        
-    def on_sunglasses_changed(self, val):
-        self.pet.settings["wear_sunglasses"] = bool(val)
         self.pet.save_and_apply_settings()
         
     def on_stretch_changed(self, val):
@@ -764,10 +1060,6 @@ class PetWidget(QWidget):
             self.active_app_state = "VIBING"
         elif "youtube" in title:
             self.active_app_state = "WATCHING"
-        elif any(app in title for app in ["discord", "whatsapp", "instagram", "twitter", "x"]):
-            self.active_app_state = "CHATTING"
-        elif any(app in title for app in ["code", "visual studio", "antigravity", "cursor", "word", "excel", "powerpoint"]):
-            self.active_app_state = "CODING"
         else:
             self.active_app_state = ""
 
@@ -780,11 +1072,9 @@ class PetWidget(QWidget):
         is_typing = getattr(self, 'is_typing', False)
         
         if is_typing:
-            if app_state == "CODING": return "CODING_TYPING"
-            if app_state == "CHATTING": return "CHATTING"
             return "TYPING"
             
-        if app_state == "CODING": return "CODING_IDLE"
+        if app_state != "": return app_state
         if app_state != "": return app_state
         return self.state
 
@@ -875,7 +1165,7 @@ class PetWidget(QWidget):
         speed = 2 # 60ms
         # Determine y_offset. If in CODING state, offset so cat doesn't bounce off screen
         anim_name = self.get_current_animation_name()
-        y_offset = -10 if anim_name in ["CODING", "CODING_TYPING", "CODING_IDLE", "CHATTING_IDLE", "CHATTING_TYPING", "CHATTING"] else 0
+        y_offset = -10 if anim_name in ["CODING", "CODING_TYPING", "CODING_IDLE"] else 0
 
         if True:
             if anim_name == "TYPING":
@@ -1063,26 +1353,6 @@ class PetWidget(QWidget):
                     
                     painter.drawRect(int(pupil_cx - pupil_w/2), int(pupil_cy - pupil_h/2), int(pupil_w), int(pupil_h))
                     
-            if self.settings.get("wear_sunglasses", False) and anim_name != "SLEEPING":
-                if not left_eye_pixels or not right_eye_pixels:
-                    min_r = 5 if anim_name == "DRAGGED" else 4
-                    min_cl = 5
-                    min_cr = 11
-                else:
-                    min_r = min(p[1] for p in left_eye_pixels + right_eye_pixels)
-                    min_cl = min(p[0] for p in left_eye_pixels)
-                    min_cr = min(p[0] for p in right_eye_pixels)
-                    
-                painter.setBrush(Qt.GlobalColor.black)
-                painter.drawRect(int(dest_x + (min_cl-1)*pixel_size), int(dest_y + min_r*pixel_size), int(5*pixel_size), int(2*pixel_size))
-                painter.drawRect(int(dest_x + (min_cr-1)*pixel_size), int(dest_y + min_r*pixel_size), int(5*pixel_size), int(2*pixel_size))
-                painter.drawRect(int(dest_x + (min_cl+4)*pixel_size), int(dest_y + min_r*pixel_size), int((min_cr - min_cl - 4)*pixel_size), int(pixel_size))
-                
-                painter.setBrush(Qt.GlobalColor.white)
-                painter.drawRect(int(dest_x + min_cl*pixel_size), int(dest_y + min_r*pixel_size), int(pixel_size), int(pixel_size))
-                painter.drawRect(int(dest_x + min_cr*pixel_size), int(dest_y + min_r*pixel_size), int(pixel_size), int(pixel_size))
-
-
         # Determine msg_to_draw
         msg_to_draw = None
         if hasattr(self, 'pinned_message') and self.pinned_message:
