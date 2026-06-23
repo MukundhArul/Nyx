@@ -8,13 +8,21 @@
 
 ---
 
+## 🌟 What's New in v1.1.0?
+Nyx has received a massive internal and external overhaul!
+- **🎨 String-Based Matrix Rendering Engine:** Nyx no longer uses traditional image sprites! Every frame is procedurally generated from custom ASCII matrices, meaning absolutely zero blurry pixels and full RGB color customization!
+- **🎧 Intelligent Context Awareness:** Nyx now hooks directly into the Windows API to detect window focus without performance lag. Open Spotify, and Nyx will instantly throw on some headphones.
+- **⏱️ Pomodoro Workflow:** The custom settings menu now features an integrated Pomodoro timer system alongside the classic stretch and water reminders!
+- **⌨️ Enhanced Contextual Actions:** Completely revamped typing animations (faster typing = angry cat!), scrolling reactions, and idle sleep animations.
+- **🐈 App Icon Support:** Nyx now boasts a fully bundled custom `.ico` file!
+
 ## 🌟 What is Nyx?
 
 Nyx is a totally free, open-source desktop overlay inspired by cozy companion apps. Nyx sits happily on your desktop, completely frameless and transparent, silently reacting to what you are doing without ever getting in your way! 🧡
 
 ## 🐈 Features & Animations
 
-Nyx isn't just a static image; it's a reactive companion powered by custom sprite sheet animations!
+Nyx isn't just a static image; it's a reactive companion powered by a custom string-rendering engine!
 
 ### 🎮 Interactive Animations
 *   **🖱️ Drag & Drop:** Click and hold to pick Nyx up and move it anywhere on your screen. When dragged, Nyx gracefully dangles!
@@ -23,15 +31,15 @@ Nyx isn't just a static image; it's a reactive companion powered by custom sprit
 
 ### 📱 App Reactions
 Nyx knows what you're doing and reacts accordingly!
-*   **🎧 Vibing:** Open **Spotify**, and Nyx will gently bob its head and vibe to your music.
+*   **🎧 Vibing:** Focus on **Spotify**, and Nyx will throw on headphones and vibe to your music.
 *   **📺 Watching:** Open **YouTube**, and Nyx's eyes will get huge to watch the videos with you!
 *   **📱 Scrolling:** Browse social media, and Nyx's paws will move as if it's scrolling the timeline with you.
 
 ### ⏰ Productivity Tools
 Nyx comes with built-in features to keep your workflow healthy and focused (accessible via right-clicking the System Tray icon):
-*   **⏲️ Alarm Clock Timer:** Toggle a custom focus timer! A digital retro alarm clock will appear directly next to Nyx to keep you on track.
+*   **🍅 Pomodoro Timers:** Toggle a custom focus timer directly from the settings menu to keep you productive.
 *   **💬 Pinned Sticky Notes:** Need to remember a quick task? Set a pinned message, and Nyx will hold it in a cute white **speech bubble** above its head.
-*   **🧘 Stretch Reminders:** Every 30 minutes of app runtime, Nyx will hold up a reminder telling you it's time to stretch!
+*   **🧘 Routine Reminders:** Configure Nyx to remind you to stretch or drink water during long computing sessions!
 
 ---
 
@@ -39,9 +47,9 @@ Nyx comes with built-in features to keep your workflow healthy and focused (acce
 
 You do not need to know how to code to use Nyx!
 
-1. Go to the main page of this GitHub repository and download the `Nyx.exe` file.
+1. Go to the main page of this GitHub repository and download `Nyx_Cat.exe` (or `Nyx.exe`).
 2. Place it anywhere on your computer (like your Desktop).
-3. Double-click `Nyx.exe` to run it! 
+3. Double-click `Nyx_Cat.exe` to run it! 
 *(Note: Windows SmartScreen might prompt you that this is an unrecognized app. Click "More info" and "Run anyway").*
 
 ---
@@ -61,7 +69,7 @@ You do not need to know how to code to use Nyx!
    ```
 3. **Install Dependencies:**
    ```bash
-   pip install PyQt6 pynput pygetwindow psutil
+   pip install PyQt6 pynput psutil Pillow
    ```
 4. **Run Nyx:**
    ```bash
@@ -69,8 +77,8 @@ You do not need to know how to code to use Nyx!
    ```
 5. **Build Executable (Optional):**
    ```bash
-   pip install pyinstaller
-   pyinstaller --noconsole --onefile --windowed --add-data "assets;assets" app.py
+   pip install pyinstaller Pillow
+   pyinstaller --noconfirm --onefile --windowed --name Nyx_Cat --icon=cat.ico app.py
    ```
 
 ---
