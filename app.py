@@ -60,8 +60,8 @@ MATRIX_FRAMES = {
             '...SPPPPPPPPPPPPS.S.', 
             '....SPPPPPPPPPPS..S.', 
             '....SPPPPPPPPPPS.S..', 
-            '....SPPS....SPPSSS..', 
-            '....SPPS....SPPS....', 
+            '....SPPPPPPPPPPSSS..', 
+            '....SPPPPPPPPPPS....', 
             '....SPPS....SPPS....', 
             '....SPPS....SPPS....', 
             '.....SS......SS.....', 
@@ -78,8 +78,8 @@ MATRIX_FRAMES = {
             '...SPPPPPPPPPPPPS...', 
             '....SPPPPPPPPPPS.S..', 
             '....SPPPPPPPPPPS..S.', 
-            '....SPPS....SPPSSS..', 
-            '....SPPS....SPPS....', 
+            '....SPPPPPPPPPPSSS..', 
+            '....SPPPPPPPPPPS....', 
             '....SPPS....SPPS....', 
             '....SPPS....SPPS....', 
             '.....SS......SS.....', 
@@ -96,8 +96,8 @@ MATRIX_FRAMES = {
             '...SPPPPPPPPPPPPS.S.', 
             '....SPPPPPPPPPPS.S..', 
             '....SPPPPPPPPPPS.S..', 
-            '....SPPS....SPPSSS..', 
-            '....SPPS....SPPS....', 
+            '....SPPPPPPPPPPSSS..', 
+            '....SPPPPPPPPPPS....', 
             '....SPPS....SPPS....', 
             '....SPPS....SPPS....', 
             '.....SS......SS.....', 
@@ -114,8 +114,8 @@ MATRIX_FRAMES = {
             '...SPPPPPPPPPPPPS...', 
             '....SPPPPPPPPPPS.S..', 
             '....SPPPPPPPPPPS..S.', 
-            '....SPPS....SPPSSS..', 
-            '....SPPS....SPPS....', 
+            '....SPPPPPPPPPPSSS..', 
+            '....SPPPPPPPPPPS....', 
             '....SPPS....SPPS....', 
             '....SPPS....SPPS....', 
             '.....SS......SS.....', 
@@ -133,8 +133,8 @@ MATRIX_FRAMES = {
             '...SPPPPPPPPPPPPS.S.', 
             '....SPPPPPPPPPPS..S.', 
             '....SPPPPPPPPPPS.S..', 
-            '....SPPS....SPPSSS..', 
-            '....SPPS....SPPS....', 
+            '....SPPPPPPPPPPSSS..', 
+            '....SPPPPPPPPPPS....', 
             '....SPPS....SPPS....', 
             '....SPPS....SPPS....', 
             '.....SS......SS.....', 
@@ -227,8 +227,8 @@ MATRIX_FRAMES = {
             '...SPPPPPPPPPPPPS.S.', 
             '...SSPPPPPPPPPPS..S.', 
             '...SSPPPPPPPPPPS.S..', 
-            '............SPPSSS..', 
-            '............SPPS....', 
+            '...SSPPPPPPPPPPSSS..', 
+            '...SSPPPPPPPPPPS....', 
             '.............SS.....', 
             '....................',
             '....................',
@@ -245,7 +245,7 @@ MATRIX_FRAMES = {
             '...SPPPPPPPPPPPPS.S.', 
             '....SPPPPPPPPSS...S.', 
             '....SPPPPPPPPSS..S..', 
-            '....SPPS.......SSS..', 
+            '....SPPPPPPPPSS.SS..', 
             '....SPPS............', 
             '.....SS.............', 
             '....................',
@@ -285,8 +285,8 @@ MATRIX_FRAMES = {
             '...SPPPPPPPPPPPPS.S.', 
             '....SPPPPPPPPPPS..S.', 
             '....SPPPPPPPPPPS.S..', 
-            '....SPPS....SPPSSS..', 
-            '....SPPS....SPPS....', 
+            '....SPPPPPPPPPPSSS..', 
+            '....SPPPPPPPPPPS....', 
             '....SPPS....SPPS....', 
             '....SPPS....SPPS....', 
             '.....SS......SS.....', 
@@ -306,8 +306,8 @@ MATRIX_FRAMES = {
             "...SPPPPPPPPPPPPS.S.",
             "....SPPPPPPPPPPS..S.",
             "....SPPPPPPPPPPS.S..",
-            "....SPPS....SPPSSS..",
-            "....SPPS....SPPS....",
+            "....SPPPPPPPPPPSSS..",
+            "....SPPPPPPPPPPS....",
             "....SPPS....SPPS....",
             "....SPPS....SPPS....",
             ".....SS......SS....."
@@ -324,8 +324,8 @@ MATRIX_FRAMES = {
             "...SPPPPPPPPPPPPS...",
             "....SPPPPPPPPPPS.S..",
             "....SPPPPPPPPPPS..S.",
-            "....SPPS....SPPSSS..",
-            "....SPPS....SPPS....",
+            "....SPPPPPPPPPPSSS..",
+            "....SPPPPPPPPPPS....",
             "....SPPS....SPPS....",
             "....SPPS....SPPS....",
             ".....SS......SS....."
@@ -342,8 +342,8 @@ MATRIX_FRAMES = {
             "...SPPPPPPPPPPPPS.S.",
             "....SPPPPPPPPPPS.S..",
             "....SPPPPPPPPPPS.S..",
-            "....SPPS....SPPSSS..",
-            "....SPPS....SPPS....",
+            "....SPPPPPPPPPPSSS..",
+            "....SPPPPPPPPPPS....",
             "....SPPS....SPPS....",
             "....SPPS....SPPS....",
             ".....SS......SS....."
@@ -360,8 +360,8 @@ MATRIX_FRAMES = {
             "...SPPPPPPPPPPPPS...",
             "....SPPPPPPPPPPS.S..",
             "....SPPPPPPPPPPS..S.",
-            "....SPPS....SPPSSS..",
-            "....SPPS....SPPS....",
+            "....SPPPPPPPPPPSSS..",
+            "....SPPPPPPPPPPS....",
             "....SPPS....SPPS....",
             "....SPPS....SPPS....",
             ".....SS......SS....."
@@ -379,8 +379,8 @@ MATRIX_FRAMES = {
             '...SPPPPPPPPPPPPS.S.', 
             '....SPPPPPPPPPPS..S.', 
             '....SPPPPPPPPPPS.S..', 
-            '....SPPS....SPPSSS..', 
-            '....SPPS....SPPS....', 
+            '....SPPPPPPPPPPSSS..', 
+            '....SPPPPPPPPPPS....', 
             '....SPPS....SPPS....', 
             '....SPPS....SPPS....', 
             '.....SS......SS.....', 
@@ -397,8 +397,8 @@ MATRIX_FRAMES = {
             '...SPPPPPPPPPPPPS...', 
             '....SPPPPPPPPPPS.S..', 
             '....SPPPPPPPPPPS..S.', 
-            '....SPPS....SPPSSS..', 
-            '....SPPS....SPPS....', 
+            '....SPPPPPPPPPPSSS..', 
+            '....SPPPPPPPPPPS....', 
             '....SPPS....SPPS....', 
             '....SPPS....SPPS....', 
             '.....SS......SS.....', 
@@ -415,8 +415,8 @@ MATRIX_FRAMES = {
             '...SPPPPPPPPPPPPS.S.', 
             '....SPPPPPPPPPPS.S..', 
             '....SPPPPPPPPPPS.S..', 
-            '....SPPS....SPPSSS..', 
-            '....SPPS....SPPS....', 
+            '....SPPPPPPPPPPSSS..', 
+            '....SPPPPPPPPPPS....', 
             '....SPPS....SPPS....', 
             '....SPPS....SPPS....', 
             '.....SS......SS.....', 
@@ -433,8 +433,8 @@ MATRIX_FRAMES = {
             '...SPPPPPPPPPPPPS...', 
             '....SPPPPPPPPPPS.S..', 
             '....SPPPPPPPPPPS..S.', 
-            '....SPPS....SPPSSS..', 
-            '....SPPS....SPPS....', 
+            '....SPPPPPPPPPPSSS..', 
+            '....SPPPPPPPPPPS....', 
             '....SPPS....SPPS....', 
             '....SPPS....SPPS....', 
             '.....SS......SS.....', 
@@ -777,15 +777,30 @@ class MonitorThread(QThread):
         mouse_listener.start()
         keyboard_listener.start()
         
+        import ctypes
         while True:
             try:
                 window = gw.getActiveWindow()
                 title = window.title if window else ""
                 self.active_window.emit(title.lower())
                 
-                import subprocess
-                output = subprocess.check_output('tasklist', shell=True, creationflags=subprocess.CREATE_NO_WINDOW).decode('utf-8', errors='ignore').lower()
-                self.spotify_status.emit('spotify' in output)
+                # Check if foreground window is spotify
+                is_spotify = False
+                user32 = ctypes.windll.user32
+                kernel32 = ctypes.windll.kernel32
+                psapi = ctypes.windll.psapi
+                hwnd = user32.GetForegroundWindow()
+                if hwnd:
+                    pid = ctypes.c_ulong(0)
+                    user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+                    h_process = kernel32.OpenProcess(0x0410, False, pid)
+                    if h_process:
+                        exe_name = ctypes.create_unicode_buffer(260)
+                        psapi.GetModuleBaseNameW(h_process, None, exe_name, ctypes.sizeof(exe_name))
+                        kernel32.CloseHandle(h_process)
+                        if "spotify" in exe_name.value.lower():
+                            is_spotify = True
+                self.spotify_status.emit(is_spotify)
             except Exception:
                 pass
             time.sleep(1)
@@ -881,8 +896,8 @@ class PetWidget(QWidget):
             "...SPPPPPPPPPPPPS.S.",
             "...SSPPPPPPPPPPS..S.",
             "...SSPPPPPPPPPPS.S..",
-            "............SPPSSS..",
-            "............SPPS....",
+            "...SSPPPPPPPPPPSSS..",
+            "...SSPPPPPPPPPPS....",
             ".............SS.....",
             "...................."
         ]
@@ -899,8 +914,8 @@ class PetWidget(QWidget):
             "...SPPPPPPPPPPPPS.S.",
             "...SSPPPPPPPPPPS..S.",
             "...SSPPPPPPPPPPS.S..",
-            "............SPPSSS..",
-            "............SPPS....",
+            "...SSPPPPPPPPPPSSS..",
+            "...SSPPPPPPPPPPS....",
             ".............SS.....",
             "...................."
         ],
@@ -915,7 +930,7 @@ class PetWidget(QWidget):
             "...SPPPPPPPPPPPPS.S.",
             "....SPPPPPPPPSS...S.",
             "....SPPPPPPPPSS..S..",
-            "....SPPS.......SSS..",
+            "....SPPPPPPPPSS.SS..",
             "....SPPS............",
             ".....SS.............",
             "...................."
@@ -933,8 +948,8 @@ class PetWidget(QWidget):
             "...SPPPPPPPPPPPPS.S.",
             "....SPPPPPPPPPPS..S.",
             "....SPPPPPPPPPPS.S..",
-            "....SPPS....SPPSSS..",
-            "....SPPS....SPPS....",
+            "....SPPPPPPPPPPSSS..",
+            "....SPPPPPPPPPPS....",
             "....SPPS....SPPS....",
             "....SPPS....SPPS....",
             ".....SS......SS.....",
@@ -953,8 +968,8 @@ class PetWidget(QWidget):
             "...SPPPPPPPPPPPPS.S.",
             "...SSPPPPPPPPPPS..S.",
             "...SSPPPPPPPPPPS.S..",
-            "............SPPSSS..",
-            "............SPPS....",
+            "...SSPPPPPPPPPPSSS..",
+            "...SSPPPPPPPPPPS....",
             ".............SS.....",
             "...................."
         ]
@@ -971,8 +986,8 @@ class PetWidget(QWidget):
             "...SPPPPPPPPPPPPS.S.",
             "...SSPPPPPPPPPPS..S.",
             "...SSPPPPPPPPPPS.S..",
-            "............SPPSSS..",
-            "............SPPS....",
+            "...SSPPPPPPPPPPSSS..",
+            "...SSPPPPPPPPPPS....",
             ".............SS.....",
             "...................."
         ],
@@ -987,7 +1002,7 @@ class PetWidget(QWidget):
             "...SPPPPPPPPPPPPS.S.",
             "....SPPPPPPPPSS...S.",
             "....SPPPPPPPPSS..S..",
-            "....SPPS.......SSS..",
+            "....SPPPPPPPPSS.SS..",
             "....SPPS............",
             ".....SS.............",
             "...................."
@@ -1005,8 +1020,8 @@ class PetWidget(QWidget):
             "...SPPPPPPPPPPPPS.S.",
             "....SPPPPPPPPPPS..S.",
             "....SPPPPPPPPPPS.S..",
-            "....SPPS....SPPSSS..",
-            "....SPPS....SPPS....",
+            "....SPPPPPPPPPPSSS..",
+            "....SPPPPPPPPPPS....",
             "....SPPS....SPPS....",
             "....SPPS....SPPS....",
             ".....SS......SS.....",
