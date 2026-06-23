@@ -14,8 +14,7 @@ Nyx has received a massive internal and external overhaul!
 - **🎧 Intelligent Context Awareness:** Nyx now hooks directly into the Windows API to detect window focus without performance lag. Open Spotify, and Nyx will instantly throw on some headphones.
 - **⏱️ Pomodoro Workflow:** The custom settings menu now features an integrated Pomodoro timer system alongside the classic stretch and water reminders!
 - **⌨️ Enhanced Contextual Actions:** Completely revamped typing animations (faster typing = angry cat!), scrolling reactions, and idle sleep animations.
-- **🐈 App Icon Support:** Nyx now boasts a fully bundled custom `.ico` file!
-
+  
 ## 🌟 What is Nyx?
 
 Nyx is a totally free, open-source desktop overlay inspired by cozy companion apps. Nyx sits happily on your desktop, completely frameless and transparent, silently reacting to what you are doing without ever getting in your way! 🧡
@@ -33,8 +32,7 @@ Nyx isn't just a static image; it's a reactive companion powered by a custom str
 Nyx knows what you're doing and reacts accordingly!
 *   **🎧 Vibing:** Focus on **Spotify**, and Nyx will throw on headphones and vibe to your music.
 *   **📺 Watching:** Open **YouTube**, and Nyx's eyes will get huge to watch the videos with you!
-*   **📱 Scrolling:** Browse social media, and Nyx's paws will move as if it's scrolling the timeline with you.
-
+  
 ### ⏰ Productivity Tools
 Nyx comes with built-in features to keep your workflow healthy and focused (accessible via right-clicking the System Tray icon):
 *   **🍅 Pomodoro Timers:** Toggle a custom focus timer directly from the settings menu to keep you productive.
