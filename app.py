@@ -297,16 +297,15 @@ MATRIX_FRAMES = {
             '....................'
         ]
     ],
-    'VIBING': [
+        'VIBING': [
         [
             "......MMMMMMMM......",
-            ".....M........M.....",
-            "....MMPH......HPMM..",
-            "...MM.PSP....PPSP.MM",
-            "...MM.PPHHHPPPHS..MM",
-            "...MMPEEEEPPEEEES.MM",
-            "...SMPEEEEPPEEEES.M.",
-            "...SPPPPPPPPPPPPS..S",
+            ".....MM......MM.....",
+            "....MMSP....PPMM....",
+            "...MMPPPHHHPPPHMM...",
+            "...MMPEEEEPPEEEMM...",
+            "...MMPEEEEPPEEEMM...",
+            "...SMMPPPPPPPPMMS..S",
             "...SPPPPPPPPPPPPS.S.",
             "....SPPPPPPPPPPS..S.",
             "....SPPPPPPPPPPS.S..",
@@ -314,61 +313,62 @@ MATRIX_FRAMES = {
             "....SPPPPPPPPPPS....",
             "....SPPS....SPPS....",
             "....SPPS....SPPS....",
-            ".....SS......SS....."
+            ".....SS......SS.....",
+            "...................."
         ],
         [
+            "....................",
             "......MMMMMMMM......",
-            ".....M........M.....",
-            "....MMPH......HPMM..",
-            ".B.MM.PSP....PPSP.MM",
-            ".B.MM.PPHHHPPPHS..MM",
-            "BB.MMPEEEEPPEEEES.MM",
-            "...SMPEEEEPPEEEES.M.",
-            "...SPPPPPPPPPPPPSSS.",
-            "...SPPPPPPPPPPPPS...",
-            "....SPPPPPPPPPPS.S..",
+            ".....MM......MM.....",
+            "....MMSP....PPMM....",
+            "...MMPPPHHHPPPHMM...",
+            "...MMPEEEEPPEEEMM...",
+            "...MMPEEEEPPEEEMM..S",
+            "...SMMPPPPPPPPMMS.S.",
             "....SPPPPPPPPPPS..S.",
+            "....SPPPPPPPPPPS.S..",
             "....SPPPPPPPPPPSSS..",
             "....SPPPPPPPPPPS....",
             "....SPPS....SPPS....",
             "....SPPS....SPPS....",
-            ".....SS......SS....."
+            ".....SS......SS.....",
+            "...................."
         ],
         [
             "......MMMMMMMM......",
-            ".B...M........M.....",
-            ".B..MMPH......HPMM..",
-            "BB.MM.PSP....PPSP.MM",
-            "...MM.PPHHHPPPHS..MM",
-            "...MMPEEEEPPEEEES.MM",
-            "...SMPEEEEPPEEEES.M.",
-            "...SPPPPPPPPPPPPS...",
+            ".B...MM......MM.....",
+            "....MMSP....PPMM....",
+            "...MMPPPHHHPPPHMM...",
+            "...MMPEEEEPPEEEMM...",
+            "...MMPEEEEPPEEEMM...",
+            "...SMMPPPPPPPPMMS..S",
             "...SPPPPPPPPPPPPS.S.",
-            "....SPPPPPPPPPPS.S..",
+            "....SPPPPPPPPPPS..S.",
             "....SPPPPPPPPPPS.S..",
             "....SPPPPPPPPPPSSS..",
             "....SPPPPPPPPPPS....",
             "....SPPS....SPPS....",
             "....SPPS....SPPS....",
-            ".....SS......SS....."
+            ".....SS......SS.....",
+            "...................."
         ],
         [
-            ".B....MMMMMMMM......",
-            ".B...M........M.....",
-            "BB..MMPH......HPMM..",
-            "...MM.PSP....PPSP.MM",
-            "...MM.PPHHHPPPHS..MM",
-            "...MMPEEEEPPEEEES.MM",
-            "...SMPEEEEPPEEEES.M.",
-            "...SPPPPPPPPPPPPSSS.",
-            "...SPPPPPPPPPPPPS...",
-            "....SPPPPPPPPPPS.S..",
+            "..B.................",
+            "......MMMMMMMM......",
+            ".....MM......MM.....",
+            "....MMSP....PPMM....",
+            "...MMPPPHHHPPPHMM...",
+            "...MMPEEEEPPEEEMM...",
+            "...MMPEEEEPPEEEMM..S",
+            "...SMMPPPPPPPPMMS.S.",
             "....SPPPPPPPPPPS..S.",
+            "....SPPPPPPPPPPS.S..",
             "....SPPPPPPPPPPSSS..",
             "....SPPPPPPPPPPS....",
             "....SPPS....SPPS....",
             "....SPPS....SPPS....",
-            ".....SS......SS....."
+            ".....SS......SS.....",
+            "...................."
         ]
     ],
     'WATCHING': [
@@ -1243,17 +1243,28 @@ class PetWidget(QWidget):
         except:
             pass
 
-    def on_spotify_status(self, is_playing):
-        self.is_listening_to_music = is_playing
-
-    def on_active_window(self, title):
-        title = title.lower()
-        if "spotify" in title:
-            self.active_app_state = "VIBING"
-        elif "youtube" in title:
+    def update_active_app_state(self):
+        title = getattr(self, 'current_window_title', '')
+        if "youtube" in title:
             self.active_app_state = "WATCHING"
+        elif getattr(self, '_raw_is_spotify', False):
+            if "spotify" in title:
+                self.active_app_state = ""
+                self.is_listening_to_music = False
+            else:
+                self.active_app_state = "VIBING"
+                self.is_listening_to_music = True
         else:
             self.active_app_state = ""
+            self.is_listening_to_music = False
+
+    def on_spotify_status(self, is_spotify):
+        self._raw_is_spotify = is_spotify
+        self.update_active_app_state()
+
+    def on_active_window(self, title):
+        self.current_window_title = title.lower()
+        self.update_active_app_state()
 
     def get_current_animation_name(self):
         if self.state == "SLEEPING": return "SLEEPING"
@@ -1531,8 +1542,8 @@ class PetWidget(QWidget):
                     min_cr = min(p[0] for p in right_eye_pixels)
                     
                 painter.setBrush(Qt.GlobalColor.black)
-                painter.drawRect(int(dest_x + (min_cl-1)*pixel_size), int(dest_y + min_r*pixel_size), int(5*pixel_size), int(2*pixel_size))
-                painter.drawRect(int(dest_x + (min_cr-1)*pixel_size), int(dest_y + min_r*pixel_size), int(5*pixel_size), int(2*pixel_size))
+                painter.drawRect(int(dest_x + (min_cl-2)*pixel_size), int(dest_y + min_r*pixel_size), int(6*pixel_size), int(3*pixel_size))
+                painter.drawRect(int(dest_x + (min_cr-1)*pixel_size), int(dest_y + min_r*pixel_size), int(6*pixel_size), int(3*pixel_size))
                 painter.drawRect(int(dest_x + (min_cl+4)*pixel_size), int(dest_y + min_r*pixel_size), int((min_cr - min_cl - 4)*pixel_size), int(pixel_size))
                 
                 painter.setBrush(Qt.GlobalColor.white)
@@ -1542,12 +1553,12 @@ class PetWidget(QWidget):
             if getattr(self, 'is_listening_to_music', False) and anim_name != "SLEEPING":
                 hp_frame = [
                     "......MMMMMMMM......",
-                    ".....M........M.....",
-                    "....MM..........MM..",
-                    "...MM............MM.",
-                    "...MM............MM.",
-                    "...MM............MM.",
-                    "....M............M.."
+                    ".....MM......MM.....",
+                    "....MM........MM....",
+                    "...MM..........MM...",
+                    "...MM..........MM...",
+                    "...MM..........MM...",
+                    "....MM........MM...."
                 ]
                 painter.setPen(Qt.PenStyle.NoPen)
                 for r, row_str in enumerate(hp_frame):

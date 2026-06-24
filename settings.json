@@ -1,5 +1,5 @@
 {
-    "scale_factor": 5.0,
+    "scale_factor": 4.8,
     "react_to_typing": true,
     "stretch_interval_min": 26,
     "water_interval_min": 60,
@@ -8,14 +8,18 @@
     "pomo_break_min": 5,
     "reminders": [],
     "matrix_mode": true,
-    "matrix_r": 255,
-    "matrix_g": 108,
-    "matrix_b": 78,
+    "matrix_r": 231,
+    "matrix_g": 91,
+    "matrix_b": 66,
     "wear_sunglasses": false,
     "matrix_sr": 160,
     "matrix_sg": 68,
     "matrix_sb": 68,
-    "matrix_outline_r": 190,
-    "matrix_outline_g": 111,
-    "matrix_outline_b": 86
+    "matrix_outline_r": 125,
+    "matrix_outline_g": 57,
+    "matrix_outline_b": 43,
+    "matrix_mouth_r": 7,
+    "matrix_mouth_g": 7,
+    "matrix_mouth_b": 9,
+    "always_on_top": true
 }
