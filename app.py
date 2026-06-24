@@ -1,5 +1,8 @@
 import sys
 import time
+import psutil
+import pyaudio
+import audioop
 import math
 import os
 import threading
@@ -13,6 +16,7 @@ from PyQt6.QtWidgets import (QApplication, QWidget, QMenu, QInputDialog, QSystem
 from PyQt6.QtGui import QPainter, QCursor, QColor, QAction, QPen, QFont, QPainterPath, QPixmap
 from PyQt6.QtCore import Qt, QPoint, QTimer, pyqtSignal, QThread, QRect, QDateTime
 from pynput import mouse, keyboard
+# pyrefly: ignore [missing-import]
 import pygetwindow as gw
 
 SETTINGS_FILE = "settings.json"
@@ -710,7 +714,6 @@ class SettingsWindow(QWidget):
             self.pet.settings["matrix_outline_b"] = color.blue()
             self.update_outline_preview(color.red(), color.green(), color.blue())
             self.pet.save_and_apply_settings()
-            self.pet.update()
 
     def on_matrix_changed(self, val):
         self.pet.settings["matrix_mode"] = bool(val)
@@ -753,6 +756,75 @@ class SettingsWindow(QWidget):
         self.pet.save_and_apply_settings()
         self.rem_input.clear()
 
+
+class MicThread(QThread):
+    is_talking_signal = pyqtSignal(bool)
+
+    def __init__(self, app_ref, parent=None):
+        super().__init__(parent)
+        self.running = True
+        self.app_ref = app_ref
+        self.p = pyaudio.PyAudio()
+        self.stream = None
+
+    def _is_discord_running(self):
+        try:
+            for p in psutil.process_iter(['name']):
+                if p.info['name'] and 'discord' in p.info['name'].lower():
+                    return True
+        except:
+            pass
+        return False
+
+    def run(self):
+        check_counter = 0
+        discord_running = False
+        
+        while self.running:
+            if check_counter % 20 == 0:
+                discord_running = self._is_discord_running()
+            check_counter += 1
+
+            mic_enabled = self.app_ref.settings.get("discord_mic", True)
+            
+            if not mic_enabled or not discord_running:
+                if self.stream:
+                    self.stream.stop_stream()
+                    self.stream.close()
+                    self.stream = None
+                time.sleep(0.1)
+                continue
+
+            if not self.stream:
+                try:
+                    self.stream = self.p.open(format=pyaudio.paInt16,
+                                              channels=1,
+                                              rate=44100,
+                                              input=True,
+                                              frames_per_buffer=1024)
+                except Exception as e:
+                    time.sleep(2)
+                    continue
+            
+            try:
+                data = self.stream.read(1024, exception_on_overflow=False)
+                rms = audioop.rms(data, 2)
+                if rms > 30:
+                    self.is_talking_signal.emit(True)
+                else:
+                    self.is_talking_signal.emit(False)
+            except Exception as e:
+                self.is_talking_signal.emit(False)
+                time.sleep(0.1)
+            
+            time.sleep(0.05)
+
+    def stop(self):
+        self.running = False
+        if self.stream:
+            self.stream.stop_stream()
+            self.stream.close()
+        self.p.terminate()
 
 class MonitorThread(QThread):
     input_activity = pyqtSignal()
@@ -861,6 +933,23 @@ class PetWidget(QWidget):
         self.monitor.spotify_status.connect(self.on_spotify_status)
         self.monitor.start()
         
+        # Start Discord Mic Thread
+        self.mic_thread = MicThread(self)
+        self.mic_thread.is_talking_signal.connect(self.set_talking)
+        self.mic_thread.start()
+        
+    def set_talking(self, talking):
+        if talking:
+            self.state = "TALKING"
+            self.talking_timer = 5
+            self.idle_time = 0
+        else:
+            if getattr(self, 'state', 'IDLE') == "TALKING":
+                if getattr(self, 'talking_timer', 0) > 0:
+                    self.talking_timer -= 1
+                else:
+                    self.state = "IDLE"
+
     def save_and_apply_settings(self):
         save_settings(self.settings)
 
@@ -1035,32 +1124,36 @@ class PetWidget(QWidget):
         self.current_frame_index = 0
 
     def initUI(self):
-        self.setWindowFlags(
-            Qt.WindowType.FramelessWindowHint |
-            Qt.WindowType.WindowStaysOnTopHint |
-            Qt.WindowType.Tool
-        )
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.resize(500, 300)
+        self.apply_window_flags()
         self.setupTray()
 
     def setupTray(self):
-        self.tray_icon = QSystemTrayIcon(self)
+        self.tray_icon = QSystemTrayIcon(QApplication.instance())
         icon = self.style().standardIcon(self.style().StandardPixmap.SP_ComputerIcon)
         self.tray_icon.setIcon(icon)
         
         # Actions
         show_action = QAction("Show", self)
+        set_task_action = QAction("Set Pomodoro Task...", self)
         set_pin_action = QAction("Set Pinned Message", self)
         clear_pin_action = QAction("Clear Pinned Message", self)
         toggle_alarm_action = QAction("Toggle Pomodoro", self)
+        
+        pin_window_action = QAction("Always Pin Nyx", self, checkable=True)
+        pin_window_action.setChecked(self.settings.get("always_on_top", True))
+        
+        
         settings_action = QAction("Settings", self)
         quit_action = QAction("Exit", self)
         
         show_action.triggered.connect(self.show)
+        set_task_action.triggered.connect(self.set_pomodoro_task)
         set_pin_action.triggered.connect(self.prompt_pinned_message)
         clear_pin_action.triggered.connect(self.clear_pinned_message)
         toggle_alarm_action.triggered.connect(self.toggle_alarm)
+        pin_window_action.triggered.connect(self.toggle_pin)
         settings_action.triggered.connect(self.settings_window.show)
         quit_action.triggered.connect(QApplication.instance().quit)
         
@@ -1068,10 +1161,14 @@ class PetWidget(QWidget):
         tray_menu = QMenu()
         tray_menu.addAction(show_action)
         tray_menu.addSeparator()
+        tray_menu.addAction(pin_window_action)
+        tray_menu.addSeparator()
+        tray_menu.addAction(set_task_action)
+        tray_menu.addAction(toggle_alarm_action)
+        tray_menu.addSeparator()
         tray_menu.addAction(set_pin_action)
         tray_menu.addAction(clear_pin_action)
         tray_menu.addSeparator()
-        tray_menu.addAction(toggle_alarm_action)
         tray_menu.addAction(settings_action)
         tray_menu.addSeparator()
         tray_menu.addAction(quit_action)
@@ -1079,7 +1176,35 @@ class PetWidget(QWidget):
         self.tray_icon.setContextMenu(tray_menu)
         self.tray_icon.show()
 
+    def apply_window_flags(self):
+        flags = Qt.WindowType.FramelessWindowHint | Qt.WindowType.Tool
+        if self.settings.get("always_on_top", True):
+            flags |= Qt.WindowType.WindowStaysOnTopHint
+            
+        if int(self.windowFlags()) != int(flags):
+            # Temporarily hide tray to avoid ghosting on Windows
+            if hasattr(self, 'tray_icon') and self.tray_icon.isVisible():
+                self.tray_icon.hide()
+            self.setWindowFlags(flags)
+            self.show()
+            if hasattr(self, 'tray_icon'):
+                self.tray_icon.show()
+
     # --- Productivity Prompts ---
+    def set_pomodoro_task(self):
+        from PyQt6.QtWidgets import QInputDialog
+        task, ok = QInputDialog.getText(self, "Set Task", "What are you working on right now?")
+        if ok:
+            self.current_task = task
+            self.pomo_active = True
+            if self.pomo_seconds == 0:
+                self.pomo_seconds = self.settings.get("pomo_focus_min", 25) * 60
+
+    def toggle_pin(self, checked):
+        self.settings["always_on_top"] = checked
+        self.save_and_apply_settings()
+        self.apply_window_flags()
+
     def prompt_pinned_message(self):
         text, ok = QInputDialog.getText(self, "Pinned Message", "Enter your reminder:")
         if ok and text:
@@ -1151,7 +1276,7 @@ class PetWidget(QWidget):
             self.idle_time += 1
             if self.idle_time > self.SLEEP_THRESHOLD:
                 self.state = "SLEEPING"
-            elif self.idle_time % 6 == 0:
+            elif self.idle_time % 6 == 0 and self.state != "TALKING":
                 self.state = "IDLE"
                 self.current_frame_index = 0
                 
@@ -1220,18 +1345,18 @@ class PetWidget(QWidget):
         anim_name = self.get_current_animation_name()
         
         # Determine speed (matrix mode allows variable speed)
-        speed = 2 # 60ms
+        speed = 1 if anim_name == 'CODING_TYPING' else 2 # 30ms for typing, 60ms for others
         # Determine y_offset. If in CODING state, offset so cat doesn't bounce off screen
         anim_name = self.get_current_animation_name()
         y_offset = -10 if anim_name in ["CODING", "CODING_TYPING", "CODING_IDLE"] else 0
 
         if True:
             if anim_name == "TYPING":
-                speed = 4 # 120ms (Slower typing)
+                speed = 1 # 30ms (Fast typing)
             elif anim_name == "SLEEPING":
                 speed = 4 # 120ms (Slow Zzzs)
             elif anim_name == "VIBING":
-                speed = 2 # 60ms (Dance)
+                speed = 1 if anim_name == 'CODING_TYPING' else 2 # 30ms for typing, 60ms for others (Dance)
             elif anim_name == "WATCHING":
                 speed = 3 # 90ms (Smooth breath)
         else:
@@ -1279,7 +1404,34 @@ class PetWidget(QWidget):
             if self.current_frame_index >= len(anim_list):
                 self.current_frame_index = 0
             
-            frame_data = anim_list[self.current_frame_index]
+            frame_data = list(anim_list[self.current_frame_index])
+            
+            if getattr(self, "state", "IDLE") == "TALKING" and anim_name != "SLEEPING":
+                import time
+                tick = int(time.time() * 10)
+                
+                # Find eyes to position mouth
+                eye_rows = [r_idx for r_idx, row in enumerate(frame_data) if 'E' in row]
+                if eye_rows:
+                    mouth_r = max(eye_rows) + 1
+                    if mouth_r + 2 < len(frame_data):
+                        is_big = (tick % 4 < 2)
+                        
+                        def set_p(r, c, ch):
+                            if 0 <= r < len(frame_data) and 0 <= c < len(frame_data[r]):
+                                frame_data[r] = frame_data[r][:c] + ch + frame_data[r][c+1:]
+                        
+                        if is_big:
+                            # Shifted right by 1, down by 1, and larger
+                            set_p(mouth_r+1, 10, 'M'); set_p(mouth_r+1, 11, 'M')
+                            set_p(mouth_r+2, 9, 'M'); set_p(mouth_r+2, 10, 'M'); set_p(mouth_r+2, 11, 'M'); set_p(mouth_r+2, 12, 'M')
+                            set_p(mouth_r+3, 9, 'M'); set_p(mouth_r+3, 10, 'M'); set_p(mouth_r+3, 11, 'M'); set_p(mouth_r+3, 12, 'M')
+                            set_p(mouth_r+4, 10, 'M'); set_p(mouth_r+4, 11, 'M')
+                        else:
+                            # Partially open
+                            set_p(mouth_r+1, 10, 'M'); set_p(mouth_r+1, 11, 'M')
+                            set_p(mouth_r+2, 10, 'M'); set_p(mouth_r+2, 11, 'M')
+
             
             grid_w = len(frame_data[0])
             grid_h = len(frame_data)
@@ -1335,6 +1487,7 @@ class PetWidget(QWidget):
                         painter.drawRect(px_x, px_y, pixel_size - 1, pixel_size - 1)
                         
             # Draw Dynamic Pupils
+
             if left_eye_pixels and right_eye_pixels and anim_name != "SLEEPING":
                 import math
                 mouse_pos = QCursor.pos()
@@ -1415,9 +1568,11 @@ class PetWidget(QWidget):
         if msg_to_draw:
             painter.setFont(QFont("Consolas", 10, QFont.Weight.Bold))
             fm = painter.fontMetrics()
-            msg_rect = fm.boundingRect(msg_to_draw)
-            bubble_w = msg_rect.width() + 10
-            bubble_h = msg_rect.height() + 4
+            
+            lines = msg_to_draw.split('\n')
+            max_w = max(fm.horizontalAdvance(l) for l in lines)
+            bubble_w = max_w + 10
+            bubble_h = len(lines) * fm.height() + 4
             
             cat_height = 16 * self.settings.get("scale_factor", 5.0)
             dest_y = cy - cat_height / 2
@@ -1432,17 +1587,20 @@ class PetWidget(QWidget):
             painter.setBrush(Qt.GlobalColor.white)
             painter.drawRect(int(bx), int(by), int(bubble_w), int(bubble_h))
             
+            # Draw tail
             painter.setBrush(Qt.GlobalColor.black)
-            painter.drawRect(int(cx - 5), int(by + bubble_h), 16, 12)
-            painter.drawRect(int(cx - 1), int(by + bubble_h + 12), 12, 12)
-            painter.drawRect(int(cx + 3), int(by + bubble_h + 24), 8, 12)
+            painter.drawRect(int(cx - 3), int(by + bubble_h), 12, 16)
+            painter.drawRect(int(cx + 1), int(by + bubble_h + 16), 8, 12)
             
             painter.setBrush(Qt.GlobalColor.white)
             painter.drawRect(int(cx - 1), int(by + bubble_h), 8, 12)
             painter.drawRect(int(cx + 3), int(by + bubble_h + 12), 4, 12)
             
             painter.setPen(Qt.GlobalColor.black)
-            painter.drawText(int(bx + 5), int(by + msg_rect.height()), msg_to_draw)
+            y_start = int(by + fm.ascent() + 2)
+            for l in lines:
+                painter.drawText(int(bx + 5), y_start, l)
+                y_start += fm.height()
 
         if hasattr(self, 'hearts') and self.hearts:
 
@@ -1507,3 +1665,4 @@ if __name__ == '__main__':
     pet = PetWidget()
     pet.show()
     sys.exit(app.exec())
+
