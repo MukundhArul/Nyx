@@ -24,13 +24,14 @@ DEFAULT_SETTINGS = {
     "scale_factor": 5.0,
     "react_to_typing": True,
     "stretch_interval_min": 30,
-    "water_interval_min": 60,
+    "water_interval_min..": 60,
     "pomodoro_enabled": False,
     "pomo_focus_min": 25,
     "pomo_break_min": 5,
     "reminders": [],
     "matrix_mode": False,
     "wear_sunglasses": False,
+    "high_res_mode": True,
     "matrix_r": 198,
     "matrix_g": 154,
     "matrix_b": 150
@@ -78,8 +79,8 @@ MATRIX_FRAMES = {
             '....HPPPHHHPPPHS....', 
             '...HPPEEEEPPEEEES...', 
             '...SPPEEEEPPEEEES...', 
-            '...SPPPPPPPPPPPPSSS.', 
-            '...SPPPPPPPPPPPPS...', 
+            '...SPPPPPPPPPPPPS.S.', 
+            '...SPPPPPPPPPPPPS.S.', 
             '....SPPPPPPPPPPS.S..', 
             '....SPPPPPPPPPPS..S.', 
             '....SPPPPPPPPPPSSS..', 
@@ -114,9 +115,9 @@ MATRIX_FRAMES = {
             '....HPPPHHHPPPHS....', 
             '...HPPEEEEPPEEEES...', 
             '...SPPEEEEPPEEEES...', 
-            '...SPPPPPPPPPPPPSSS.', 
-            '...SPPPPPPPPPPPPS...', 
-            '....SPPPPPPPPPPS.S..', 
+            '...SPPPPPPPPPPPPS..S', 
+            '...SPPPPPPPPPPPPS..S', 
+            '....SPPPPPPPPPPS..S.', 
             '....SPPPPPPPPPPS..S.', 
             '....SPPPPPPPPPPSSS..', 
             '....SPPSSSSSSPPS....', 
@@ -272,7 +273,7 @@ MATRIX_FRAMES = {
             '....SPPSSSSSSPPS....', 
             '....SPPS....SPPS....', 
             '....SPPS....SPPS....', 
-            '.....SS......SS....',
+            '.....SS......SS.....',
             '....................',
             '....................'
         ]
@@ -552,6 +553,11 @@ class SettingsWindow(QWidget):
         self.sunglasses_cb.stateChanged.connect(self.on_sunglasses_changed)
         layout.addWidget(self.sunglasses_cb)
         
+        self.highres_cb = QCheckBox("High-Res Mode (EPX)")
+        self.highres_cb.setChecked(self.pet.settings.get("high_res_mode", True))
+        self.highres_cb.stateChanged.connect(self.on_highres_changed)
+        layout.addWidget(self.highres_cb)
+        
         # Matrix Mode
         
 
@@ -673,6 +679,10 @@ class SettingsWindow(QWidget):
 
     def on_sunglasses_changed(self, val):
         self.pet.settings["wear_sunglasses"] = bool(val)
+        self.pet.save_and_apply_settings()
+
+    def on_highres_changed(self, val):
+        self.pet.settings["high_res_mode"] = bool(val)
         self.pet.save_and_apply_settings()
         
 
@@ -876,6 +886,60 @@ class MonitorThread(QThread):
             except Exception:
                 pass
             time.sleep(1)
+
+
+def epx_scale(frame):
+    height = len(frame)
+    width = max((len(r) for r in frame), default=0)
+    out = [["." for _ in range(width * 2)] for _ in range(height * 2)]
+    def get_p(x, y):
+        if y < 0 or y >= height or x < 0 or x >= len(frame[y]): return "."
+        return frame[y][x]
+    for y in range(height):
+        for x in range(width):
+            P = get_p(x, y)
+            A = get_p(x, y - 1)
+            B = get_p(x + 1, y)
+            C = get_p(x, y + 1)
+            D = get_p(x - 1, y)
+            P1, P2, P3, P4 = P, P, P, P
+            if A != C and B != D:
+                if A == D: P1 = A
+                if A == B: P2 = B
+                if C == D: P3 = C
+                if C == B: P4 = B
+                
+            if P == 'P':
+                if P1 == 'P' and (x + y) % 2 == 0: P1 = 'L'
+                if P2 == 'P' and (x + y) % 3 == 0: P2 = 'D'
+                if P3 == 'P' and (x + y) % 3 == 1: P3 = 'D'
+                if P4 == 'P' and (x + y) % 2 == 1: P4 = 'L'
+                
+            out[y*2][x*2] = P1
+            out[y*2][x*2+1] = P2
+            out[y*2+1][x*2] = P3
+            out[y*2+1][x*2+1] = P4
+    return ["".join(row) for row in out]
+
+# Apply EPX to all matrix frames
+MATRIX_FRAMES_HIGH_RES = {}
+scaled_ids = {}
+for anim_name, frames in MATRIX_FRAMES.items():
+    if id(frames) in scaled_ids:
+        MATRIX_FRAMES_HIGH_RES[anim_name] = scaled_ids[id(frames)]
+        continue
+    if isinstance(frames, list) and isinstance(frames[0], list):
+        new_frames = []
+        for frame in frames:
+            if isinstance(frame[0], str):
+                new_frames.append(epx_scale(frame))
+            else:
+                new_frames.append(frame)
+        MATRIX_FRAMES_HIGH_RES[anim_name] = new_frames
+        scaled_ids[id(frames)] = new_frames
+    else:
+        MATRIX_FRAMES_HIGH_RES[anim_name] = frames
+
 
 class PetWidget(QWidget):
     def __init__(self):
@@ -1214,6 +1278,7 @@ class PetWidget(QWidget):
         self.pinned_message = ""
 
     def toggle_alarm(self):
+
         if not self.settings["pomodoro_enabled"]:
             self.pinned_message = "Pomodoro disabled in Settings"
             return
@@ -1409,44 +1474,24 @@ class PetWidget(QWidget):
         if True:
             # MATRIX MODE RENDERING
             anim_name = self.get_current_animation_name()
-            if anim_name not in MATRIX_FRAMES:
+            is_high_res = self.settings.get("high_res_mode", True)
+            frames_dict = MATRIX_FRAMES_HIGH_RES if is_high_res else MATRIX_FRAMES
+            
+            if anim_name not in frames_dict:
                 anim_name = "IDLE"
-            anim_list = MATRIX_FRAMES.get(anim_name, MATRIX_FRAMES["IDLE"])
+            anim_list = frames_dict.get(anim_name, frames_dict["IDLE"])
             if self.current_frame_index >= len(anim_list):
                 self.current_frame_index = 0
             
             frame_data = list(anim_list[self.current_frame_index])
             
-            if getattr(self, "state", "IDLE") == "TALKING" and anim_name != "SLEEPING":
-                import time
-                tick = int(time.time() * 10)
-                
-                # Find eyes to position mouth
-                eye_rows = [r_idx for r_idx, row in enumerate(frame_data) if 'E' in row]
-                if eye_rows:
-                    mouth_r = max(eye_rows) + 1
-                    if mouth_r + 2 < len(frame_data):
-                        is_big = (tick % 4 < 2)
-                        
-                        def set_p(r, c, ch):
-                            if 0 <= r < len(frame_data) and 0 <= c < len(frame_data[r]):
-                                frame_data[r] = frame_data[r][:c] + ch + frame_data[r][c+1:]
-                        
-                        if is_big:
-                            # Shifted right by 1, down by 1, and larger
-                            set_p(mouth_r+1, 10, 'M'); set_p(mouth_r+1, 11, 'M')
-                            set_p(mouth_r+2, 9, 'M'); set_p(mouth_r+2, 10, 'M'); set_p(mouth_r+2, 11, 'M'); set_p(mouth_r+2, 12, 'M')
-                            set_p(mouth_r+3, 9, 'M'); set_p(mouth_r+3, 10, 'M'); set_p(mouth_r+3, 11, 'M'); set_p(mouth_r+3, 12, 'M')
-                            set_p(mouth_r+4, 10, 'M'); set_p(mouth_r+4, 11, 'M')
-                        else:
-                            # Partially open
-                            set_p(mouth_r+1, 10, 'M'); set_p(mouth_r+1, 11, 'M')
-                            set_p(mouth_r+2, 10, 'M'); set_p(mouth_r+2, 11, 'M')
-
-            
             grid_w = len(frame_data[0])
             grid_h = len(frame_data)
-            pixel_size = max(2, int(self.scale_factor * 1.6)) # Scaled correctly to original PNG size
+            old_pixel_size = max(2, int(self.scale_factor * 1.6))
+            if is_high_res:
+                pixel_size = max(1, int(self.scale_factor * 0.8))
+            else:
+                pixel_size = old_pixel_size
             
             dest_width = grid_w * pixel_size
             dest_height = grid_h * pixel_size
@@ -1484,10 +1529,20 @@ class PetWidget(QWidget):
                     color = None
                     if char == 'E':
                         color = MATRIX_COLORS['W']
-                        if c < 10:
+                        if c < (len(row_str) // 2):
                             left_eye_pixels.append((c, r))
                         else:
                             right_eye_pixels.append((c, r))
+                    elif char == 'L':
+                        c_r = min(255, custom_r + 20)
+                        c_g = min(255, custom_g + 20)
+                        c_b = min(255, custom_b + 20)
+                        color = QColor(c_r, c_g, c_b)
+                    elif char == 'D':
+                        c_r = max(0, custom_r - 20)
+                        c_g = max(0, custom_g - 20)
+                        c_b = max(0, custom_b - 20)
+                        color = QColor(c_r, c_g, c_b)
                     elif char in MATRIX_COLORS:
                         color = MATRIX_COLORS[char]
                         
@@ -1497,6 +1552,26 @@ class PetWidget(QWidget):
                         px_y = int(dest_y + r * pixel_size)
                         painter.drawRect(px_x, px_y, pixel_size - 1, pixel_size - 1)
                         
+            if getattr(self, "state", "IDLE") == "TALKING" and anim_name != "SLEEPING":
+                import time
+                tick = int(time.time() * 10)
+                
+                eye_rows = [r_idx for r_idx, row in enumerate(frame_data) if 'E' in row]
+                if eye_rows:
+                    is_big = (tick % 4 < 2)
+                    mouth_y = dest_y + (max(eye_rows) + 1) * pixel_size
+                    mouth_cx = dest_x + (len(frame_data[0]) / 2) * pixel_size
+                    
+                    painter.setBrush(MATRIX_COLORS['M'])
+                    painter.setPen(Qt.PenStyle.NoPen)
+                    if is_big:
+                        # Draw a large open mouth
+                        painter.drawRect(int(mouth_cx - old_pixel_size*1.5), int(mouth_y + old_pixel_size*1), int(old_pixel_size*3), int(old_pixel_size*2))
+                        painter.drawRect(int(mouth_cx - old_pixel_size*0.5), int(mouth_y + old_pixel_size*3), int(old_pixel_size*1), int(old_pixel_size*1))
+                    else:
+                        # Draw a smaller mouth
+                        painter.drawRect(int(mouth_cx - old_pixel_size*1.0), int(mouth_y + old_pixel_size*1), int(old_pixel_size*2), int(old_pixel_size*1))
+
             # Draw Dynamic Pupils
 
             if left_eye_pixels and right_eye_pixels and anim_name != "SLEEPING":
@@ -1508,8 +1583,8 @@ class PetWidget(QWidget):
                 dy = mouse_pos.y() - cat_global.y()
                 
                 dist = math.hypot(dx, dy)
-                max_off_x = pixel_size * 1.5
-                max_off_y = pixel_size * 0.8
+                max_off_x = old_pixel_size * 1.5
+                max_off_y = old_pixel_size * 0.8
                 
                 if dist > 0:
                     off_x = (dx / dist) * max_off_x
@@ -1526,8 +1601,8 @@ class PetWidget(QWidget):
                     pupil_cx = dest_x + avg_c * pixel_size + off_x + (pixel_size / 2)
                     pupil_cy = dest_y + avg_r * pixel_size + off_y + (pixel_size / 2)
                     
-                    pupil_w = pixel_size * 1.5
-                    pupil_h = pixel_size * 2.0
+                    pupil_w = old_pixel_size * 1.5
+                    pupil_h = old_pixel_size * 2.0
                     
                     painter.drawRect(int(pupil_cx - pupil_w/2), int(pupil_cy - pupil_h/2), int(pupil_w), int(pupil_h))
                     
@@ -1536,22 +1611,35 @@ class PetWidget(QWidget):
                     min_r = 5 if anim_name == "DRAGGED" else 4
                     min_cl = 5
                     min_cr = 11
+                    if is_high_res:
+                        min_r *= 2
+                        min_cl *= 2
+                        min_cr *= 2
                 else:
                     min_r = min(p[1] for p in left_eye_pixels + right_eye_pixels)
                     min_cl = min(p[0] for p in left_eye_pixels)
                     min_cr = min(p[0] for p in right_eye_pixels)
+                
+                # Dynamic scaling factors for high-res vs low-res grids
+                l_off = 4 if is_high_res else 2
+                r_off = 2 if is_high_res else 1
+                b_off = 8 if is_high_res else 4
+                lens_w = 12 if is_high_res else 6
+                lens_h = 6 if is_high_res else 3
+                bridge_h = 2 if is_high_res else 1
+                glint_s = 2 if is_high_res else 1
                     
                 painter.setBrush(Qt.GlobalColor.black)
-                painter.drawRect(int(dest_x + (min_cl-2)*pixel_size), int(dest_y + min_r*pixel_size), int(6*pixel_size), int(3*pixel_size))
-                painter.drawRect(int(dest_x + (min_cr-1)*pixel_size), int(dest_y + min_r*pixel_size), int(6*pixel_size), int(3*pixel_size))
-                painter.drawRect(int(dest_x + (min_cl+4)*pixel_size), int(dest_y + min_r*pixel_size), int((min_cr - min_cl - 4)*pixel_size), int(pixel_size))
+                painter.drawRect(int(dest_x + (min_cl-l_off)*pixel_size), int(dest_y + min_r*pixel_size), int(lens_w*pixel_size), int(lens_h*pixel_size))
+                painter.drawRect(int(dest_x + (min_cr-r_off)*pixel_size), int(dest_y + min_r*pixel_size), int(lens_w*pixel_size), int(lens_h*pixel_size))
+                painter.drawRect(int(dest_x + (min_cl+b_off)*pixel_size), int(dest_y + min_r*pixel_size), int((min_cr - min_cl - b_off)*pixel_size), int(bridge_h*pixel_size))
                 
                 painter.setBrush(Qt.GlobalColor.white)
-                painter.drawRect(int(dest_x + min_cl*pixel_size), int(dest_y + min_r*pixel_size), int(pixel_size), int(pixel_size))
-                painter.drawRect(int(dest_x + min_cr*pixel_size), int(dest_y + min_r*pixel_size), int(pixel_size), int(pixel_size))
+                painter.drawRect(int(dest_x + min_cl*pixel_size), int(dest_y + min_r*pixel_size), int(glint_s*pixel_size), int(glint_s*pixel_size))
+                painter.drawRect(int(dest_x + min_cr*pixel_size), int(dest_y + min_r*pixel_size), int(glint_s*pixel_size), int(glint_s*pixel_size))
                     
             if getattr(self, 'is_listening_to_music', False) and anim_name != "SLEEPING":
-                hp_frame = [
+                hp_frame_base = [
                     "......MMMMMMMM......",
                     ".....MM......MM.....",
                     "....MM........MM....",
@@ -1560,6 +1648,7 @@ class PetWidget(QWidget):
                     "...MM..........MM...",
                     "....MM........MM...."
                 ]
+                hp_frame = epx_scale(hp_frame_base) if self.settings.get("high_res_mode", True) else hp_frame_base
                 painter.setPen(Qt.PenStyle.NoPen)
                 for r, row_str in enumerate(hp_frame):
                     for c, char in enumerate(row_str):
