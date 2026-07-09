@@ -3,18 +3,17 @@ import time
 import psutil
 import pyaudio
 import audioop
-import math
 import os
-import threading
-import winsound
-import random
 import json
 from datetime import datetime
+# pyrefly: ignore [missing-import]
 from PyQt6.QtWidgets import (QApplication, QWidget, QMenu, QInputDialog, QSystemTrayIcon,
                              QVBoxLayout, QHBoxLayout, QLabel, QSlider, QCheckBox, 
                              QLineEdit, QPushButton, QDateTimeEdit, QSpinBox, QGroupBox)
-from PyQt6.QtGui import QPainter, QCursor, QColor, QAction, QPen, QFont, QPainterPath, QPixmap
-from PyQt6.QtCore import Qt, QPoint, QTimer, pyqtSignal, QThread, QRect, QDateTime
+# pyrefly: ignore [missing-import]
+from PyQt6.QtGui import QPainter, QCursor, QColor, QAction, QFont, QPixmap
+# pyrefly: ignore [missing-import]
+from PyQt6.QtCore import Qt, QPoint, QTimer, pyqtSignal, QThread, QDateTime
 from pynput import mouse, keyboard
 # pyrefly: ignore [missing-import]
 import pygetwindow as gw
@@ -812,7 +811,7 @@ class MicThread(QThread):
                                               rate=44100,
                                               input=True,
                                               frames_per_buffer=1024)
-                except Exception as e:
+                except Exception:
                     time.sleep(2)
                     continue
             
@@ -823,7 +822,7 @@ class MicThread(QThread):
                     self.is_talking_signal.emit(True)
                 else:
                     self.is_talking_signal.emit(False)
-            except Exception as e:
+            except Exception:
                 self.is_talking_signal.emit(False)
                 time.sleep(0.1)
             
@@ -1038,78 +1037,6 @@ class PetWidget(QWidget):
             "DRAGGED": [(c, 1) for c in range(4)],       # Row 1
             "TYPING": [(c, 7) for c in range(6)],        # Row 7
         "CODING_IDLE": [
-        [
-            "....................",
-            ".....PH......HP.....",
-            "....PPSP....PPSP....",
-            "....HPPPHHHPPPHS....",
-            "...HGGGGGGGGGGGGGS..",
-            "...SPGGGGGGGGGGGS...",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "...SSPPPPPPPPPPS..S.",
-            "...SSPPPPPPPPPPS.S..",
-            "...SSPPPPPPPPPPSSS..",
-            "...SSPPPPPPPPPPS....",
-            ".............SS.....",
-            "...................."
-        ]
-    ],
-    "CODING_TYPING": [
-        [
-            "....................",
-            ".....PH......HP.....",
-            "....PPSP....PPSP....",
-            "....HPPPHHHPPPHS....",
-            "...HGGGGGGGGGGGGGS..",
-            "...SPGGGGGGGGGGGS...",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "...SSPPPPPPPPPPS..S.",
-            "...SSPPPPPPPPPPS.S..",
-            "...SSPPPPPPPPPPSSS..",
-            "...SSPPPPPPPPPPS....",
-            ".............SS.....",
-            "...................."
-        ],
-        [
-            "....................",
-            ".....PH......HP.....",
-            "....PPSP....PPSP....",
-            "....HPPPHHHPPPHS....",
-            "...HGGGGGGGGGGGGGS..",
-            "...SPGGGGGGGGGGGS...",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "....SPPPPPPPPSS...S.",
-            "....SPPPPPPPPSS..S..",
-            "....SPPPPPPPPSS.SS..",
-            "....SPPS............",
-            ".....SS.............",
-            "...................."
-        ]
-    ],
-    "PURRING": [
-        [
-            "....................",
-            ".....PH......HP.....",
-            "....PPSP....PPSP....",
-            "....HPPPHHHPPPHS....",
-            "...HPPBBBBPPBBBBS...",
-            "...SPPBBBBPPBBBBS...",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "....SPPPPPPPPPPS..S.",
-            "....SPPPPPPPPPPS.S..",
-            "....SPPPPPPPPPPSSS..",
-            "....SPPPPPPPPPPS....",
-            "....SPPS....SPPS....",
-            "....SPPS....SPPS....",
-            ".....SS......SS.....",
-            "...................."
-        ]
-    ],
-    "CODING_IDLE": [
         [
             "....................",
             ".....PH......HP.....",
@@ -1422,9 +1349,6 @@ class PetWidget(QWidget):
         
         # Determine speed (matrix mode allows variable speed)
         speed = 1 if anim_name == 'CODING_TYPING' else 2 # 30ms for typing, 60ms for others
-        # Determine y_offset. If in CODING state, offset so cat doesn't bounce off screen
-        anim_name = self.get_current_animation_name()
-        y_offset = -10 if anim_name in ["CODING", "CODING_TYPING", "CODING_IDLE"] else 0
 
         if True:
             if anim_name == "TYPING":
@@ -1605,7 +1529,7 @@ class PetWidget(QWidget):
                     pupil_h = old_pixel_size * 2.0
                     
                     painter.drawRect(int(pupil_cx - pupil_w/2), int(pupil_cy - pupil_h/2), int(pupil_w), int(pupil_h))
-                    
+                        
             if self.settings.get("wear_sunglasses", False) and anim_name != "SLEEPING":
                 if not left_eye_pixels or not right_eye_pixels:
                     min_r = 5 if anim_name == "DRAGGED" else 4
