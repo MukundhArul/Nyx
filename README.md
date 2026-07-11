@@ -8,6 +8,12 @@
 
 ---
 
+## 🌟 What's New in v1.1.1?
+Nyx has just received some amazing new features and optimizations!
+- **🎙️ Audio Interactivity:** Nyx now listens to your microphone! Talk out loud, and Nyx will open its mouth to talk back to you in real-time.
+- **✨ EPX High-Res Scaling:** A brand new scaling algorithm that smooths out pixel art when you make the cat larger. Toggle it right from the settings!
+- **🚀 Performance Optimizations:** Massive code cleanups, removal of duplicate rendering data, and fixed Spotify animation symmetry, making Nyx lighter and faster than ever.
+
 ## 🌟 What's New in v1.1.0?
 Nyx has received a massive internal and external overhaul!
 - **🎨 String-Based Matrix Rendering Engine:** Nyx no longer uses traditional image sprites! Every frame is procedurally generated from custom ASCII matrices, meaning absolutely zero blurry pixels and full RGB color customization!
@@ -26,6 +32,7 @@ Nyx isn't just a static image; it's a reactive companion powered by a custom str
 ### 🎮 Interactive Animations
 *   **🖱️ Drag & Drop:** Click and hold to pick Nyx up and move it anywhere on your screen. When dragged, Nyx gracefully dangles!
 *   **⌨️ Keyboard Kneading:** Start typing an essay or writing code, and Nyx will tap its little paws along with your keystrokes.
+*   **🎙️ Talking (Mic Support):** Nyx uses your microphone to listen to you! If you start talking, Nyx's mouth will move to talk back to you.
 *   **💤 Sleep Mode:** If you step away from your keyboard and mouse for 30 seconds, Nyx will close its eyes and drift off to sleep.
 
 ### 📱 App Reactions
