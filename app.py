@@ -17,8 +17,7 @@ from PyQt6.QtGui import QPainter, QCursor, QColor, QAction, QFont, QPixmap
 from PyQt6.QtGui import (QPainter, QCursor, QColor, QAction, QFont, QPixmap,
                          QIcon, QPolygonF, QPen, QRadialGradient)
 # pyrefly: ignore [missing-import]
-from PyQt6.QtCore import Qt, QPoint, QTimer, pyqtSignal, QThread, QDateTime
-from PyQt6.QtCore import Qt, QPoint, QPointF, QTimer, pyqtSignal, QThread, QDateTime
+from PyQt6.QtCore import Qt, QPoint, QPointF, QRectF, QTimer, pyqtSignal, QThread, QDateTime
 from pynput import mouse, keyboard
 # pyrefly: ignore [missing-import]
 import pygetwindow as gw
@@ -286,47 +285,106 @@ MATRIX_FRAMES = {
     ],
     'PURRING': [
         [
-            "..............................................",
-            "................P..........P..................",
-            "...............PP..........PP.................",
-            "..............PPPP........PPPP................",
-            ".............PPPPPP......PPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPWWWPPPPPPPPWWWPPP..............",
-            "............PPWPWPWPPPPPPWPWPWPP..............",
-            ".........WWWPPWWPWWPPPPPPWWPWWPPWWW...........",
-            "............PPWPPPWPPPPPPWPPPWPP..............",
-            "............PPPWWWPPPPPPPPWWWPPP..............",
-            "........WWWWPPPPPPPPPPPPPPPPPPPPWWWW..........",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
-            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
-            "...........PPPPPPPPPPPPPPPPPPPPPP..PPP........",
-            "...........PPPPPPPPPPPPPPPPPPPPPPPPP..........",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            "..............WWWWW......WWWWW................",
+            ".......WWW.......WWW............",
+            "......WWPW......WWPWW...........",
+            ".....WWPPWW.....WPPPWW..........",
+            ".....WPPPPWWWWWWWPPPPW..........",
+            "....WWPPPPPPPPPPPPPPPW..........",
+            "....WPPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WPPPPPPPPPPPPPPPPPPW........",
+            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "...WPPWPWWPPPPPPWPWWPPPW........",
+            "...WPWWPPWPPPPPPWPPWWPPW........",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPPPPPPPPPPPPPPPPPPPW......",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WWPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "...WWPPPPPPPPPPPPPPPPPPW........",
+            "...WPPPPPPPPPPPPPPPPPPPW...WWW..",
+            "...WPPPPPPPPPPPPPPPPPPPW..WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
+            "...WWPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPWPPPW....",
+            "....WPPPPPPPPPPPPPPPPPPPWWP.....",
+            "....WWWWPPPPPPPPPPPPWWWWWW......",
+            "......WWWWPPWWWWPPWWWW..........",
+            "........WWWWWWWWWWWW............",
+        ],
+        [
+            ".......WWW.......WWW............",
+            "......WWPW......WWPWW...........",
+            ".....WWPPWW.....WPPPWW..........",
+            ".....WPPPPWWWWWWWPPPPW..........",
+            "....WWPPPPPPPPPPPPPPPW..........",
+            "....WPPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WPPPPPPPPPPPPPPPPPPW........",
+            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "...WPPWPWWPPPPPPWPWWPPPW........",
+            "...WPWWPPWPPPPPPWPPWWPPW........",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPPPPPPPPPPPPPPPPPPPW......",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "...WPPPPPPPPPPPPPPPPPPPPW.......",
+            "...WPPPPPPPPPPPPPPPPPPPPW.......",
+            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "...WPPPPPPPPPPPPPPPPPPPW....WWW.",
+            "...WPPPPPPPPPPPPPPPPPPPW...WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPWW..WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPWW..WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPW..WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPWW.WPPPW",
+            "...WWPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPW.WPPPW..",
+            "....WPPPPPPPPPPPPPPPPPPPWWPP....",
+            "....WWWWPPPPPPPPPPPPWWWWWW......",
+            "......WWWWPPWWWWPPWWWW..........",
+            "........WWWWWWWWWWWW............",
+        ],
+        [
+            ".......WWW.......WWW............",
+            "......WWPW......WWPWW...........",
+            ".....WWPPWW.....WPPPWW..........",
+            ".....WPPPPWWWWWWWPPPPW..........",
+            "....WWPPPPPPPPPPPPPPPW..........",
+            "....WPPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WPPPPPPPPPPPPPPPPPPW........",
+            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "...WPPWPWWPPPPPPWPWWPPPW........",
+            "...WPWWPPWPPPPPPWPPWWPPW........",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPPPPPPPPPPPPPPPPPPPW......",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WWPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "...WWPPPPPPPPPPPPPPPPPPW........",
+            "...WPPPPPPPPPPPPPPPPPPPW..WWWW..",
+            "...WPPPPPPPPPPPPPPPPPPPW.WPPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWWWPPPW..",
+            "...WPPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "...WPPPPPPPPPPPPPPPPPPPPWPPPW...",
+            "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
+            "...WWPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPWPPPW....",
+            "....WPPPPPPPPPPPPPPPPPPPWWP.....",
+            "....WWWWPPPPPPPPPPPPWWWWWW......",
+            "......WWWWPPWWWWPPWWWW..........",
+            "........WWWWWWWWWWWW............",
         ],
     ],
     'SLEEPING': [
@@ -342,11 +400,11 @@ MATRIX_FRAMES = {
             "...WWPPPPPPPPPPPPPPPPPPW........",
             "...WPPWWWWPPPPPPPWWWWPPW........",
             "...WPPPPPPPPPPPPPPPPPPPW........",
-            "WWWPPPPPPPPPPPPPPPPPPPPW........",
-            "WWWPPPPPPPPPPPPPPPPPPPPWWWWW....",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
             "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
             "...WPPPPPPPPPPPPPPPPPPPPPW......",
-            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
             "....WPPPPPPPPPPPPPPPPPWW........",
             "....WWPPPPPPPPPPPPPPPWW.........",
             "....WPPPPPPPPPPPPPPPPPWW........",
@@ -376,24 +434,24 @@ MATRIX_FRAMES = {
             "...WWPPPPPPPPPPPPPPPPPPW........",
             "...WPPWWWWPPPPPPPWWWWPPW........",
             "...WPPPPPPPPPPPPPPPPPPPW........",
-            "WWWPPPPPPPPPPPPPPPPPPPPW........",
-            "WWWPPPPPPPPPPPPPPPPPPPPWWWWW....",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
             "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
             "...WPPPPPPPPPPPPPPPPPPPPPW......",
-            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
             "...WWPPPPPPPPPPPPPPPPPPWW.......",
             "...WPPPPPPPPPPPPPPPPPPPPW.......",
             "...WPPPPPPPPPPPPPPPPPPPPW.......",
             "...WWPPPPPPPPPPPPPPPPPPWW.......",
-            "...WPPPPPPPPPPPPPPPPPPPW...WWW..",
-            "...WPPPPPPPPPPPPPPPPPPPW..WPPPW.",
-            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
-            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
-            "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
-            "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-            "...WWPPPPPPPPPPPPPPPPPPWWPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPW....",
-            "....WPPPPPPPPPPPPPPPPPPPWWP.....",
+            "...WPPPPPPPPPPPPPPPPPPPW....WWW.",
+            "...WPPPPPPPPPPPPPPPPPPPW...WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPWW..WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPWW..WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPW..WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPWW.WPPPW",
+            "...WWPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPW.WPPPW..",
+            "....WPPPPPPPPPPPPPPPPPPPWWPP....",
             "....WWWWPPPPPPPPPPPPWWWWWW......",
             "......WWWWPPWWWWPPWWWW..........",
             "........WWWWWWWWWWWW............",
@@ -526,92 +584,278 @@ MATRIX_FRAMES = {
     ],
     'VIBING': [
         [
-            "..............................................",
-            "................P..........P..................",
-            "..............MMMMMMMMMMMMMMM.................",
-            ".............MMMMMMMMMMMMMMMMM................",
-            ".............PPPPPP......PPPPPP...............",
-            ".........MMM.PPPPPPPPPPPPPPPPPP.MMM...........",
-            ".........MMMPPPPPPPPPPPPPPPPPPPPMMM...........",
-            ".........MMMPPPPPPPPPPPPPPPPPPPPMMM...........",
-            ".........MMMPPPPPPPPPPPPPPPPPPPPMMM...........",
-            ".........MMMPPPPPPPPPPPPPPPPPPPPMMM...........",
-            ".........MMMPPPPPPPPPPPPPPPPPPPPMMM...........",
-            "............PPPWWWPPPPPPPPWWWPPP..............",
-            "............PPWPPPWPPPPPPWPPPWPP..............",
-            ".........WWWPPWPPPWPPPPPPWPPPWPPWWW...........",
-            "............PPWPPPWPPPPPPWPPPWPP..............",
-            "............PPPWWWPPPPPPPPWWWPPP..............",
-            "........WWWWPPPPPPPPPPPPPPPPPPPPWWWW..........",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
-            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
-            "...........PPPPPPPPPPPPPPPPPPPPPP..PPP........",
-            "...........PPPPPPPPPPPPPPPPPPPPPPPPP..........",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            "..............WWWWW......WWWWW................",
+            ".......WWW.......WWW............",
+            "......WMMW.......WMMW...........",
+            ".....WMMMMWWWWWWWWMMMMW.........",
+            "....WMMMMMMMMMMMMMMMMMMW........",
+            "...WMMMWPPPPPPPPPPPPPWMMMW......",
+            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
+            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
+            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
+            "..WWMMMWPPWWWPPPPPPPWWMMMMWW....",
+            "..WMMMMWPPWPPPWPPPPPPWPPPWMMW...",
+            "..WMMMMWPPWPPPWPPPPPPWPPPWMMW...",
+            "WWWWMMMWPPWPPPWPPPPPPWPPPWMMWWWW",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPPPPPPPPPPPPPPPPPPPW......",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WWPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "...WWPPPPPPPPPPPPPPPPPPW........",
+            "...WPPPPPPPPPPPPPPPPPPPW...WWW..",
+            "...WPPPPPPPPPPPPPPPPPPPW..WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
+            "...WWPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPWPPPW....",
+            "....WPPPPPPPPPPPPPPPPPPPWWP.....",
+            "....WWWWPPPPPPPPPPPPWWWWWW......",
+            "......WWWWPPWWWWPPWWWW..........",
+            "........WWWWWWWWWWWW............",
+        ],
+        [
+            "................................",
+            ".......WWW.......WWW............",
+            "......WMMW.......WMMW...........",
+            ".....WMMMMWWWWWWWWMMMMW.........",
+            "....WMMMMMMMMMMMMMMMMMMW........",
+            "...WMMMWPPPPPPPPPPPPPWMMMW......",
+            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
+            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
+            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
+            "..WWMMMWPPWWWPPPPPPPWWMMMMWW....",
+            "..WMMMMWPPWPPPWPPPPPPWPPPWMMW...",
+            "WWWWMMMWPPWPPPWPPPPPPWPPPWMMWWWW",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "...WPPPPPPPPPPPPPPPPPPPPW.......",
+            "...WPPPPPPPPPPPPPPPPPPPPW.......",
+            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "...WPPPPPPPPPPPPPPPPPPPW....WWW.",
+            "...WPPPPPPPPPPPPPPPPPPPW...WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPWW..WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPWW..WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPW..WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPWW.WPPPW",
+            "...WWPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPW.WPPPW..",
+            "....WPPPPPPPPPPPPPPPPPPPWWPP....",
+            "....WWWWPPPPPPPPPPPPWWWWWW......",
+            "......WWWWPPWWWWPPWWWW..........",
+            "........WWWWWWWWWWWW............",
+        ],
+        [
+            ".......WWW.......WWW............",
+            "......WMMW.......WMMW...........",
+            ".....WMMMMWWWWWWWWMMMMW.........",
+            "....WMMMMMMMMMMMMMMMMMMW........",
+            "...WMMMWPPPPPPPPPPPPPWMMMW......",
+            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
+            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
+            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
+            "..WWMMMWPPWWWPPPPPPPWWMMMMWW....",
+            "..WMMMMWPPWPPPWPPPPPPWPPPWMMW...",
+            "..WMMMMWPPWPPPWPPPPPPWPPPWMMW...",
+            "WWWWMMMWPPWPPPWPPPPPPWPPPWMMWWWW",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPPPPPPPPPPPPPPPPPPPW......",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WWPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "...WWPPPPPPPPPPPPPPPPPPW........",
+            "...WPPPPPPPPPPPPPPPPPPPW..WWWW..",
+            "...WPPPPPPPPPPPPPPPPPPPW.WPPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWWWPPPW..",
+            "...WPPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "...WPPPPPPPPPPPPPPPPPPPPWPPPW...",
+            "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
+            "...WWPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPWPPPW....",
+            "....WPPPPPPPPPPPPPPPPPPPWWP.....",
+            "....WWWWPPPPPPPPPPPPWWWWWW......",
+            "......WWWWPPWWWWPPWWWW..........",
+            "........WWWWWWWWWWWW............",
+        ],
+        [
+            "................................",
+            ".......WWW.......WWW............",
+            "......WMMW.......WMMW...........",
+            ".....WMMMMWWWWWWWWMMMMW.........",
+            "....WMMMMMMMMMMMMMMMMMMW........",
+            "...WMMMWPPPPPPPPPPPPPWMMMW......",
+            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
+            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
+            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
+            "..WWMMMWPPWWWPPPPPPPWWMMMMWW....",
+            "..WMMMMWPPWPPPWPPPPPPWPPPWMMW...",
+            "WWWWMMMWPPWPPPWPPPPPPWPPPWMMWWWW",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "...WPPPPPPPPPPPPPPPPPPPPW.......",
+            "...WPPPPPPPPPPPPPPPPPPPPW.......",
+            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "...WPPPPPPPPPPPPPPPPPPPW...WWW..",
+            "...WPPPPPPPPPPPPPPPPPPPW..WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
+            "...WWPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPWPPPW....",
+            "....WPPPPPPPPPPPPPPPPPPPWWP.....",
+            "....WWWWPPPPPPPPPPPPWWWWWW......",
+            "......WWWWPPWWWWPPWWWW..........",
+            "........WWWWWWWWWWWW............",
         ],
     ],
     'WATCHING': [
         [
-            "..............................................",
-            "................P..........P..................",
-            "...............PP..........PP.................",
-            "..............PPPP........PPPP................",
-            ".............PPPPPP......PPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPWWWPPPPPPPPWWWPPP..............",
-            "............PPWPPPWPPPPPPWPPPWPP..............",
-            ".........WWWPPWPPPWPPPPPPWPPPWPPWWW...........",
-            "............PPWPPPWPPPPPPWPPPWPP..............",
-            "............PPPWWWPPPPPPPPWWWPPP..............",
-            "........WWWWPPPPPPPPPPPPPPPPPPPPWWWW..........",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "............PPPPPPPPPPPPPPPPPPPP..............",
-            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
-            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
-            "...........PPPPPPPPPPPPPPPPPPPPPP..PPP........",
-            "...........PPPPPPPPPPPPPPPPPPPPPPPPP..........",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
-            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            ".............PPPPPPPPPPPPPPPPPP...............",
-            "..............WWWWW......WWWWW................",
+            ".......WWW.......WWW............",
+            "......WWPW......WWPWW...........",
+            ".....WWPPWW.....WPPPWW..........",
+            ".....WPPPPWWWWWWWPPPPW..........",
+            "....WWPPPPPPPPPPPPPPPW..........",
+            "....WPPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WPPPPPPPPPPPPPPPPPPW........",
+            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPPPPPPPPPPPPPPPPPPPW......",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WWPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "...WWPPPPPPPPPPPPPPPPPPW........",
+            "...WPPPPPPPPPPPPPPPPPPPW...WWW..",
+            "...WPPPPPPPPPPPPPPPPPPPW..WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
+            "...WWPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPWPPPW....",
+            "....WPPPPPPPPPPPPPPPPPPPWWP.....",
+            "....WWWWPPPPPPPPPPPPWWWWWW......",
+            "......WWWWPPWWWWPPWWWW..........",
+            "........WWWWWWWWWWWW............",
+        ],
+        [
+            ".......WWW.......WWW............",
+            "......WWPWW.....WWPWW...........",
+            ".....WWPPWW.....WWPPWW..........",
+            ".....WPPPPWWWWWWWPPPPW..........",
+            "....WWPPPPPPPPPPPPPPPW..........",
+            "....WPPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WPPPPPPPPPPPPPPPPPPW........",
+            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPPPPPPPPPPPPPPPPPPPW......",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "...WPPPPPPPPPPPPPPPPPPPPW.......",
+            "...WPPPPPPPPPPPPPPPPPPPPW.......",
+            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "...WPPPPPPPPPPPPPPPPPPPW...WWW..",
+            "...WPPPPPPPPPPPPPPPPPPPW..WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
+            "...WWPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPWPPPW....",
+            "....WPPPPPPPPPPPPPPPPPPPWWP.....",
+            "....WWWWPPPPPPPPPPPPWWWWWW......",
+            "......WWWWPPWWWWPPWWWW..........",
+            "........WWWWWWWWWWWW............",
+        ],
+        [
+            ".......WWW.......WWW............",
+            "......WWPW......WWPWW...........",
+            ".....WWPPWW.....WPPPWW..........",
+            ".....WPPPPWWWWWWWPPPPW..........",
+            "....WWPPPPPPPPPPPPPPPW..........",
+            "....WPPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WPPPPPPPPPPPPPPPPPPW........",
+            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPPPPPPPPPPPPPPPPPPPW......",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "...WPPPPPPPPPPPPPPPPPPPPW.......",
+            "...WPPPPPPPPPPPPPPPPPPPPW.......",
+            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "...WPPPPPPPPPPPPPPPPPPPW....WWW.",
+            "...WPPPPPPPPPPPPPPPPPPPW...WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPWW..WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPWW..WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPW..WPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPWW.WPPPW",
+            "...WWPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPW.WPPPW..",
+            "....WPPPPPPPPPPPPPPPPPPPWWPP....",
+            "....WWWWPPPPPPPPPPPPWWWWWW......",
+            "......WWWWPPWWWWPPWWWW..........",
+            "........WWWWWWWWWWWW............",
+        ],
+        [
+            ".......WWW.......WWW............",
+            "......WWPW......WWPWW...........",
+            ".....WWPPWW.....WPPPWW..........",
+            ".....WPPPPWWWWWWWPPPPW..........",
+            "....WWPPPPPPPPPPPPPPPW..........",
+            "....WPPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WPPPPPPPPPPPPPPPPPPW........",
+            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
+            "...WPPPWWWPPPPPPPPWWWPPPPW......",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPPPPPPPPPPPPPPPPPPPW......",
+            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WWPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "...WWPPPPPPPPPPPPPPPPPPW........",
+            "...WPPPPPPPPPPPPPPPPPPPW..WWWW..",
+            "...WPPPPPPPPPPPPPPPPPPPW.WPPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWWWPPPW..",
+            "...WPPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "...WPPPPPPPPPPPPPPPPPPPPWPPPW...",
+            "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
+            "...WWPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPWPPPW....",
+            "....WPPPPPPPPPPPPPPPPPPPWWP.....",
+            "....WWWWPPPPPPPPPPPPWWWWWW......",
+            "......WWWWPPWWWWPPWWWW..........",
+            "........WWWWWWWWWWWW............",
         ],
     ],
 }
@@ -1139,6 +1383,10 @@ class PetWidget(QWidget):
         self.blink_duration = 0
         self.hearts = []
         self.sleeping_zzzs = []
+        self.music_notes = []
+        self.is_petting = False
+        self.drag_has_started = False
+        self.mouse_press_pos = None
         self.oldPos = self.pos()
         self.tick_count = 0
         
@@ -1501,19 +1749,32 @@ class PetWidget(QWidget):
             pass
 
     def update_active_app_state(self):
-        title = getattr(self, 'current_window_title', '')
-        if "youtube" in title:
-            self.active_app_state = "WATCHING"
-        elif getattr(self, '_raw_is_spotify', False):
-            if "spotify" in title:
-                self.active_app_state = ""
-                self.is_listening_to_music = False
-            else:
-                self.active_app_state = "VIBING"
-                self.is_listening_to_music = True
-        else:
-            self.active_app_state = ""
+        title = getattr(self, 'current_window_title', '').lower()
+        
+        # 1. Video Watching Detection (YouTube, Twitch, Netflix, Disney+, Anime, Media Players)
+        watching_keywords = [
+            "youtube", "twitch", "netflix", "disney+", "crunchyroll",
+            "prime video", "bilibili", "vlc media player", "mpv", "media player"
+        ]
+        
+        # 2. Music Vibing Detection (Spotify, Apple Music, YouTube Music, SoundCloud, Tidal, etc.)
+        music_keywords = [
+            "spotify", "apple music", "soundcloud", "tidal", "deezer", "pandora", "amazon music"
+        ]
+        
+        is_yt_music = "youtube music" in title
+        is_music = is_yt_music or any(k in title for k in music_keywords) or getattr(self, '_raw_is_spotify', False)
+        is_watching = not is_yt_music and any(k in title for k in watching_keywords)
+        
+        if is_music:
+            self.is_listening_to_music = True
+            self.active_app_state = "VIBING"
+        elif is_watching:
             self.is_listening_to_music = False
+            self.active_app_state = "WATCHING"
+        else:
+            self.is_listening_to_music = False
+            self.active_app_state = ""
 
     def on_spotify_status(self, is_spotify):
         self._raw_is_spotify = is_spotify
@@ -1534,7 +1795,6 @@ class PetWidget(QWidget):
         if is_typing:
             return "TYPING"
             
-        if app_state != "": return app_state
         if app_state != "": return app_state
         return self.state
 
@@ -1627,6 +1887,35 @@ class PetWidget(QWidget):
                 z[0] += math.sin(z[4]) * 0.45 + 0.35 # Drift upward and to the right
                 z[2] -= 3.5 # Fade out
             self.sleeping_zzzs = [z for z in self.sleeping_zzzs if z[2] > 0]
+
+        # Floating Musical Notes for VIBING / music playback
+        is_music = (anim_name == "VIBING" or getattr(self, 'is_listening_to_music', False))
+        if is_music and anim_name != "SLEEPING":
+            if self.tick_count % 16 == 0:
+                note_symbols = ["♫", "♪", "♬", "♩"]
+                sym = random.choice(note_symbols)
+                side = random.choice([-1, 1])
+                ox = side * random.randint(10, 17)
+                oy = random.randint(-16, -8)
+                drift_speed = random.uniform(0.8, 1.4)
+                note_color = random.choice([
+                    QColor(255, 110, 150),  # Pastel coral pink
+                    QColor(100, 210, 255),  # Cyan
+                    QColor(255, 220, 100),  # Sunny gold
+                    QColor(180, 140, 255)   # Lavender
+                ])
+                self.music_notes.append([ox, oy, 255.0, drift_speed, sym, note_color, random.uniform(0.0, 6.28)])
+        else:
+            if hasattr(self, 'music_notes') and self.music_notes and not is_music:
+                self.music_notes.clear()
+
+        if hasattr(self, 'music_notes') and self.music_notes:
+            for n in self.music_notes:
+                n[1] -= n[3]  # float upward
+                n[6] += 0.10  # sway phase
+                n[0] += math.sin(n[6]) * 0.4  # gentle sway
+                n[2] -= 4.0   # fade out
+            self.music_notes = [n for n in self.music_notes if n[2] > 0]
         
         # Fluid per-state animation speeds
         speed = 10
@@ -1639,14 +1928,14 @@ class PetWidget(QWidget):
         elif anim_name == "SLEEPING":
             speed = 20 # ~400ms per frame (peaceful deep breathing)
         elif anim_name == "PURRING":
-            speed = 4
+            speed = 8  # ~160ms per frame (soft purring vibration and breathing swell)
         elif anim_name == "VIBING":
-            speed = 2
+            speed = 7  # ~140ms per frame (energetic rhythmic beat bounce)
         elif anim_name == "WATCHING":
-            speed = 6
+            speed = 16 # ~320ms per frame (calm, attentive screen gazing)
             
-        # Natural blinking logic (NEVER while typing or dragged!)
-        if getattr(self, 'is_typing', False) or anim_name in ["TYPING", "DRAGGED", "SLEEPING"]:
+        # Natural blinking logic (NEVER while typing, dragged, sleeping, or purring!)
+        if getattr(self, 'is_typing', False) or anim_name in ["TYPING", "DRAGGED", "SLEEPING", "PURRING"]:
             self.is_blinking = False
             self.blink_timer = random.randint(300, 500)
         else:
@@ -1861,14 +2150,18 @@ class PetWidget(QWidget):
             import time
             tick = int(time.time() * 10)
             is_big = (tick % 4 < 2)
-            mouth_y = dest_y + 17 * pixel_size
-            mouth_cx = dest_x + (grid_w / 2) * pixel_size
-            painter.setBrush(MATRIX_COLORS['M'])
+            mouth_y = dest_y + int(13 * pixel_size)
+            mouth_cx = dest_x + int(13.5 * pixel_size)
             painter.setPen(Qt.PenStyle.NoPen)
+            painter.setBrush(QColor(255, 90, 130))
+            ps = pixel_size
             if is_big:
-                painter.drawRect(int(mouth_cx - pixel_size * 2), int(mouth_y), int(pixel_size * 4), int(pixel_size * 3))
+                painter.drawRoundedRect(QRectF(mouth_cx - 2.5 * ps, mouth_y, 5 * ps, 3.5 * ps), 1.5, 1.5)
+                painter.setBrush(QColor(255, 255, 255))
+                painter.drawRect(int(mouth_cx - 2 * ps), int(mouth_y), ps, ps)
+                painter.drawRect(int(mouth_cx + 1 * ps), int(mouth_y), ps, ps)
             else:
-                painter.drawRect(int(mouth_cx - pixel_size * 1.5), int(mouth_y), int(pixel_size * 3), int(pixel_size * 1.5))
+                painter.drawRoundedRect(QRectF(mouth_cx - 1.5 * ps, mouth_y, 3 * ps, 2 * ps), 1.0, 1.0)
 
         # Floating Sleeping Zzzs
         if anim_name == "SLEEPING" and hasattr(self, 'sleeping_zzzs') and self.sleeping_zzzs:
@@ -1884,6 +2177,23 @@ class PetWidget(QWidget):
                 zy = int(head_y + z[1] * pixel_size * 0.4)
                 painter.drawText(zx, zy, "z" if alpha < 120 else "Z")
 
+        # Floating Musical Notes for VIBING & music playback
+        is_music = (anim_name == "VIBING" or getattr(self, 'is_listening_to_music', False))
+        if is_music and hasattr(self, 'music_notes') and self.music_notes and anim_name != "SLEEPING":
+            font = QFont("Segoe UI", 11, QFont.Weight.Bold)
+            font.setStyleStrategy(QFont.StyleStrategy.PreferAntialias)
+            painter.setFont(font)
+            head_x = dest_x + int(13.5 * pixel_size)
+            head_y = dest_y + int(4 * pixel_size)
+            for n in self.music_notes:
+                alpha = int(max(0, min(255, n[2])))
+                col = QColor(n[5])
+                col.setAlpha(alpha)
+                painter.setPen(col)
+                nx = int(head_x + n[0] * pixel_size * 0.45)
+                ny = int(head_y + n[1] * pixel_size * 0.45)
+                painter.drawText(nx, ny, n[4])
+
         # 5. Eye Rendering (Active Real-time Mouse Eye Follow for IDLE & TYPING)
         # Eye tracking is active in BOTH IDLE and TYPING (and VIBING/WATCHING)!
         has_dynamic_eyes = (anim_name in ["IDLE", "TYPING", "VIBING", "WATCHING"])
@@ -1893,8 +2203,9 @@ class PetWidget(QWidget):
             blush_color = QColor(255, 110, 150, 180)
             painter.setBrush(blush_color)
             painter.setPen(Qt.PenStyle.NoPen)
-            painter.drawEllipse(int(dest_x + 9 * pixel_size), int(dest_y + 15 * pixel_size), int(4.5 * pixel_size), int(2.5 * pixel_size))
-            painter.drawEllipse(int(dest_x + 31 * pixel_size), int(dest_y + 15 * pixel_size), int(4.5 * pixel_size), int(2.5 * pixel_size))
+            ps = pixel_size
+            painter.drawEllipse(int(dest_x + 6.5 * ps), int(dest_y + 12 * ps), int(4 * ps), int(2.5 * ps))
+            painter.drawEllipse(int(dest_x + 18.5 * ps), int(dest_y + 12 * ps), int(4 * ps), int(2.5 * ps))
 
         elif getattr(self, 'is_blinking', False) and anim_name != "DRAGGED":
             # Natural blinking: clean sleeping slit _ _ across row 10 (IDLE) or row 13 (TYPING)
@@ -1956,22 +2267,22 @@ class PetWidget(QWidget):
                 ry = int(dest_y + (10 + gaze_y) * ps)
                 painter.drawRect(rx, ry, ps, ps)
 
-        # 6. Headphones overlay (if music is playing and not vibing)
-        if getattr(self, 'is_listening_to_music', False) and anim_name != "SLEEPING" and anim_name != "VIBING":
+        # 6. Headphones overlay (if music is playing and typing)
+        if getattr(self, 'is_listening_to_music', False) and anim_name == "TYPING":
             hp_frame = [
-                "....MMMMMMMMMM....",
-                "...MM........MM...",
-                "..MM..........MM..",
-                "..MM..........MM..",
-                "..MM..........MM..",
-                "...MM........MM..."
+                ".............WMMMMMMMMMMW.............",
+                "............WMMMMMMMMMMMMW............",
+                "...........WMMW........WMMW...........",
+                "...........WMMW........WMMW...........",
+                "...........WMMW........WMMW...........",
+                "............WW..........WW............"
             ]
             painter.setPen(Qt.PenStyle.NoPen)
             for r, row_str in enumerate(hp_frame):
                 for c, char in enumerate(row_str):
-                    if char == 'M':
-                        painter.setBrush(MATRIX_COLORS['M'])
-                        painter.drawRect(int(dest_x + (c + 13) * pixel_size), int(dest_y + (r + 1) * pixel_size), pixel_size, pixel_size)
+                    if char in MATRIX_COLORS:
+                        painter.setBrush(MATRIX_COLORS[char])
+                        painter.drawRect(int(dest_x + c * pixel_size), int(dest_y + (r + 1) * pixel_size), pixel_size, pixel_size)
 
         # Restore coordinate space for speech bubble
         painter.restore()
@@ -2029,8 +2340,8 @@ class PetWidget(QWidget):
                 painter.drawText(text_x, y_start, l)
                 y_start += fm.height()
 
-        # 8. Floating Love Hearts
-        if hasattr(self, 'hearts') and self.hearts:
+        # 8. Floating Love Hearts (only during purring or petting)
+        if (anim_name == "PURRING" or getattr(self, 'is_petting', False)) and hasattr(self, 'hearts') and self.hearts:
             heart_matrix = [
                 ".XX.XX.",
                 "XXXXXXX",
@@ -2062,47 +2373,60 @@ class PetWidget(QWidget):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            self.is_dragging = True
-            self.is_petting = False
-            self.state = "DRAGGED"
-            self.oldPos = event.globalPosition().toPoint()
+            self.mouse_press_pos = event.globalPosition().toPoint()
             self.last_drag_pos = event.globalPosition().toPoint()
+            self.drag_has_started = False
             self.drag_vx = 0.0
             self.drag_vy = 0.0
             self.wobble_angle = 0.0
             self.wobble_vel = 0.0
-            self.setCursor(Qt.CursorShape.SizeAllCursor)
 
     def mouseMoveEvent(self, event):
-        curr_pos = event.globalPosition().toPoint()
-        if getattr(self, 'is_dragging', False):
-            dx = curr_pos.x() - self.last_drag_pos.x()
-            dy = curr_pos.y() - self.last_drag_pos.y()
-            self.last_drag_pos = curr_pos
-            self.move(self.x() + dx, self.y() + dy)
-            # Fluid velocity tracking
-            self.drag_vx = self.drag_vx * 0.65 + dx * 0.35
-            self.drag_vy = self.drag_vy * 0.65 + dy * 0.35
-            self.update()
+        if getattr(self, 'mouse_press_pos', None):
+            curr_pos = event.globalPosition().toPoint()
+            if not getattr(self, 'drag_has_started', False):
+                dist = math.hypot(curr_pos.x() - self.mouse_press_pos.x(), curr_pos.y() - self.mouse_press_pos.y())
+                if dist >= 4:
+                    self.drag_has_started = True
+                    self.is_dragging = True
+                    self.is_petting = False
+                    self.state = "DRAGGED"
+                    self.setCursor(Qt.CursorShape.SizeAllCursor)
+            
+            if getattr(self, 'is_dragging', False):
+                dx = curr_pos.x() - self.last_drag_pos.x()
+                dy = curr_pos.y() - self.last_drag_pos.y()
+                self.last_drag_pos = curr_pos
+                self.move(self.x() + dx, self.y() + dy)
+                # Fluid velocity tracking
+                self.drag_vx = self.drag_vx * 0.65 + dx * 0.35
+                self.drag_vy = self.drag_vy * 0.65 + dy * 0.35
+                self.update()
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            was_dragging = getattr(self, 'is_dragging', False)
-            self.is_petting = False
+            was_dragging = getattr(self, 'drag_has_started', False)
             self.is_dragging = False
+            self.drag_has_started = False
+            self.mouse_press_pos = None
             self.setCursor(Qt.CursorShape.PointingHandCursor)
             if was_dragging:
                 self.state = "IDLE"
                 self.idle_time = 0
             else:
+                # Petting / Purring on click!
                 self.state = "PURRING"
+                self.is_petting = True
                 self.idle_time = 0
-                QTimer.singleShot(2500, self.reset_to_idle)
+                for _ in range(5):
+                    self.hearts.append([random.randint(-16, 16), random.randint(-35, -15), 255.0, random.uniform(1.2, 2.0)])
+                QTimer.singleShot(3000, self.reset_to_idle)
             self.update()
 
     def reset_to_idle(self):
         if self.state == "PURRING":
             self.state = "IDLE"
+            self.is_petting = False
             self.update()
 
 if __name__ == '__main__':
