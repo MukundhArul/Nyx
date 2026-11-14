@@ -1,8 +1,6 @@
 import sys
 import time
 import psutil
-import pyaudio
-import audioop
 import os
 import json
 import math
@@ -250,6 +248,94 @@ MATRIX_FRAMES = {
             "...........PPPPPPPPPPPPPPPPPP.................",
             "..........PPPPPPPPPPPPPPPPPPPP................",
             "..........PPPPPPPPPPPPPPPPPPPP................",
+            ".........PPPPPPPPPPPPPPPPPPPPPP...............",
+            ".........PPPWWWPPPPPPWWWPPPPPPPPP.........PP..",
+            ".........PPWPPPWPPPPWPPPWPPPPPPPPP.......PPPP.",
+            ".........PPWPPPWPPPPWPPPWPPPPPPPPPP......PPPPP",
+            "......PPPPPWPPPWPPPPWPPPWPPPPPPPPPPP.....PPPPP",
+            "..........PPWWWPPPPPPWWWPPPPPPPPPPPPP.....PPPP",
+            ".......PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP....PPPPP",
+            "..........PPPPPPPPPPPPPPPPPPPPPPPPPPPP.PPPPPPP",
+            "..........PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP.",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP..",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP....",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            "...........PPPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            "...........PPPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            ".....KKKKKKPPPPPPPP.PPPPPPPPPPPPPPPPPPP.......",
+            "....KKKKKKKPPPPPPPK..PPPPPPPPPPPPPPPPPP.......",
+            "...KKKKKKKPPPPPPPPKP.PPPPPPPPPPPPPPPPPP.......",
+            "...KKKKKKKPPPPPPPPKP.PPPPPPPPPPPPPPPPPP.......",
+            "..KKKKKKKKPPPPPPPKPP.PPPPPPPPPPKKKKKKKP.......",
+            "..KKKKKKKKPPPPPPKKPP.PPPPPPPPPPKKKKKKKK.......",
+            ".KKKKKKKKKKKKKKKKKPP.PPKPPPPPPKKKKKKKKKP......",
+            ".KKKKKKKKKKKKKKKKPPP.PPKPPPPPPKKKKKKKKKP......",
+            "WKKKKKKKKKKKKKKKWPPP.PKKPPPPPPKKKKKKKKPP......",
+            "KWKKKKKKKKKKKKKWPPP..PKPPPPPPPKKKKKKKKP.......",
+            "kKWWWWWWWWWWWWWKPPP..KKPPPPPPPKKKKKKKKP.......",
+            "kkkkkkkkkkkkkkkkPPP..KKPPPPPPkKKKKKKKPP.......",
+            "kkkkkkkkkkkkkkkkPP..WKKKPPPPPKKKKKKKWP........",
+            "kkkkkkkkkkkkkkkkPP..KWKKKKKKKKKKKKKWPP........",
+            "kkkkkkkkkkkkkkkkP...kKWWWWWWWWWWWWWKP.........",
+            ".kkkkkkkkkkkkkkPP....kkkkkkkkkkkkkkPP.........",
+            "..kkkkkkkkkkkkkP......kkkkkkkkkkkkkP..........",
+        ],
+    ],
+    'TYPING_MUSIC': [
+        [
+            "..............P..........P....................",
+            ".............PP.WWWWWWWWPPP...................",
+            "............PPPMMMMMMMMMMPPP..................",
+            "............PPPPP......PPPPP..................",
+            ".........WMMWPPPPPPPPPPPPPWMMW................",
+            ".........WMMWPPPPPPPPPPPPPWMMW................",
+            ".........WMMWPPPPPPPPPPPPPWMMW................",
+            ".........WMMWPPPPPPPPPPPPPWMMW................",
+            ".........WMMWPPPPPPPPPPPPPWMMW................",
+            "..........WWPPPPPPPPPPPPPPPWWP...........PP...",
+            ".........PPPPPPPPPPPPPPPPPPPPPP.........PPPP..",
+            ".........PPPWWWPPPPPPWWWPPPPPPPPP.......PPPPP.",
+            ".........PPWPPPWPPPPWPPPWPPPPPPPPP......PPPPP.",
+            ".........PPWPPPWPPPPWPPPWPPPPPPPPPP......PPPP.",
+            ".....PPPPPPWPPPWPPPPWPPPWPPPPPPPPPPP....PPPPP.",
+            "..........PPWWWPPPPPPWWWPPPPPPPPPPPPP.PPPPPPP.",
+            "..........PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP..",
+            "......PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP...",
+            "..........PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP.....",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPP........",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            "............PPPPPPP.PPPPPPPPPPPKKKKKKKP.......",
+            "............PPPPPPP..PPPKPPPPPPKKKKKKKK.......",
+            "............PPPPPPP..PPKKPPPPPPKKKKKKKKP......",
+            "...........PPPPPPPP..PPKPPPPPPPKKKKKKKKP......",
+            ".....KKKKKKPPPPPPPP..PKKPPPPPPPKKKKKKKPP......",
+            "....KKKKKKKPPPPPPPk..PKKPPPPPPkKKKKKKKPP......",
+            "...KKKKKKKKPPPPPPPKP.KKKKPPPPPKKKKKKKKPP......",
+            "...KKKKKKKPPPPPPPPKP.KKKKKKKKKKKKKKKKPPP......",
+            "..KKKKKKKKPPPPPPPPPPWKKKKKKKKKKKKKKKWPPP......",
+            "..KKKKKKKKPPPPPPPKP.KWKKKKKKKKKKKKKWPPP.......",
+            ".KKKKKKKKKPPPPPPKKP.kKWWWWWWWWWWWWWKPPP.......",
+            ".KKKKKKKKKKKKKKKKPP.kkkkkkkkkkkkkkkkPPP.......",
+            "WKKKKKKKKKKKKKKKWP..kkkkkkkkkkkkkkkkPP........",
+            "KWKKKKKKKKKKKKKWPP..kkkkkkkkkkkkkkkkPP........",
+            "kKWWWWWWWWWWWWWKP...kkkkkkkkkkkkkkkkP.........",
+            ".kkkkkkkkkkkkkkPP....kkkkkkkkkkkkkkPP.........",
+            "..kkkkkkkkkkkkkP......kkkkkkkkkkkkkP..........",
+        ],
+        [
+            "..............P..........P....................",
+            ".............PP.WWWWWWWWPPP...................",
+            "............PPPMMMMMMMMMMPPP..................",
+            "............PPPPP......PPPPP..................",
+            ".........WMMWPPPPPPPPPPPPPWMMW................",
+            ".........WMMWPPPPPPPPPPPPPWMMW................",
+            ".........WMMWPPPPPPPPPPPPPWMMW................",
+            ".........WMMWPPPPPPPPPPPPPWMMW................",
+            ".........WMMWPPPPPPPPPPPPPWMMW................",
+            "..........WWPPPPPPPPPPPPPPPWWP................",
             ".........PPPPPPPPPPPPPPPPPPPPPP...............",
             ".........PPPWWWPPPPPPWWWPPPPPPPPP.........PP..",
             ".........PPWPPPWPPPPWPPPWPPPPPPPPP.......PPPP.",
@@ -585,17 +671,17 @@ MATRIX_FRAMES = {
     'VIBING': [
         [
             ".......WWW.......WWW............",
-            "......WMMW.......WMMW...........",
-            ".....WMMMMWWWWWWWWMMMMW.........",
-            "....WMMMMMMMMMMMMMMMMMMW........",
-            "...WMMMWPPPPPPPPPPPPPWMMMW......",
-            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
-            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
-            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
-            "..WWMMMWPPWWWPPPPPPPWWMMMMWW....",
-            "..WMMMMWPPWPPPWPPPPPPWPPPWMMW...",
-            "..WMMMMWPPWPPPWPPPPPPWPPPWMMW...",
-            "WWWWMMMWPPWPPPWPPPPPPWPPPWMMWWWW",
+            "......MMPWWWWWWWWWMMW...........",
+            ".....WMMMMMMMMMMMPMMWW..........",
+            "....WMMPPPWWWWWWWPPMMW..........",
+            "...WMMWPPPPPPPPPPPPWMMW.........",
+            "...WMMWPPPPPPPPPPPPWMMW.........",
+            "...WMMWPPPPPPPPPPPPWMMWW........",
+            "....WWPPPPPPPPPPPPPPWWPW........",
+            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
             "...WPPPWWWPPPPPPPPWWWPPPPW......",
             "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
             "...WPPPPPPPPPPPPPPPPPPPPPW......",
@@ -618,21 +704,21 @@ MATRIX_FRAMES = {
             "........WWWWWWWWWWWW............",
         ],
         [
-            "................................",
             ".......WWW.......WWW............",
-            "......WMMW.......WMMW...........",
-            ".....WMMMMWWWWWWWWMMMMW.........",
-            "....WMMMMMMMMMMMMMMMMMMW........",
-            "...WMMMWPPPPPPPPPPPPPWMMMW......",
-            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
-            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
-            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
-            "..WWMMMWPPWWWPPPPPPPWWMMMMWW....",
-            "..WMMMMWPPWPPPWPPPPPPWPPPWMMW...",
-            "WWWWMMMWPPWPPPWPPPPPPWPPPWMMWWWW",
+            "......MMPWWWWWWWWWMMW...........",
+            ".....WMMMMMMMMMMMPMMWW..........",
+            "....WMMPPPWWWWWWWPPMMW..........",
+            "...WMMWPPPPPPPPPPPPWMMW.........",
+            "...WMMWPPPPPPPPPPPPWMMW.........",
+            "...WMMWPPPPPPPPPPPPWMMWW........",
+            "....WWPPPPPPPPPPPPPPWWPW........",
+            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
             "...WPPPWWWPPPPPPPPWWWPPPPW......",
             "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
-            "...WWPPPPPPPPPPPPPPPPPPPWW......",
+            "...WPPPPPPPPPPPPPPPPPPPPPW......",
             "...WWPPPPPPPPPPPPPPPPPPPWW......",
             "...WWPPPPPPPPPPPPPPPPPPWW.......",
             "...WPPPPPPPPPPPPPPPPPPPPW.......",
@@ -653,17 +739,17 @@ MATRIX_FRAMES = {
         ],
         [
             ".......WWW.......WWW............",
-            "......WMMW.......WMMW...........",
-            ".....WMMMMWWWWWWWWMMMMW.........",
-            "....WMMMMMMMMMMMMMMMMMMW........",
-            "...WMMMWPPPPPPPPPPPPPWMMMW......",
-            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
-            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
-            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
-            "..WWMMMWPPWWWPPPPPPPWWMMMMWW....",
-            "..WMMMMWPPWPPPWPPPPPPWPPPWMMW...",
-            "..WMMMMWPPWPPPWPPPPPPWPPPWMMW...",
-            "WWWWMMMWPPWPPPWPPPPPPWPPPWMMWWWW",
+            "......MMPWWWWWWWWWMMW...........",
+            ".....WMMMMMMMMMMMPMMWW..........",
+            "....WMMPPPWWWWWWWPPMMW..........",
+            "...WMMWPPPPPPPPPPPPWMMW.........",
+            "...WMMWPPPPPPPPPPPPWMMW.........",
+            "...WMMWPPPPPPPPPPPPWMMWW........",
+            "....WWPPPPPPPPPPPPPPWWPW........",
+            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
             "...WPPPWWWPPPPPPPPWWWPPPPW......",
             "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
             "...WPPPPPPPPPPPPPPPPPPPPPW......",
@@ -686,26 +772,26 @@ MATRIX_FRAMES = {
             "........WWWWWWWWWWWW............",
         ],
         [
-            "................................",
             ".......WWW.......WWW............",
-            "......WMMW.......WMMW...........",
-            ".....WMMMMWWWWWWWWMMMMW.........",
-            "....WMMMMMMMMMMMMMMMMMMW........",
-            "...WMMMWPPPPPPPPPPPPPWMMMW......",
-            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
-            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
-            "..WMMMMWPPPPPPPPPPPPPWMMMMW.....",
-            "..WWMMMWPPWWWPPPPPPPWWMMMMWW....",
-            "..WMMMMWPPWPPPWPPPPPPWPPPWMMW...",
-            "WWWWMMMWPPWPPPWPPPPPPWPPPWMMWWWW",
+            "......MMPWWWWWWWWWMMW...........",
+            ".....WMMMMMMMMMMMPMMWW..........",
+            "....WMMPPPWWWWWWWPPMMW..........",
+            "...WMMWPPPPPPPPPPPPWMMW.........",
+            "...WMMWPPPPPPPPPPPPWMMW.........",
+            "...WMMWPPPPPPPPPPPPWMMWW........",
+            "....WWPPPPPPPPPPPPPPWWPW........",
+            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
             "...WPPPWWWPPPPPPPPWWWPPPPW......",
             "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPPPPPPPPPPPPPPPPPPPW......",
             "...WWPPPPPPPPPPPPPPPPPPPWW......",
-            "...WWPPPPPPPPPPPPPPPPPPPWW......",
-            "...WWPPPPPPPPPPPPPPPPPPWW.......",
-            "...WPPPPPPPPPPPPPPPPPPPPW.......",
-            "...WPPPPPPPPPPPPPPPPPPPPW.......",
-            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WWPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "...WWPPPPPPPPPPPPPPPPPPW........",
             "...WPPPPPPPPPPPPPPPPPPPW...WWW..",
             "...WPPPPPPPPPPPPPPPPPPPW..WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
@@ -1164,75 +1250,6 @@ class SettingsWindow(QWidget):
         self.rem_input.clear()
 
 
-class MicThread(QThread):
-    is_talking_signal = pyqtSignal(bool)
-
-    def __init__(self, app_ref, parent=None):
-        super().__init__(parent)
-        self.running = True
-        self.app_ref = app_ref
-        self.p = pyaudio.PyAudio()
-        self.stream = None
-
-    def _is_discord_running(self):
-        try:
-            for p in psutil.process_iter(['name']):
-                if p.info['name'] and 'discord' in p.info['name'].lower():
-                    return True
-        except:
-            pass
-        return False
-
-    def run(self):
-        check_counter = 0
-        discord_running = False
-        
-        while self.running:
-            if check_counter % 20 == 0:
-                discord_running = self._is_discord_running()
-            check_counter += 1
-
-            mic_enabled = self.app_ref.settings.get("discord_mic", True)
-            
-            if not mic_enabled or not discord_running:
-                if self.stream:
-                    self.stream.stop_stream()
-                    self.stream.close()
-                    self.stream = None
-                time.sleep(0.1)
-                continue
-
-            if not self.stream:
-                try:
-                    self.stream = self.p.open(format=pyaudio.paInt16,
-                                              channels=1,
-                                              rate=44100,
-                                              input=True,
-                                              frames_per_buffer=1024)
-                except Exception:
-                    time.sleep(2)
-                    continue
-            
-            try:
-                data = self.stream.read(1024, exception_on_overflow=False)
-                rms = audioop.rms(data, 2)
-                if rms > 30:
-                    self.is_talking_signal.emit(True)
-                else:
-                    self.is_talking_signal.emit(False)
-            except Exception:
-                self.is_talking_signal.emit(False)
-                time.sleep(0.1)
-            
-            time.sleep(0.05)
-
-    def stop(self):
-        self.running = False
-        if self.stream:
-            self.stream.stop_stream()
-            self.stream.close()
-        self.p.terminate()
-
 class MonitorThread(QThread):
     input_activity = pyqtSignal()
     typing_activity = pyqtSignal()
@@ -1257,18 +1274,32 @@ class MonitorThread(QThread):
         keyboard_listener.start()
         
         import ctypes
+        user32 = ctypes.windll.user32
+        kernel32 = ctypes.windll.kernel32
+        psapi = ctypes.windll.psapi
+        
         while True:
             try:
-                window = gw.getActiveWindow()
-                title = window.title if window else ""
-                self.active_window.emit(title.lower())
+                hwnd = user32.GetForegroundWindow()
+                title = ""
+                if hwnd:
+                    buf = ctypes.create_unicode_buffer(512)
+                    user32.GetWindowTextW(hwnd, buf, 512)
+                    title = buf.value
+                
+                # Fallback to PyGetWindow if empty
+                if not title:
+                    try:
+                        window = gw.getActiveWindow()
+                        if window and window.title:
+                            title = window.title
+                    except Exception:
+                        pass
+                
+                self.active_window.emit(title.lower() if title else "")
                 
                 # Check if foreground window is spotify
                 is_spotify = False
-                user32 = ctypes.windll.user32
-                kernel32 = ctypes.windll.kernel32
-                psapi = ctypes.windll.psapi
-                hwnd = user32.GetForegroundWindow()
                 if hwnd:
                     pid = ctypes.c_ulong(0)
                     user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
@@ -1430,23 +1461,6 @@ class PetWidget(QWidget):
         self.monitor.active_window.connect(self.on_active_window)
         self.monitor.spotify_status.connect(self.on_spotify_status)
         self.monitor.start()
-        
-        # Start Discord Mic Thread
-        self.mic_thread = MicThread(self)
-        self.mic_thread.is_talking_signal.connect(self.set_talking)
-        self.mic_thread.start()
-        
-    def set_talking(self, talking):
-        if talking:
-            self.state = "TALKING"
-            self.talking_timer = 5
-            self.idle_time = 0
-        else:
-            if getattr(self, 'state', 'IDLE') == "TALKING":
-                if getattr(self, 'talking_timer', 0) > 0:
-                    self.talking_timer -= 1
-                else:
-                    self.state = "IDLE"
 
     def save_and_apply_settings(self):
         save_settings(self.settings)
@@ -1754,7 +1768,8 @@ class PetWidget(QWidget):
         # 1. Video Watching Detection (YouTube, Twitch, Netflix, Disney+, Anime, Media Players)
         watching_keywords = [
             "youtube", "twitch", "netflix", "disney+", "crunchyroll",
-            "prime video", "bilibili", "vlc media player", "mpv", "media player"
+            "prime video", "bilibili", "vlc", "mpv", "media player",
+            "potplayer", "hulu", "kick.com"
         ]
         
         # 2. Music Vibing Detection (Spotify, Apple Music, YouTube Music, SoundCloud, Tidal, etc.)
@@ -1762,16 +1777,22 @@ class PetWidget(QWidget):
             "spotify", "apple music", "soundcloud", "tidal", "deezer", "pandora", "amazon music"
         ]
         
-        is_yt_music = "youtube music" in title
+        is_yt_music = "youtube music" in title or "music.youtube" in title
         is_music = is_yt_music or any(k in title for k in music_keywords) or getattr(self, '_raw_is_spotify', False)
         is_watching = not is_yt_music and any(k in title for k in watching_keywords)
         
         if is_music:
             self.is_listening_to_music = True
             self.active_app_state = "VIBING"
+            self.idle_time = 0
+            if self.state == "SLEEPING":
+                self.state = "IDLE"
         elif is_watching:
             self.is_listening_to_music = False
             self.active_app_state = "WATCHING"
+            self.idle_time = 0
+            if self.state == "SLEEPING":
+                self.state = "IDLE"
         else:
             self.is_listening_to_music = False
             self.active_app_state = ""
@@ -1785,26 +1806,33 @@ class PetWidget(QWidget):
         self.update_active_app_state()
 
     def get_current_animation_name(self):
-        if self.state == "SLEEPING": return "SLEEPING"
         if self.state == "DRAGGED": return "DRAGGED"
         if hasattr(self, 'is_petting') and self.is_petting: return "PURRING"
         
-        app_state = getattr(self, 'active_app_state', "")
         is_typing = getattr(self, 'is_typing', False)
-        
         if is_typing:
             return "TYPING"
             
-        if app_state != "": return app_state
+        app_state = getattr(self, 'active_app_state', "")
+        if app_state != "":
+            return app_state
+            
+        if self.state == "SLEEPING":
+            return "SLEEPING"
+            
         return self.state
 
     # --- Logic Updates ---
     def update_logic(self):
-        if not self.is_dragging:
+        if getattr(self, 'active_app_state', '') in ["WATCHING", "VIBING"]:
+            self.idle_time = 0
+            if self.state == "SLEEPING":
+                self.state = "IDLE"
+        elif not self.is_dragging:
             self.idle_time += 1
             if self.idle_time > self.SLEEP_THRESHOLD:
                 self.state = "SLEEPING"
-            elif self.idle_time % 6 == 0 and self.state != "TALKING":
+            elif self.idle_time % 6 == 0:
                 self.state = "IDLE"
                 self.current_frame_index = 0
                 
@@ -2026,6 +2054,8 @@ class PetWidget(QWidget):
         if anim_name not in frames_dict:
             anim_name = "IDLE"
         anim_list = frames_dict.get(anim_name, frames_dict["IDLE"])
+        if anim_name == "TYPING" and getattr(self, 'is_listening_to_music', False):
+            anim_list = frames_dict.get("TYPING_MUSIC", anim_list)
         if self.current_frame_index >= len(anim_list):
             self.current_frame_index = 0
         
@@ -2145,23 +2175,6 @@ class PetWidget(QWidget):
                 dash_h = max(3, int(pixel_size * 2.2))
                 painter.drawRect(drift_x, drift_y, dash_w, dash_h)
 
-        # 4. Talking Mouth Animation
-        if getattr(self, "state", "IDLE") == "TALKING" and anim_name != "SLEEPING":
-            import time
-            tick = int(time.time() * 10)
-            is_big = (tick % 4 < 2)
-            mouth_y = dest_y + int(13 * pixel_size)
-            mouth_cx = dest_x + int(13.5 * pixel_size)
-            painter.setPen(Qt.PenStyle.NoPen)
-            painter.setBrush(QColor(255, 90, 130))
-            ps = pixel_size
-            if is_big:
-                painter.drawRoundedRect(QRectF(mouth_cx - 2.5 * ps, mouth_y, 5 * ps, 3.5 * ps), 1.5, 1.5)
-                painter.setBrush(QColor(255, 255, 255))
-                painter.drawRect(int(mouth_cx - 2 * ps), int(mouth_y), ps, ps)
-                painter.drawRect(int(mouth_cx + 1 * ps), int(mouth_y), ps, ps)
-            else:
-                painter.drawRoundedRect(QRectF(mouth_cx - 1.5 * ps, mouth_y, 3 * ps, 2 * ps), 1.0, 1.0)
 
         # Floating Sleeping Zzzs
         if anim_name == "SLEEPING" and hasattr(self, 'sleeping_zzzs') and self.sleeping_zzzs:
@@ -2267,22 +2280,6 @@ class PetWidget(QWidget):
                 ry = int(dest_y + (10 + gaze_y) * ps)
                 painter.drawRect(rx, ry, ps, ps)
 
-        # 6. Headphones overlay (if music is playing and typing)
-        if getattr(self, 'is_listening_to_music', False) and anim_name == "TYPING":
-            hp_frame = [
-                ".............WMMMMMMMMMMW.............",
-                "............WMMMMMMMMMMMMW............",
-                "...........WMMW........WMMW...........",
-                "...........WMMW........WMMW...........",
-                "...........WMMW........WMMW...........",
-                "............WW..........WW............"
-            ]
-            painter.setPen(Qt.PenStyle.NoPen)
-            for r, row_str in enumerate(hp_frame):
-                for c, char in enumerate(row_str):
-                    if char in MATRIX_COLORS:
-                        painter.setBrush(MATRIX_COLORS[char])
-                        painter.drawRect(int(dest_x + c * pixel_size), int(dest_y + (r + 1) * pixel_size), pixel_size, pixel_size)
 
         # Restore coordinate space for speech bubble
         painter.restore()
