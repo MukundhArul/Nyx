@@ -5,6 +5,8 @@ import pyaudio
 import audioop
 import os
 import json
+import math
+import random
 from datetime import datetime
 # pyrefly: ignore [missing-import]
 from PyQt6.QtWidgets import (QApplication, QWidget, QMenu, QInputDialog, QSystemTrayIcon,
@@ -12,441 +14,398 @@ from PyQt6.QtWidgets import (QApplication, QWidget, QMenu, QInputDialog, QSystem
                              QLineEdit, QPushButton, QDateTimeEdit, QSpinBox, QGroupBox)
 # pyrefly: ignore [missing-import]
 from PyQt6.QtGui import QPainter, QCursor, QColor, QAction, QFont, QPixmap
+from PyQt6.QtGui import (QPainter, QCursor, QColor, QAction, QFont, QPixmap,
+                         QIcon, QPolygonF, QPen, QRadialGradient)
 # pyrefly: ignore [missing-import]
 from PyQt6.QtCore import Qt, QPoint, QTimer, pyqtSignal, QThread, QDateTime
+from PyQt6.QtCore import Qt, QPoint, QPointF, QTimer, pyqtSignal, QThread, QDateTime
 from pynput import mouse, keyboard
 # pyrefly: ignore [missing-import]
 import pygetwindow as gw
 
 SETTINGS_FILE = "settings.json"
 DEFAULT_SETTINGS = {
-    "scale_factor": 5.0,
+    "scale_factor": 4.0,
     "react_to_typing": True,
     "stretch_interval_min": 30,
-    "water_interval_min..": 60,
+    "water_interval_min": 60,
     "pomodoro_enabled": False,
     "pomo_focus_min": 25,
     "pomo_break_min": 5,
     "reminders": [],
     "matrix_mode": False,
-    "wear_sunglasses": False,
-    "high_res_mode": True,
-    "matrix_r": 198,
-    "matrix_g": 154,
-    "matrix_b": 150
+    "matrix_r": 26,
+    "matrix_g": 26,
+    "matrix_b": 26,
+    "matrix_outline_r": 20,
+    "matrix_outline_g": 20,
+    "matrix_outline_b": 20
 }
 
 MATRIX_COLORS = {
-    'P': QColor(198, 154, 150), # Dusty Pinkish Brown (Default, will be overridden)
-    'D': QColor(75, 54, 50),    # Dark Brown
-    'W': QColor(255, 255, 255), # White
-    'B': QColor(34, 34, 34),    # Black
-    'K': QColor(180, 180, 180), # Keyboard Box
-    'Z': QColor(255, 255, 255), # Zzzs
-    'M': QColor(40, 40, 40),    # Headphones
-    'U': QColor(255, 215, 0),   # Starstruck Eyes
-    'G': QColor(0, 255, 0),     # Glowing Green
-    'O': QColor(50, 50, 50),    # Dark Hoodie
-    'H': QColor(255, 255, 255), # Hoodie String
-    'S': QColor(160, 110, 110), # Shading (Darker Pinkish Brown)
+    'P': QColor(26, 26, 26),     # Comnyang official dark body (#1A1A1A, overridden by settings)
+    'W': QColor(255, 255, 255),  # Pure white eyes, whiskers, markings
+    'E': QColor(26, 26, 26),     # Eye socket interior (tracks pupil)
+    'B': QColor(10, 10, 10),     # Dark pupil / mouth
+    'K': QColor(153, 151, 151),  # Official keycap top (#999797)
+    'k': QColor(96, 94, 94),     # Official keycap side bevel (#605E5E)
+    'D': QColor(34, 34, 34),     # Official keycap bottom bevel (#222222)
+    'S': QColor(20, 20, 20),     # Outline / shading
+    'N': QColor(255, 140, 165),  # Pink nose & inner ears
+    'Z': QColor(110, 180, 255),  # Sleeping Zzzs
+    'M': QColor(255, 75, 95),    # Coral red headphones
+    'L': QColor(42, 42, 42),     # Subtle fur highlight
 }
 
 MATRIX_FRAMES = {
     'IDLE': [
         [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPEEEEPPEEEES...', 
-            '...SPPEEEEPPEEEES...', 
-            '...SPPPPPPPPPPPPS..S', 
-            '...SPPPPPPPPPPPPS.S.', 
-            '....SPPPPPPPPPPS..S.', 
-            '....SPPPPPPPPPPS.S..', 
-            '....SPPPPPPPPPPSSS..', 
-            '....SPPSSSSSSPPS....', 
-            '....SPPS....SPPS....', 
-            '....SPPS....SPPS....', 
-            '.....SS......SS.....', 
-            '....................'
+            ".......WWW.......WWW............",
+            "......WWPW......WWPWW...........",
+            ".....WWPPWW.....WPPPWW..........",
+            ".....WPPPPWWWWWWWPPPPW..........",
+            "....WWPPPPPPPPPPPPPPPW..........",
+            "....WPPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WPPPPPPPPPPPPPPPPPPW........",
+            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "...WPPWPPPWPPPPPPWPPPWPPW.......",
+            "WWWPPPWPPPWPPPPPPWPPPWPPPW......",
+            "WWWPPPPWWWPPPPPPPPWWWPPPPWWW....",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "...WPPPPPPPPPPPPPPPPPPPPPW......",
+            "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "....WWPPPPPPPPPPPPPPPWW.........",
+            "....WPPPPPPPPPPPPPPPPPWW........",
+            "...WWPPPPPPPPPPPPPPPPPPW........",
+            "...WPPPPPPPPPPPPPPPPPPPW...WWW..",
+            "...WPPPPPPPPPPPPPPPPPPPW..WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
+            "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
+            "...WWPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPWPPPW....",
+            "....WPPPPPPPPPPPPPPPPPPPWWP.....",
+            "....WWWWPPPPPPPPPPPPWWWWWW......",
+            "......WWWWPPWWWWPPWWWW..........",
+            "........WWWWWWWWWWWW............",
         ],
-        [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPEEEEPPEEEES...', 
-            '...SPPEEEEPPEEEES...', 
-            '...SPPPPPPPPPPPPS.S.', 
-            '...SPPPPPPPPPPPPS.S.', 
-            '....SPPPPPPPPPPS.S..', 
-            '....SPPPPPPPPPPS..S.', 
-            '....SPPPPPPPPPPSSS..', 
-            '....SPPSSSSSSPPS....', 
-            '....SPPS....SPPS....', 
-            '....SPPS....SPPS....', 
-            '.....SS......SS.....', 
-            '....................'
-        ],
-        [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPEEEEPPEEEES...', 
-            '...SPPEEEEPPEEEES...', 
-            '...SPPPPPPPPPPPPS...', 
-            '...SPPPPPPPPPPPPS.S.', 
-            '....SPPPPPPPPPPS.S..', 
-            '....SPPPPPPPPPPS.S..', 
-            '....SPPPPPPPPPPSSS..', 
-            '....SPPSSSSSSPPS....', 
-            '....SPPS....SPPS....', 
-            '....SPPS....SPPS....', 
-            '.....SS......SS.....', 
-            '....................'
-        ],
-        [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPEEEEPPEEEES...', 
-            '...SPPEEEEPPEEEES...', 
-            '...SPPPPPPPPPPPPS..S', 
-            '...SPPPPPPPPPPPPS..S', 
-            '....SPPPPPPPPPPS..S.', 
-            '....SPPPPPPPPPPS..S.', 
-            '....SPPPPPPPPPPSSS..', 
-            '....SPPSSSSSSPPS....', 
-            '....SPPS....SPPS....', 
-            '....SPPS....SPPS....', 
-            '.....SS......SS.....', 
-            '....................'
-        ]
-    ] * 45 + [
-        [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPBBBBPPBBBBS...', 
-            '...SPPBBBBPPBBBBS...', 
-            '...SPPPPPPPPPPPPS..S', 
-            '...SPPPPPPPPPPPPS.S.', 
-            '....SPPPPPPPPPPS..S.', 
-            '....SPPPPPPPPPPS.S..', 
-            '....SPPPPPPPPPPSSS..', 
-            '....SPPPSSSSSPPS....', 
-            '....SPPS....SPPS....', 
-            '....SPPS....SPPS....', 
-            '.....SS......SS.....', 
-            '....................'
-        ]
-    ] * 2,
-    'SLEEPING': [
-        [
-            "....................",
-            "...........S........",
-            "....................",
-            "....................",
-            "......PH......HP....",
-            ".....PPSP....PPSP...",
-            ".....HPPPHHHPPPHS...",
-            "....HPPBBBPPPBBBPS..",
-            "....SPPBBBPPPBBBPS..",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "...SPPPPPPPPPPPS..S.",
-            "...SPPPPPPPPPPPS.S..",
-            "....SPPPPPPPPPSSSS..",
-            "....SSSSSSSSSSSS....",
-            "...................."
-        ],
-        [
-            "...........S........",
-            "............S.......",
-            "....................",
-            "....................",
-            "......PH......HP....",
-            ".....PPSP....PPSP...",
-            ".....HPPPHHHPPPHS...",
-            "....HPPBBBPPPBBBPS..",
-            "....SPPBBBPPPBBBPS..",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "...SPPPPPPPPPPPS..S.",
-            "...SPPPPPPPPPPPS.S..",
-            "....SPPPPPPPPPSSSS..",
-            "....SSSSSSSSSSSS....",
-            "...................."
-        ],
-        [
-            "...........S........",
-            "............S.......",
-            "...........S........",
-            "....................",
-            "......PH......HP....",
-            ".....PPSP....PPSP...",
-            ".....HPPPHHHPPPHS...",
-            "....HPPBBBPPPBBBPS..",
-            "....SPPBBBPPPBBBPS..",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "...SPPPPPPPPPPPS..S.",
-            "...SPPPPPPPPPPPS.S..",
-            "....SPPPPPPPPPSSSS..",
-            "....SSSSSSSSSSSS....",
-            "...................."
-        ],
-        [
-            "............S.......",
-            "...........S........",
-            "...........S........",
-            "....................",
-            "......PH......HP....",
-            ".....PPSP....PPSP...",
-            ".....HPPPHHHPPPHS...",
-            "....HPPBBBPPPBBBPS..",
-            "....SPPBBBPPPBBBPS..",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "...SPPPPPPPPPPPS..S.",
-            "...SPPPPPPPPPPPS.S..",
-            "....SPPPPPPPPPSSSS..",
-            "....SSSSSSSSSSSS....",
-            "...................."
-        ]
     ],
     'TYPING': [
         [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPEEEEPPEEEES...', 
-            '...SPPEEEEPPEEEES...', 
-            '...SPPPPPPPPPPPPS..S', 
-            '...SPPPPPPPPPPPPS.S.', 
-            '...SSPPPPPPPPPPS..S.',     
-            '...SSPPPPPPPPPPS.S..', 
-            '...SSPPPPPPPPPPSSS..', 
-            '...SSPPPPPPPPPPS....', 
-            '............SPPS....', 
-            '.............SS.....',
-            '....................',
-            '....................'
+            "..............P..........P....................",
+            ".............PP.........PPP...................",
+            "............PPPP........PPPP..................",
+            "............PPPPP......PPPPP..................",
+            "...........PPPPPPPPPPPPPPPPP..................",
+            "...........PPPPPPPPPPPPPPPPP..................",
+            "...........PPPPPPPPPPPPPPPPP..................",
+            "...........PPPPPPPPPPPPPPPPPP.................",
+            "..........PPPPPPPPPPPPPPPPPPPP................",
+            "..........PPPPPPPPPPPPPPPPPPPP...........PP...",
+            ".........PPPPPPPPPPPPPPPPPPPPPP.........PPPP..",
+            ".........PPPWWWPPPPPPWWWPPPPPPPPP.......PPPPP.",
+            ".........PPWPPPWPPPPWPPPWPPPPPPPPP......PPPPP.",
+            ".........PPWPPPWPPPPWPPPWPPPPPPPPPP......PPPP.",
+            ".....PPPPPPWPPPWPPPPWPPPWPPPPPPPPPPP....PPPPP.",
+            "..........PPWWWPPPPPPWWWPPPPPPPPPPPPP.PPPPPPP.",
+            "..........PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP..",
+            "......PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP...",
+            "..........PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP.....",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPP........",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            "............PPPPPPP.PPPPPPPPPPPKKKKKKKP.......",
+            "............PPPPPPP..PPPKPPPPPPKKKKKKKK.......",
+            "............PPPPPPP..PPKKPPPPPPKKKKKKKKP......",
+            "...........PPPPPPPP..PPKPPPPPPPKKKKKKKKP......",
+            ".....KKKKKKPPPPPPPP..PKKPPPPPPPKKKKKKKPP......",
+            "....KKKKKKKPPPPPPPk..PKKPPPPPPkKKKKKKKPP......",
+            "...KKKKKKKKPPPPPPPKP.KKKKPPPPPKKKKKKKKPP......",
+            "...KKKKKKKPPPPPPPPKP.KKKKKKKKKKKKKKKKPPP......",
+            "..KKKKKKKKPPPPPPPPPPWKKKKKKKKKKKKKKKWPPP......",
+            "..KKKKKKKKPPPPPPPKP.KWKKKKKKKKKKKKKWPPP.......",
+            ".KKKKKKKKKPPPPPPKKP.kKWWWWWWWWWWWWWKPPP.......",
+            ".KKKKKKKKKKKKKKKKPP.kkkkkkkkkkkkkkkkPPP.......",
+            "WKKKKKKKKKKKKKKKWP..kkkkkkkkkkkkkkkkPP........",
+            "KWKKKKKKKKKKKKKWPP..kkkkkkkkkkkkkkkkPP........",
+            "kKWWWWWWWWWWWWWKP...kkkkkkkkkkkkkkkkP.........",
+            ".kkkkkkkkkkkkkkPP....kkkkkkkkkkkkkkPP.........",
+            "..kkkkkkkkkkkkkP......kkkkkkkkkkkkkP..........",
         ],
         [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPEEEEPPEEEES...', 
-            '...SPPEEEEPPEEEES...', 
-            '...SPPPPPPPPPPPPS..S', 
-            '...SPPPPPPPPPPPPS.S.', 
-            '....SPPPPPPPPPS...S.', 
-            '....SPPPPPPPPPS..S..', 
-            '....SPPPPPPPPPS.SS..', 
-            '....SPPS............', 
-            '....SPPS............', 
-            '.....SS.............',
-            '....................',
-            '....................'
-        ]
-    ],
-    'DRAGGED': [
-        [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPEEEEPPEEEES...', 
-            '...SPPEEEEPPEEEES...', 
-            '...SPPPPPPPPPPPPS...', 
-            '...SPPPPPPPPPPPPS...', 
-            '....SPPPPPPPPPPS....', 
-            '....SPPPPPPPPPPS....', 
-            '....SPPSSSSSSPPS....', 
-            '....SPPS....SPPS....', 
-            '....SPPS....SPPS....', 
-            '.....SS......SS.....',
-            '....................',
-            '....................'
-        ]
+            "..............P..........P....................",
+            ".............PP.........PPP...................",
+            "............PPPP........PPPP..................",
+            "............PPPPP......PPPPP..................",
+            "...........PPPPPPPPPPPPPPPPP..................",
+            "...........PPPPPPPPPPPPPPPPP..................",
+            "...........PPPPPPPPPPPPPPPPP..................",
+            "...........PPPPPPPPPPPPPPPPPP.................",
+            "..........PPPPPPPPPPPPPPPPPPPP................",
+            "..........PPPPPPPPPPPPPPPPPPPP................",
+            ".........PPPPPPPPPPPPPPPPPPPPPP...............",
+            ".........PPPWWWPPPPPPWWWPPPPPPPPP.........PP..",
+            ".........PPWPPPWPPPPWPPPWPPPPPPPPP.......PPPP.",
+            ".........PPWPPPWPPPPWPPPWPPPPPPPPPP......PPPPP",
+            "......PPPPPWPPPWPPPPWPPPWPPPPPPPPPPP.....PPPPP",
+            "..........PPWWWPPPPPPWWWPPPPPPPPPPPPP.....PPPP",
+            ".......PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP....PPPPP",
+            "..........PPPPPPPPPPPPPPPPPPPPPPPPPPPP.PPPPPPP",
+            "..........PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP.",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP..",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP....",
+            "............PPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            "...........PPPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            "...........PPPPPPPPPPPPPPPPPPPPPPPPPPPP.......",
+            ".....KKKKKKPPPPPPPP.PPPPPPPPPPPPPPPPPPP.......",
+            "....KKKKKKKPPPPPPPK..PPPPPPPPPPPPPPPPPP.......",
+            "...KKKKKKKPPPPPPPPKP.PPPPPPPPPPPPPPPPPP.......",
+            "...KKKKKKKPPPPPPPPKP.PPPPPPPPPPPPPPPPPP.......",
+            "..KKKKKKKKPPPPPPPKPP.PPPPPPPPPPKKKKKKKP.......",
+            "..KKKKKKKKPPPPPPKKPP.PPPPPPPPPPKKKKKKKK.......",
+            ".KKKKKKKKKKKKKKKKKPP.PPKPPPPPPKKKKKKKKKP......",
+            ".KKKKKKKKKKKKKKKKPPP.PPKPPPPPPKKKKKKKKKP......",
+            "WKKKKKKKKKKKKKKKWPPP.PKKPPPPPPKKKKKKKKPP......",
+            "KWKKKKKKKKKKKKKWPPP..PKPPPPPPPKKKKKKKKP.......",
+            "kKWWWWWWWWWWWWWKPPP..KKPPPPPPPKKKKKKKKP.......",
+            "kkkkkkkkkkkkkkkkPPP..KKPPPPPPkKKKKKKKPP.......",
+            "kkkkkkkkkkkkkkkkPP..WKKKPPPPPKKKKKKKWP........",
+            "kkkkkkkkkkkkkkkkPP..KWKKKKKKKKKKKKKWPP........",
+            "kkkkkkkkkkkkkkkkP...kKWWWWWWWWWWWWWKP.........",
+            ".kkkkkkkkkkkkkkPP....kkkkkkkkkkkkkkPP.........",
+            "..kkkkkkkkkkkkkP......kkkkkkkkkkkkkP..........",
+        ],
     ],
     'PURRING': [
         [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPBBBBPPBBBBS...', 
-            '...SPPBBBBPPBBBBS...', 
-            '...SPPPPPPPPPPPPS..S', 
-            '...SPPPPPPPPPPPPS.S.', 
-            '....SPPPPPPPPPPS..S.', 
-            '....SPPPPPPPPPPS.S..', 
-            '....SPPPPPPPPPPSSS..', 
-            '....SPPPPPPPPPPS....', 
-            '....SPPS....SPPS....', 
-            '....SPPS....SPPS....', 
-            '.....SS......SS.....', 
-            '....................'
-        ]
+            "..............................................",
+            "................P..........P..................",
+            "...............PP..........PP.................",
+            "..............PPPP........PPPP................",
+            ".............PPPPPP......PPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPWWWPPPPPPPPWWWPPP..............",
+            "............PPWPWPWPPPPPPWPWPWPP..............",
+            ".........WWWPPWWPWWPPPPPPWWPWWPPWWW...........",
+            "............PPWPPPWPPPPPPWPPPWPP..............",
+            "............PPPWWWPPPPPPPPWWWPPP..............",
+            "........WWWWPPPPPPPPPPPPPPPPPPPPWWWW..........",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
+            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
+            "...........PPPPPPPPPPPPPPPPPPPPPP..PPP........",
+            "...........PPPPPPPPPPPPPPPPPPPPPPPPP..........",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            "..............WWWWW......WWWWW................",
+        ],
     ],
-        'VIBING': [
+    'SLEEPING': [
         [
-            "......MMMMMMMM......",
-            ".....MM......MM.....",
-            "....MMSP....PPMM....",
-            "...MMPPPHHHPPPHMM...",
-            "...MMPEEEEPPEEEMM...",
-            "...MMPEEEEPPEEEMM...",
-            "...SMMPPPPPPPPMMS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "....SPPPPPPPPPPS..S.",
-            "....SPPPPPPPPPPS.S..",
-            "....SPPPPPPPPPPSSS..",
-            "....SPPPPPPPPPPS....",
-            "....SPPS....SPPS....",
-            "....SPPS....SPPS....",
-            ".....SS......SS.....",
-            "...................."
+            "..............................................",
+            "................P..........P..................",
+            "...............PP..........PP.................",
+            "..............PPPP........PPPP................",
+            ".............PPPPPP......PPPPPP.....ZZZ.......",
+            ".............PPPPPPPPPPPPPPPPPP.......Z.......",
+            "............PPPPPPPPPPPPPPPPPPPP.....Z........",
+            "............PPPPPPPPPPPPPPPPPPPP....ZZZ.......",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPWWWPPPPPPPPWWWPPP..............",
+            "............PPWPPPWPPPPPPWPPPWPP..............",
+            ".........WWWPPWWWWWPPPPPPWWWWWPPWWW...........",
+            "............PPWPPPWPPPPPPWPPPWPP..............",
+            "............PPPWWWPPPPPPPPWWWPPP..............",
+            "........WWWWPPPPPPPPPPPPPPPPPPPPWWWW..........",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
+            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
+            "...........PPPPPPPPPPPPPPPPPPPPPP..PPP........",
+            "...........PPPPPPPPPPPPPPPPPPPPPPPPP..........",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            "..............WWWWW......WWWWW................",
         ],
+    ],
+    'DRAGGED': [
         [
-            "....................",
-            "......MMMMMMMM......",
-            ".....MM......MM.....",
-            "....MMSP....PPMM....",
-            "...MMPPPHHHPPPHMM...",
-            "...MMPEEEEPPEEEMM...",
-            "...MMPEEEEPPEEEMM..S",
-            "...SMMPPPPPPPPMMS.S.",
-            "....SPPPPPPPPPPS..S.",
-            "....SPPPPPPPPPPS.S..",
-            "....SPPPPPPPPPPSSS..",
-            "....SPPPPPPPPPPS....",
-            "....SPPS....SPPS....",
-            "....SPPS....SPPS....",
-            ".....SS......SS.....",
-            "...................."
+            ".......WWW........WWW...........",
+            "......WWPWW......WWPWW..........",
+            ".....WWPPWW......WWPPWW.........",
+            ".....WPPPPWWWWWWWWPPPPW.........",
+            "....WWPPPPPPPPPPPPPPPPWW........",
+            "....WPPPPPPPPPPPPPPPPPPW........",
+            "....WPPPPPPPPPPPPPPPPPPW........",
+            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "...WPPWWWWPPPPPPPPWWWWPPW.......",
+            "WWWWPPWPPWPPPPPPPPWPPWPPWWWW....",
+            "WPPPWPPWPPWPPPPPPWPPWPPWPPPW....",
+            "WWWWPPWPPWPPWWWWPPWPPWPPWWWW....",
+            "...WPPWWWW.WWBBWW.WWWWPPW.......",
+            "...WWPPPPP.WBBBBW.PPPPPWW.......",
+            "WWWWPPPPPP.WWWWWW.PPPPPPWWWW....",
+            "WPPPWPPPPPPPPPPPPPPPPPPWPPPW....",
+            "WWWWPPPPPPPPPPPPPPPPPPPPWWWW....",
+            "....WWPPPPPPPPPPPPPPPPWW........",
+            ".....WPPPPPPPPPPPPPPPPW.........",
+            ".....WWPPPPPPPPPPPPPPWW.........",
+            "....WWPPPPPPPPPPPPPPPPWW........",
+            "...WWPPPPPPPPPPPPPPPPPPWW.......",
+            "...WPPWPPPPPPPPPPPPPPWPPW.......",
+            "...WPPWPPPPPPPPPPPPPPWPPW.......",
+            "...WWPWPPPPPPPPPPPPPPWPWW.......",
+            "....WWPPPPPPPPPPPPPPPPWW........",
+            "......WPPPPPPPPPPPPPPW..........",
+            "......WPPPPPPPPPPPPPPW..........",
+            "......WPPPPPPPPPPPPPPW..........",
+            "......WPPPPPPPPPPPPPPW...WWW....",
+            "......WPPPPPPPPPPPPPPW..WPPPW...",
+            ".....WWPPPPPPPPPPPPPPWW.WPPPW...",
+            ".....WPPPPPPPPPPPPPPPPWWPPPW....",
+            ".....WPPPPPPPPPPPPPPPPPWWPW.....",
+            ".....WPPPPPPPPPPPPPPPPPPWW......",
+            ".....WPPPPPWW....WWPPPPPPW......",
+            ".....WPPPPPW......WPPPPPPW......",
+            ".....WPPPPPW......WPPPPPPW......",
+            ".....WWWWWW......WWWWWW.........",
         ],
+    ],
+    'VIBING': [
         [
-            "......MMMMMMMM......",
-            ".B...MM......MM.....",
-            "....MMSP....PPMM....",
-            "...MMPPPHHHPPPHMM...",
-            "...MMPEEEEPPEEEMM...",
-            "...MMPEEEEPPEEEMM...",
-            "...SMMPPPPPPPPMMS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "....SPPPPPPPPPPS..S.",
-            "....SPPPPPPPPPPS.S..",
-            "....SPPPPPPPPPPSSS..",
-            "....SPPPPPPPPPPS....",
-            "....SPPS....SPPS....",
-            "....SPPS....SPPS....",
-            ".....SS......SS.....",
-            "...................."
+            "..............................................",
+            "................P..........P..................",
+            "..............MMMMMMMMMMMMMMM.................",
+            ".............MMMMMMMMMMMMMMMMM................",
+            ".............PPPPPP......PPPPPP...............",
+            ".........MMM.PPPPPPPPPPPPPPPPPP.MMM...........",
+            ".........MMMPPPPPPPPPPPPPPPPPPPPMMM...........",
+            ".........MMMPPPPPPPPPPPPPPPPPPPPMMM...........",
+            ".........MMMPPPPPPPPPPPPPPPPPPPPMMM...........",
+            ".........MMMPPPPPPPPPPPPPPPPPPPPMMM...........",
+            ".........MMMPPPPPPPPPPPPPPPPPPPPMMM...........",
+            "............PPPWWWPPPPPPPPWWWPPP..............",
+            "............PPWPPPWPPPPPPWPPPWPP..............",
+            ".........WWWPPWPPPWPPPPPPWPPPWPPWWW...........",
+            "............PPWPPPWPPPPPPWPPPWPP..............",
+            "............PPPWWWPPPPPPPPWWWPPP..............",
+            "........WWWWPPPPPPPPPPPPPPPPPPPPWWWW..........",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
+            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
+            "...........PPPPPPPPPPPPPPPPPPPPPP..PPP........",
+            "...........PPPPPPPPPPPPPPPPPPPPPPPPP..........",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            "..............WWWWW......WWWWW................",
         ],
-        [
-            "..B.................",
-            "......MMMMMMMM......",
-            ".....MM......MM.....",
-            "....MMSP....PPMM....",
-            "...MMPPPHHHPPPHMM...",
-            "...MMPEEEEPPEEEMM...",
-            "...MMPEEEEPPEEEMM..S",
-            "...SMMPPPPPPPPMMS.S.",
-            "....SPPPPPPPPPPS..S.",
-            "....SPPPPPPPPPPS.S..",
-            "....SPPPPPPPPPPSSS..",
-            "....SPPPPPPPPPPS....",
-            "....SPPS....SPPS....",
-            "....SPPS....SPPS....",
-            ".....SS......SS.....",
-            "...................."
-        ]
     ],
     'WATCHING': [
         [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPUUUUPPUUUUS...', 
-            '...SPPUUUUPPUUUUS...', 
-            '...SPPPPPPPPPPPPS..S', 
-            '...SPPPPPPPPPPPPS.S.', 
-            '....SPPPPPPPPPPS..S.', 
-            '....SPPPPPPPPPPS.S..', 
-            '....SPPPPPPPPPPSSS..', 
-            '....SPPPPPPPPPPS....', 
-            '....SPPS....SPPS....', 
-            '....SPPS....SPPS....', 
-            '.....SS......SS.....', 
-            '....................'
+            "..............................................",
+            "................P..........P..................",
+            "...............PP..........PP.................",
+            "..............PPPP........PPPP................",
+            ".............PPPPPP......PPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPWWWPPPPPPPPWWWPPP..............",
+            "............PPWPPPWPPPPPPWPPPWPP..............",
+            ".........WWWPPWPPPWPPPPPPWPPPWPPWWW...........",
+            "............PPWPPPWPPPPPPWPPPWPP..............",
+            "............PPPWWWPPPPPPPPWWWPPP..............",
+            "........WWWWPPPPPPPPPPPPPPPPPPPPWWWW..........",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "............PPPPPPPPPPPPPPPPPPPP..............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.....PPP.....",
+            "...........PPPPPPPPPPPPPPPPPPPPPP....PPP......",
+            "...........PPPPPPPPPPPPPPPPPPPPPP..PPP........",
+            "...........PPPPPPPPPPPPPPPPPPPPPPPPP..........",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            "...........PPPPPPPPPPPPPPPPPPPPPP.............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            ".............PPPPPPPPPPPPPPPPPP...............",
+            "..............WWWWW......WWWWW................",
         ],
-        [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPUUUUPPUUUUS...', 
-            '...SPPUUUUPPUUUUS...', 
-            '...SPPPPPPPPPPPPSSS.', 
-            '...SPPPPPPPPPPPPS...', 
-            '....SPPPPPPPPPPS.S..', 
-            '....SPPPPPPPPPPS..S.', 
-            '....SPPPPPPPPPPSSS..', 
-            '....SPPPPPPPPPPS....', 
-            '....SPPS....SPPS....', 
-            '....SPPS....SPPS....', 
-            '.....SS......SS.....', 
-            '....................'
-        ],
-        [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPUUUUPPUUUUS...', 
-            '...SPPUUUUPPUUUUS...', 
-            '...SPPPPPPPPPPPPS...', 
-            '...SPPPPPPPPPPPPS.S.', 
-            '....SPPPPPPPPPPS.S..', 
-            '....SPPPPPPPPPPS.S..', 
-            '....SPPPPPPPPPPSSS..', 
-            '....SPPPPPPPPPPS....', 
-            '....SPPS....SPPS....', 
-            '....SPPS....SPPS....', 
-            '.....SS......SS.....', 
-            '....................'
-        ],
-        [
-            '....................', 
-            '.....PH......HP.....', 
-            '....PPSP....PPSP....', 
-            '....HPPPHHHPPPHS....', 
-            '...HPPUUUUPPUUUUS...', 
-            '...SPPUUUUPPUUUUS...', 
-            '...SPPPPPPPPPPPPSSS.', 
-            '...SPPPPPPPPPPPPS...', 
-            '....SPPPPPPPPPPS.S..', 
-            '....SPPPPPPPPPPS..S.', 
-            '....SPPPPPPPPPPSSS..', 
-            '....SPPPPPPPPPPS....', 
-            '....SPPS....SPPS....', 
-            '....SPPS....SPPS....', 
-            '.....SS......SS.....', 
-            '....................'
-        ]
-    ]
+    ],
 }
-MATRIX_FRAMES['SCROLLING'] = MATRIX_FRAMES['WATCHING']
 
 def load_settings():
     if os.path.exists(SETTINGS_FILE):
@@ -547,15 +506,7 @@ class SettingsWindow(QWidget):
         self.typing_cb.stateChanged.connect(self.on_typing_changed)
         layout.addWidget(self.typing_cb)
         
-        self.sunglasses_cb = QCheckBox("Wear Sunglasses")
-        self.sunglasses_cb.setChecked(self.pet.settings.get("wear_sunglasses", False))
-        self.sunglasses_cb.stateChanged.connect(self.on_sunglasses_changed)
-        layout.addWidget(self.sunglasses_cb)
-        
-        self.highres_cb = QCheckBox("High-Res Mode (EPX)")
-        self.highres_cb.setChecked(self.pet.settings.get("high_res_mode", True))
-        self.highres_cb.stateChanged.connect(self.on_highres_changed)
-        layout.addWidget(self.highres_cb)
+
         
         # Matrix Mode
         
@@ -676,13 +627,7 @@ class SettingsWindow(QWidget):
         self.pet.settings["react_to_typing"] = bool(val)
         self.pet.save_and_apply_settings()
 
-    def on_sunglasses_changed(self, val):
-        self.pet.settings["wear_sunglasses"] = bool(val)
-        self.pet.save_and_apply_settings()
 
-    def on_highres_changed(self, val):
-        self.pet.settings["high_res_mode"] = bool(val)
-        self.pet.save_and_apply_settings()
         
 
 
@@ -940,6 +885,26 @@ for anim_name, frames in MATRIX_FRAMES.items():
         MATRIX_FRAMES_HIGH_RES[anim_name] = frames
 
 
+
+
+def generate_mochi_sprite(base_matrix, stretch_rows=0):
+    if stretch_rows <= 0:
+        return base_matrix
+    top = base_matrix[0:26] # Rows 0 to 25 (Head, arms, paws)
+    bottom = base_matrix[29:] # Rows 29 to end (Pelvis, tail, legs)
+    
+    total_mid_rows = 3 + stretch_rows
+    mid = []
+    for i in range(total_mid_rows):
+        t = i / max(1, total_mid_rows - 1)
+        pinch = int(round(math.sin(t * math.pi) * min(2, stretch_rows // 6)))
+        left = 6 + pinch
+        right = 21 - pinch
+        row = "." * left + "W" + "P" * (right - left - 1) + "W" + "." * (32 - right - 1)
+        mid.append(row)
+        
+    return top + mid + bottom
+
 class PetWidget(QWidget):
     def __init__(self):
         super().__init__()
@@ -953,6 +918,16 @@ class PetWidget(QWidget):
         
         self.is_dragging = False
         self.is_petting = False
+        self.drag_vx = 0.0
+        self.drag_vy = 0.0
+        self.wobble_angle = 0.0
+        self.wobble_vel = 0.0
+        self.lift_offset = 0.0
+        self.current_stretch_rows = 0.0
+        self.last_drag_pos = QPoint()
+        self.is_blinking = False
+        self.blink_timer = 250
+        self.blink_duration = 0
         self.hearts = []
         self.oldPos = self.pos()
         self.tick_count = 0
@@ -960,7 +935,9 @@ class PetWidget(QWidget):
         self.active_app_state = ""
         self.is_typing = False
         self.typing_timer = 0
-        self.recent_typing_events = []
+        self.typing_heat = 0.0
+        self.keystroke_times = []
+        self.current_wpm = 0.0
         self.is_angry = False
         self.is_listening_to_music = False
         
@@ -978,10 +955,10 @@ class PetWidget(QWidget):
         self.settings_window = SettingsWindow(self)
         self.initUI()
         
-        # Animation loop (30 FPS)
+        # Animation loop (50 FPS for fluid physics)
         self.anim_timer = QTimer(self)
         self.anim_timer.timeout.connect(self.update_animation)
-        self.anim_timer.start(33)
+        self.anim_timer.start(20)
         
         # One second logic timer
         self.logic_timer = QTimer(self)
@@ -1116,7 +1093,8 @@ class PetWidget(QWidget):
 
     def initUI(self):
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.resize(500, 300)
+        self.resize(500, 440)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.apply_window_flags()
         self.setupTray()
 
@@ -1124,17 +1102,30 @@ class PetWidget(QWidget):
         self.tray_icon = QSystemTrayIcon(QApplication.instance())
         icon = self.style().standardIcon(self.style().StandardPixmap.SP_ComputerIcon)
         self.tray_icon.setIcon(icon)
+        icon_path = os.path.join(os.path.dirname(__file__), "cat.ico")
+        if os.path.exists(icon_path):
+            cat_icon = QIcon(icon_path)
+            self.tray_icon.setIcon(cat_icon)
+            self.setWindowIcon(cat_icon)
+        else:
+            icon = self.style().standardIcon(self.style().StandardPixmap.SP_ComputerIcon)
+            self.tray_icon.setIcon(icon)
         
         # Actions
         show_action = QAction("Show", self)
         set_task_action = QAction("Set Pomodoro Task...", self)
         set_pin_action = QAction("Set Pinned Message", self)
         clear_pin_action = QAction("Clear Pinned Message", self)
+        set_pin_action = QAction("Set Speech Note...", self)
+        clear_pin_action = QAction("Clear Note", self)
         toggle_alarm_action = QAction("Toggle Pomodoro", self)
         
         pin_window_action = QAction("Always Pin Nyx", self, checkable=True)
+        pin_window_action = QAction("Always on Top", self, checkable=True)
         pin_window_action.setChecked(self.settings.get("always_on_top", True))
         
+        settings_action = QAction("Settings...", self)
+        quit_action = QAction("Exit Nyx", self)
         
         settings_action = QAction("Settings", self)
         quit_action = QAction("Exit", self)
@@ -1149,7 +1140,32 @@ class PetWidget(QWidget):
         quit_action.triggered.connect(QApplication.instance().quit)
         
         # Menu
+        # Styled Menu
         tray_menu = QMenu()
+        tray_menu.setStyleSheet("""
+            QMenu {
+                background-color: #1e1e28;
+                color: #e4e4ed;
+                border: 1px solid #36364c;
+                border-radius: 8px;
+                padding: 6px;
+                font-family: 'Segoe UI', Arial;
+                font-size: 12px;
+            }
+            QMenu::item {
+                padding: 6px 20px;
+                border-radius: 4px;
+            }
+            QMenu::item:selected {
+                background-color: #5c6bc0;
+                color: #ffffff;
+            }
+            QMenu::separator {
+                height: 1px;
+                background-color: #313145;
+                margin: 4px 6px;
+            }
+        """)
         tray_menu.addAction(show_action)
         tray_menu.addSeparator()
         tray_menu.addAction(pin_window_action)
@@ -1166,6 +1182,11 @@ class PetWidget(QWidget):
         
         self.tray_icon.setContextMenu(tray_menu)
         self.tray_icon.show()
+
+    def contextMenuEvent(self, event):
+        # Allow right-clicking directly on the desktop cat
+        if hasattr(self, 'tray_icon') and self.tray_icon.contextMenu():
+            self.tray_icon.contextMenu().exec(event.globalPos())
 
     def apply_window_flags(self):
         flags = Qt.WindowType.FramelessWindowHint | Qt.WindowType.Tool
@@ -1221,12 +1242,42 @@ class PetWidget(QWidget):
         self.idle_time = 0
         if self.state == "SLEEPING":
             self.state = "IDLE"
+        self.update()
             
     def on_typing_activity(self):
         if not self.settings.get("react_to_typing", True):
             return
+        self.idle_time = 0
+        if self.state == "SLEEPING":
+            self.state = "IDLE"
         self.is_typing = True
-        self.typing_timer = 3
+        # Crucial: NEVER blink while typing!
+        self.is_blinking = False
+        self.blink_timer = random.randint(300, 500)
+        # Hold keycaps for ~700ms after keystroke
+        self.typing_timer = 24
+        
+        # Calculate WPM over 4.0 second sliding window
+        now = time.time()
+        self.keystroke_times.append(now)
+        self.keystroke_times = [t for t in self.keystroke_times if now - t <= 4.0]
+        if len(self.keystroke_times) >= 2:
+            dt = max(0.6, now - self.keystroke_times[0])
+            self.current_wpm = (len(self.keystroke_times) / 5.0) / (dt / 60.0)
+        else:
+            self.current_wpm = 0.0
+
+        # Trigger angry red mode when typing speed exceeds 60 WPM!
+        if self.current_wpm >= 60.0:
+            self.is_angry = True
+            self.typing_heat = min(1.0, getattr(self, 'typing_heat', 0.0) + 0.25)
+        elif self.current_wpm >= 35.0:
+            self.typing_heat = min(0.60, getattr(self, 'typing_heat', 0.0) + 0.06)
+        
+        # Immediately alternate paw on key press for responsive tactile feel
+        if hasattr(self, 'current_frame_index'):
+            self.current_frame_index = (self.current_frame_index + 1) % 2
+        self.update()
         
     def play_alarm_sound(self):
         try:
@@ -1338,344 +1389,468 @@ class PetWidget(QWidget):
         if hasattr(self, 'hearts'):
             for h in self.hearts:
                 h[1] -= h[3]
-                h[2] -= 4.0
+                h[2] -= 3.5
+                h[0] += math.sin(h[1] * 0.12) * 0.6
             self.hearts = [h for h in self.hearts if h[2] > 0]
             
             if hasattr(self, 'is_petting') and self.is_petting and self.tick_count % 3 == 0:
-                import random
-                self.hearts.append([random.randint(-20, 20), random.randint(-40, -10), 255.0, random.uniform(1.0, 2.0)])
+                self.hearts.append([random.randint(-16, 16), random.randint(-38, -15), 255.0, random.uniform(1.2, 2.0)])
 
         anim_name = self.get_current_animation_name()
         
-        # Determine speed (matrix mode allows variable speed)
-        speed = 1 if anim_name == 'CODING_TYPING' else 2 # 30ms for typing, 60ms for others
-
-        if True:
-            if anim_name == "TYPING":
-                speed = 1 # 30ms (Fast typing)
-            elif anim_name == "SLEEPING":
-                speed = 4 # 120ms (Slow Zzzs)
-            elif anim_name == "VIBING":
-                speed = 1 if anim_name == 'CODING_TYPING' else 2 # 30ms for typing, 60ms for others (Dance)
-            elif anim_name == "WATCHING":
-                speed = 3 # 90ms (Smooth breath)
-        else:
+        speed = 2
+        if anim_name == "TYPING":
+            speed = 1 if getattr(self, 'is_angry', False) else 2
+        elif anim_name == "SLEEPING":
+            speed = 4
+        elif anim_name == "PURRING":
+            speed = 3
+        elif anim_name == "VIBING":
+            speed = 2
+        elif anim_name == "WATCHING":
             speed = 3
             
-        if self.tick_count % speed == 0:
-            self.current_frame_index += 1
+        # Natural blinking logic (NEVER while typing or dragged!)
+        if getattr(self, 'is_typing', False) or anim_name in ["TYPING", "DRAGGED", "SLEEPING"]:
+            self.is_blinking = False
+            self.blink_timer = random.randint(300, 500)
+        else:
+            if self.is_blinking:
+                self.blink_duration -= 1
+                if self.blink_duration <= 0:
+                    self.is_blinking = False
+                    self.blink_timer = random.randint(180, 420)
+            else:
+                self.blink_timer -= 1
+                if self.blink_timer <= 0:
+                    self.is_blinking = True
+                    self.blink_duration = 3
+
+        # Update WPM sliding window
+        now = time.time()
+        self.keystroke_times = [t for t in self.keystroke_times if now - t <= 4.0]
+        if len(self.keystroke_times) >= 2:
+            dt = max(0.6, now - self.keystroke_times[0])
+            self.current_wpm = (len(self.keystroke_times) / 5.0) / (dt / 60.0)
+        else:
+            self.current_wpm = 0.0
+
+        if self.current_wpm < 50.0:
+            self.is_angry = False
+
+        # Heat natural cooling
+        if hasattr(self, 'typing_heat') and self.typing_heat > 0:
+            if not getattr(self, 'is_angry', False):
+                self.typing_heat = max(0.0, self.typing_heat - 0.010)
+
+        # FLUID MOCHI DRAG PHYSICS
+        if getattr(self, 'is_dragging', False):
+            # 1. Smooth scruff lift
+            self.lift_offset += (24.0 - self.lift_offset) * 0.22
+            
+            # 2. Pendulum Tilt: opposes horizontal movement with fluid inertia
+            target_tilt = max(-24.0, min(24.0, -self.drag_vx * 1.5))
+            tilt_force = (target_tilt - self.wobble_angle) * 0.22
+            self.wobble_vel = (self.wobble_vel + tilt_force) * 0.82
+            self.wobble_angle += self.wobble_vel
+            
+            # 3. Fluid Mochi Stretch: stretches midsection based on vertical pull & drag speed
+            drag_speed = math.hypot(self.drag_vx, self.drag_vy)
+            target_stretch_rows = min(26.0, max(0.0, self.drag_vy * 0.85 + drag_speed * 0.40))
+            self.current_stretch_rows += (target_stretch_rows - self.current_stretch_rows) * 0.25
+            
+            # Velocity decay
+            self.drag_vx *= 0.86
+            self.drag_vy *= 0.86
+        else:
+            # Dropped: fluid landing settle
+            self.lift_offset += (0.0 - self.lift_offset) * 0.25
+            self.wobble_angle *= 0.78
+            if abs(self.wobble_angle) < 0.05:
+                self.wobble_angle = 0.0
+            self.wobble_vel = 0.0
+            self.current_stretch_rows += (0.0 - self.current_stretch_rows) * 0.30
+
+        # Advance frames for multi-frame animations (typing steps via keystrokes)
+        if anim_name != "TYPING":
+            if self.tick_count % speed == 0:
+                anim_list_len = len(MATRIX_FRAMES.get(anim_name, [0]))
+                self.current_frame_index = (self.current_frame_index + 1) % max(1, anim_list_len)
 
         if self.typing_timer > 0:
             self.typing_timer -= 1
-            
-        current_time = time.time()
-        self.recent_typing_events = [t for t in self.recent_typing_events if current_time - t < 2.0]
-        if len(self.recent_typing_events) > 8:
-            self.is_angry = True
-        else:
-            self.is_angry = False
-
-        if self.tick_count % 10 == 0:
-            if self.typing_timer <= 0:
+            if self.typing_timer == 0:
                 self.is_typing = False
+                self.current_frame_index = 0
                 
         self.update() 
 
     # --- Drawing ---
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         
-        cx, cy = 150, 150
-        y_offset = 0
+        cx = self.width() // 2
+        cy = self.height() // 2
         
-        if self.state == "DRAGGED":
-            y_offset = -10
-            
-        painter.setFont(QFont("Arial", 10, QFont.Weight.Bold))
+        anim_name = self.get_current_animation_name()
+        frames_dict = MATRIX_FRAMES
         
-
-        if True:
-            # MATRIX MODE RENDERING
-            anim_name = self.get_current_animation_name()
-            is_high_res = self.settings.get("high_res_mode", True)
-            frames_dict = MATRIX_FRAMES_HIGH_RES if is_high_res else MATRIX_FRAMES
-            
-            if anim_name not in frames_dict:
-                anim_name = "IDLE"
-            anim_list = frames_dict.get(anim_name, frames_dict["IDLE"])
-            if self.current_frame_index >= len(anim_list):
-                self.current_frame_index = 0
-            
-            frame_data = list(anim_list[self.current_frame_index])
-            
+        if anim_name not in frames_dict:
+            anim_name = "IDLE"
+        anim_list = frames_dict.get(anim_name, frames_dict["IDLE"])
+        if self.current_frame_index >= len(anim_list):
+            self.current_frame_index = 0
+        
+        frame_data = list(anim_list[self.current_frame_index])
+        
+        grid_w = len(frame_data[0])
+        grid_h = len(frame_data)
+        # High fidelity pixel sizing
+        pixel_size = max(2, int(self.scale_factor))
+        floor_y = cy + int(16 * pixel_size)
+        
+        if anim_name == "DRAGGED":
+            frame_data = generate_mochi_sprite(MATRIX_FRAMES['DRAGGED'][0], int(getattr(self, 'current_stretch_rows', 0.0)))
             grid_w = len(frame_data[0])
             grid_h = len(frame_data)
-            old_pixel_size = max(2, int(self.scale_factor * 1.6))
-            if is_high_res:
-                pixel_size = max(1, int(self.scale_factor * 0.8))
-            else:
-                pixel_size = old_pixel_size
-            
             dest_width = grid_w * pixel_size
             dest_height = grid_h * pixel_size
             dest_x = cx - (dest_width // 2)
-            dest_y = cy - (dest_height // 2) + getattr(self, "y_offset", y_offset) + y_offset
+            dest_y = int(floor_y - dest_height - getattr(self, 'lift_offset', 0.0))
+        else:
+            frame_data = list(anim_list[self.current_frame_index])
+            grid_w = len(frame_data[0])
+            grid_h = len(frame_data)
+            dest_width = grid_w * pixel_size
+            dest_height = grid_h * pixel_size
+            dest_x = cx - (dest_width // 2)
+            dest_y = floor_y - dest_height
+        
+        # Override body, outline, and cute pink colors from settings
+        custom_r = self.settings.get("matrix_r", 26)
+        custom_g = self.settings.get("matrix_g", 26)
+        custom_b = self.settings.get("matrix_b", 26)
+        
+        # ANGRY RED MODE WHEN TYPING > 60 WPM (matching Image 5 reference)
+        heat = getattr(self, 'typing_heat', 0.0)
+        is_angry = getattr(self, 'is_angry', False)
+        if anim_name == "TYPING" and (is_angry or heat > 0.15):
+            # Smooth transition to flaming angry red (235, 40, 40)
+            t = 1.0 if is_angry else min(1.0, (heat - 0.15) / 0.50)
+            cr = int(custom_r + (235 - custom_r) * t)
+            cg = int(custom_g + (40 - custom_g) * t)
+            cb = int(custom_b + (40 - custom_b) * t)
+            cat_body_color = QColor(cr, cg, cb)
+        else:
+            cat_body_color = QColor(custom_r, custom_g, custom_b)
             
-            # Override body color with settings
-            custom_r = self.settings.get("matrix_r", 198)
-            custom_g = self.settings.get("matrix_g", 154)
-            custom_b = self.settings.get("matrix_b", 150)
-            MATRIX_COLORS['P'] = QColor(custom_r, custom_g, custom_b)
-            
-            out_r = self.settings.get("matrix_outline_r", 160)
-            out_g = self.settings.get("matrix_outline_g", 110)
-            out_b = self.settings.get("matrix_outline_b", 110)
-            MATRIX_COLORS['S'] = QColor(out_r, out_g, out_b)
-            
-            left_eye_pixels = []
-            right_eye_pixels = []
-            
-            # Override body color with settings
-            custom_r = self.settings.get("matrix_r", 198)
-            custom_g = self.settings.get("matrix_g", 154)
-            custom_b = self.settings.get("matrix_b", 150)
-            MATRIX_COLORS['P'] = QColor(custom_r, custom_g, custom_b)
-            
-            out_r = self.settings.get("matrix_outline_r", 160)
-            out_g = self.settings.get("matrix_outline_g", 110)
-            out_b = self.settings.get("matrix_outline_b", 110)
-            MATRIX_COLORS['S'] = QColor(out_r, out_g, out_b)
-            
-            painter.setPen(Qt.PenStyle.NoPen)
-            for r, row_str in enumerate(frame_data):
-                for c, char in enumerate(row_str):
+        MATRIX_COLORS['P'] = cat_body_color
+        
+        out_r = self.settings.get("matrix_outline_r", 20)
+        out_g = self.settings.get("matrix_outline_g", 20)
+        out_b = self.settings.get("matrix_outline_b", 20)
+        MATRIX_COLORS['S'] = QColor(out_r, out_g, out_b)
+
+        nose_r = self.settings.get("matrix_nose_r", 255)
+        nose_g = self.settings.get("matrix_nose_g", 140)
+        nose_b = self.settings.get("matrix_nose_b", 165)
+        MATRIX_COLORS['N'] = QColor(nose_r, nose_g, nose_b)
+
+        # 1. Ground Shadow (anchored on desktop floor)
+        shadow_w = int(dest_width * (0.50 if anim_name == "DRAGGED" else 0.70))
+        shadow_h = max(5, int(dest_height * 0.10))
+        shadow_x = cx - shadow_w // 2
+        shadow_y = floor_y - (shadow_h // 2) + 2
+        
+        grad = QRadialGradient(shadow_x + shadow_w / 2, shadow_y + shadow_h / 2, shadow_w / 2)
+        grad.setColorAt(0.0, QColor(15, 20, 30, 70 if anim_name != "DRAGGED" else 30))
+        grad.setColorAt(0.5, QColor(15, 20, 30, 30 if anim_name != "DRAGGED" else 12))
+        grad.setColorAt(1.0, QColor(15, 20, 30, 0))
+        painter.setBrush(grad)
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.drawEllipse(shadow_x, shadow_y, shadow_w, shadow_h)
+
+        # 2. Scruff Pivot Physics: Natural pendulum wobble rotation
+        painter.save()
+        wobble = getattr(self, 'wobble_angle', 0.0)
+        if anim_name == "DRAGGED" and abs(wobble) > 0.05:
+            pivot_x = dest_x + dest_width / 2.0
+            pivot_y = dest_y + 4.0 * pixel_size # Scruff grab point between ears
+            painter.translate(pivot_x, pivot_y)
+            painter.rotate(wobble)
+            painter.translate(-pivot_x, -pivot_y)
+
+        # 3. Draw Cat Matrix
+        painter.setPen(Qt.PenStyle.NoPen)
+        for r, row_str in enumerate(frame_data):
+            for c, char in enumerate(row_str):
+                if char == 'L':
+                    color = QColor(min(255, custom_r + 20), min(255, custom_g + 20), min(255, custom_b + 20))
+                elif char == 'D':
+                    color = QColor(max(0, custom_r - 20), max(0, custom_g - 20), max(0, custom_b - 20))
+                elif char in MATRIX_COLORS:
+                    color = MATRIX_COLORS[char]
+                else:
                     color = None
-                    if char == 'E':
-                        color = MATRIX_COLORS['W']
-                        if c < (len(row_str) // 2):
-                            left_eye_pixels.append((c, r))
-                        else:
-                            right_eye_pixels.append((c, r))
-                    elif char == 'L':
-                        c_r = min(255, custom_r + 20)
-                        c_g = min(255, custom_g + 20)
-                        c_b = min(255, custom_b + 20)
-                        color = QColor(c_r, c_g, c_b)
-                    elif char == 'D':
-                        c_r = max(0, custom_r - 20)
-                        c_g = max(0, custom_g - 20)
-                        c_b = max(0, custom_b - 20)
-                        color = QColor(c_r, c_g, c_b)
-                    elif char in MATRIX_COLORS:
-                        color = MATRIX_COLORS[char]
-                        
-                    if color:
-                        painter.setBrush(color)
-                        px_x = int(dest_x + c * pixel_size)
-                        px_y = int(dest_y + r * pixel_size)
-                        painter.drawRect(px_x, px_y, pixel_size - 1, pixel_size - 1)
-                        
-            if getattr(self, "state", "IDLE") == "TALKING" and anim_name != "SLEEPING":
-                import time
-                tick = int(time.time() * 10)
-                
-                eye_rows = [r_idx for r_idx, row in enumerate(frame_data) if 'E' in row]
-                if eye_rows:
-                    is_big = (tick % 4 < 2)
-                    mouth_y = dest_y + (max(eye_rows) + 1) * pixel_size
-                    mouth_cx = dest_x + (len(frame_data[0]) / 2) * pixel_size
                     
-                    painter.setBrush(MATRIX_COLORS['M'])
-                    painter.setPen(Qt.PenStyle.NoPen)
-                    if is_big:
-                        # Draw a large open mouth
-                        painter.drawRect(int(mouth_cx - old_pixel_size*1.5), int(mouth_y + old_pixel_size*1), int(old_pixel_size*3), int(old_pixel_size*2))
-                        painter.drawRect(int(mouth_cx - old_pixel_size*0.5), int(mouth_y + old_pixel_size*3), int(old_pixel_size*1), int(old_pixel_size*1))
-                    else:
-                        # Draw a smaller mouth
-                        painter.drawRect(int(mouth_cx - old_pixel_size*1.0), int(mouth_y + old_pixel_size*1), int(old_pixel_size*2), int(old_pixel_size*1))
+                if color:
+                    painter.setBrush(color)
+                    px_x = int(dest_x + c * pixel_size)
+                    px_y = int(dest_y + r * pixel_size)
+                    painter.drawRect(px_x, px_y, pixel_size, pixel_size)
 
-            # Draw Dynamic Pupils
+        # Rising heat steam vapors when cat is angry or hot from typing (matching Image 5 reference)
+        if (is_angry or heat > 0.40) and anim_name == "TYPING":
+            steam_offsets = [-7, 0, 7]
+            head_cx = dest_x + int(18 * pixel_size)
+            head_top_y = dest_y + int(1 * pixel_size)
+            painter.setPen(Qt.PenStyle.NoPen)
+            for i, sx in enumerate(steam_offsets):
+                phase = (self.tick_count * 3 + i * 11) % 40
+                drift_x = head_cx + int((sx + math.sin(phase * 0.3) * 1.5) * pixel_size)
+                drift_y = head_top_y - int(phase * pixel_size * 0.5)
+                alpha = max(0, min(250, int(255 * (1.0 - phase / 40.0))))
+                steam_color = QColor(235, 40, 40, alpha)
+                painter.setBrush(steam_color)
+                dash_w = max(2, int(pixel_size * 0.9))
+                dash_h = max(3, int(pixel_size * 2.2))
+                painter.drawRect(drift_x, drift_y, dash_w, dash_h)
 
-            if left_eye_pixels and right_eye_pixels and anim_name != "SLEEPING":
-                import math
-                mouse_pos = QCursor.pos()
-                cat_global = self.mapToGlobal(QPoint(int(cx), int(cy)))
-                
-                dx = mouse_pos.x() - cat_global.x()
-                dy = mouse_pos.y() - cat_global.y()
-                
-                dist = math.hypot(dx, dy)
-                max_off_x = old_pixel_size * 1.5
-                max_off_y = old_pixel_size * 0.8
-                
-                if dist > 0:
-                    off_x = (dx / dist) * max_off_x
-                    off_y = (dy / dist) * max_off_y
-                else:
-                    off_x, off_y = 0, 0
-                    
-                painter.setBrush(MATRIX_COLORS['B'])
-                
-                for eye_pixels in [left_eye_pixels, right_eye_pixels]:
-                    avg_c = sum(p[0] for p in eye_pixels) / len(eye_pixels)
-                    avg_r = sum(p[1] for p in eye_pixels) / len(eye_pixels)
-                    
-                    pupil_cx = dest_x + avg_c * pixel_size + off_x + (pixel_size / 2)
-                    pupil_cy = dest_y + avg_r * pixel_size + off_y + (pixel_size / 2)
-                    
-                    pupil_w = old_pixel_size * 1.5
-                    pupil_h = old_pixel_size * 2.0
-                    
-                    painter.drawRect(int(pupil_cx - pupil_w/2), int(pupil_cy - pupil_h/2), int(pupil_w), int(pupil_h))
-                        
-            if self.settings.get("wear_sunglasses", False) and anim_name != "SLEEPING":
-                if not left_eye_pixels or not right_eye_pixels:
-                    min_r = 5 if anim_name == "DRAGGED" else 4
-                    min_cl = 5
-                    min_cr = 11
-                    if is_high_res:
-                        min_r *= 2
-                        min_cl *= 2
-                        min_cr *= 2
-                else:
-                    min_r = min(p[1] for p in left_eye_pixels + right_eye_pixels)
-                    min_cl = min(p[0] for p in left_eye_pixels)
-                    min_cr = min(p[0] for p in right_eye_pixels)
-                
-                # Dynamic scaling factors for high-res vs low-res grids
-                l_off = 4 if is_high_res else 2
-                r_off = 2 if is_high_res else 1
-                b_off = 8 if is_high_res else 4
-                lens_w = 12 if is_high_res else 6
-                lens_h = 6 if is_high_res else 3
-                bridge_h = 2 if is_high_res else 1
-                glint_s = 2 if is_high_res else 1
-                    
-                painter.setBrush(Qt.GlobalColor.black)
-                painter.drawRect(int(dest_x + (min_cl-l_off)*pixel_size), int(dest_y + min_r*pixel_size), int(lens_w*pixel_size), int(lens_h*pixel_size))
-                painter.drawRect(int(dest_x + (min_cr-r_off)*pixel_size), int(dest_y + min_r*pixel_size), int(lens_w*pixel_size), int(lens_h*pixel_size))
-                painter.drawRect(int(dest_x + (min_cl+b_off)*pixel_size), int(dest_y + min_r*pixel_size), int((min_cr - min_cl - b_off)*pixel_size), int(bridge_h*pixel_size))
-                
-                painter.setBrush(Qt.GlobalColor.white)
-                painter.drawRect(int(dest_x + min_cl*pixel_size), int(dest_y + min_r*pixel_size), int(glint_s*pixel_size), int(glint_s*pixel_size))
-                painter.drawRect(int(dest_x + min_cr*pixel_size), int(dest_y + min_r*pixel_size), int(glint_s*pixel_size), int(glint_s*pixel_size))
-                    
-            if getattr(self, 'is_listening_to_music', False) and anim_name != "SLEEPING":
-                hp_frame_base = [
-                    "......MMMMMMMM......",
-                    ".....MM......MM.....",
-                    "....MM........MM....",
-                    "...MM..........MM...",
-                    "...MM..........MM...",
-                    "...MM..........MM...",
-                    "....MM........MM...."
-                ]
-                hp_frame = epx_scale(hp_frame_base) if self.settings.get("high_res_mode", True) else hp_frame_base
-                painter.setPen(Qt.PenStyle.NoPen)
-                for r, row_str in enumerate(hp_frame):
-                    for c, char in enumerate(row_str):
-                        if char == 'M':
-                            painter.setBrush(MATRIX_COLORS['M'])
-                            painter.drawRect(int(dest_x + c*pixel_size), int(dest_y + r*pixel_size + y_offset), int(pixel_size), int(pixel_size))
+        # 4. Talking Mouth Animation
+        if getattr(self, "state", "IDLE") == "TALKING" and anim_name != "SLEEPING":
+            import time
+            tick = int(time.time() * 10)
+            is_big = (tick % 4 < 2)
+            mouth_y = dest_y + 17 * pixel_size
+            mouth_cx = dest_x + (grid_w / 2) * pixel_size
+            painter.setBrush(MATRIX_COLORS['M'])
+            painter.setPen(Qt.PenStyle.NoPen)
+            if is_big:
+                painter.drawRect(int(mouth_cx - pixel_size * 2), int(mouth_y), int(pixel_size * 4), int(pixel_size * 3))
+            else:
+                painter.drawRect(int(mouth_cx - pixel_size * 1.5), int(mouth_y), int(pixel_size * 3), int(pixel_size * 1.5))
 
-        # Determine msg_to_draw
+        # 5. Eye Rendering (Active Real-time Mouse Eye Follow for IDLE & TYPING)
+        # Eye tracking is active in BOTH IDLE and TYPING (and VIBING/WATCHING)!
+        has_dynamic_eyes = (anim_name in ["IDLE", "TYPING", "VIBING", "WATCHING"])
+        
+        if anim_name == "PURRING" or (hasattr(self, 'is_petting') and self.is_petting):
+            # Rosy blushing cheeks!
+            blush_color = QColor(255, 110, 150, 180)
+            painter.setBrush(blush_color)
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.drawEllipse(int(dest_x + 9 * pixel_size), int(dest_y + 15 * pixel_size), int(4.5 * pixel_size), int(2.5 * pixel_size))
+            painter.drawEllipse(int(dest_x + 31 * pixel_size), int(dest_y + 15 * pixel_size), int(4.5 * pixel_size), int(2.5 * pixel_size))
+
+        elif getattr(self, 'is_blinking', False) and anim_name != "DRAGGED":
+            # Natural blinking: clean sleeping slit _ _ across row 10 (IDLE) or row 13 (TYPING)
+            ps = pixel_size
+            painter.setPen(Qt.PenStyle.NoPen)
+            if anim_name == "TYPING":
+                # Cover typing eyes with body color and draw clean horizontal slits
+                painter.setBrush(cat_body_color)
+                painter.drawRect(int(dest_x + 11 * ps), int(dest_y + 11 * ps), int(5 * ps), int(5 * ps))
+                painter.drawRect(int(dest_x + 20 * ps), int(dest_y + 11 * ps), int(5 * ps), int(5 * ps))
+                painter.setBrush(QColor(255, 255, 255))
+                painter.drawRect(int(dest_x + 11 * ps), int(dest_y + 13 * ps), int(5 * ps), ps)
+                painter.drawRect(int(dest_x + 20 * ps), int(dest_y + 13 * ps), int(5 * ps), ps)
+            else:
+                # Cover idle eyes with body color and draw clean horizontal slits
+                painter.setBrush(cat_body_color)
+                painter.drawRect(int(dest_x + 6 * ps), int(dest_y + 8 * ps), int(5 * ps), int(5 * ps))
+                painter.drawRect(int(dest_x + 17 * ps), int(dest_y + 8 * ps), int(5 * ps), int(5 * ps))
+                painter.setBrush(QColor(255, 255, 255))
+                painter.drawRect(int(dest_x + 6 * ps), int(dest_y + 10 * ps), int(5 * ps), ps)
+                painter.drawRect(int(dest_x + 17 * ps), int(dest_y + 10 * ps), int(5 * ps), ps)
+
+        elif has_dynamic_eyes:
+            # Active Real-time Mouse Eye Follow for BOTH eyes (works in IDLE AND TYPING)!
+            mouse_pos = QCursor.pos()
+            cat_global = self.mapToGlobal(QPoint(int(cx), int(cy)))
+            dx = mouse_pos.x() - cat_global.x()
+            dy = mouse_pos.y() - cat_global.y()
+            dist = math.hypot(dx, dy)
+            
+            # Gaze offset inside the 3x3 eye socket (-1, 0, or +1 pixel):
+            if dist > 25:
+                gaze_x = int(round(max(-1.0, min(1.0, dx / (dist * 0.7)))))
+                gaze_y = int(round(max(-1.0, min(1.0, dy / (dist * 0.7)))))
+            else:
+                gaze_x = 0
+                gaze_y = 0
+                
+            ps = pixel_size
+            painter.setBrush(QColor(255, 255, 255))
+            painter.setPen(Qt.PenStyle.NoPen)
+            
+            if anim_name == "TYPING":
+                # In TYPING, eyes are centered at col 13 and col 22, row 13
+                lx = int(dest_x + (13 + gaze_x) * ps)
+                ly = int(dest_y + (13 + gaze_y) * ps)
+                painter.drawRect(lx, ly, ps, ps)
+                
+                rx = int(dest_x + (22 + gaze_x) * ps)
+                ry = int(dest_y + (13 + gaze_y) * ps)
+                painter.drawRect(rx, ry, ps, ps)
+            else:
+                # In IDLE_32 (and WATCHING, VIBING), eyes are centered at col 8 and col 19, row 10
+                lx = int(dest_x + (8 + gaze_x) * ps)
+                ly = int(dest_y + (10 + gaze_y) * ps)
+                painter.drawRect(lx, ly, ps, ps)
+                
+                rx = int(dest_x + (19 + gaze_x) * ps)
+                ry = int(dest_y + (10 + gaze_y) * ps)
+                painter.drawRect(rx, ry, ps, ps)
+
+        # 6. Headphones overlay (if music is playing and not vibing)
+        if getattr(self, 'is_listening_to_music', False) and anim_name != "SLEEPING" and anim_name != "VIBING":
+            hp_frame = [
+                "....MMMMMMMMMM....",
+                "...MM........MM...",
+                "..MM..........MM..",
+                "..MM..........MM..",
+                "..MM..........MM..",
+                "...MM........MM..."
+            ]
+            painter.setPen(Qt.PenStyle.NoPen)
+            for r, row_str in enumerate(hp_frame):
+                for c, char in enumerate(row_str):
+                    if char == 'M':
+                        painter.setBrush(MATRIX_COLORS['M'])
+                        painter.drawRect(int(dest_x + (c + 13) * pixel_size), int(dest_y + (r + 1) * pixel_size), pixel_size, pixel_size)
+
+        # Restore coordinate space for speech bubble
+        painter.restore()
+
+        # 7. Speech Bubble / Reminders / Pomodoro
         msg_to_draw = None
         if hasattr(self, 'pinned_message') and self.pinned_message:
             msg_to_draw = self.pinned_message
         elif hasattr(self, 'pomo_active') and self.pomo_active:
             mins = self.pomo_seconds // 60
             secs = self.pomo_seconds % 60
-            msg_to_draw = f"🍅 {mins:02d}:{secs:02d} 🍅"
+            msg_to_draw = f"🍅 {mins:02d}:{secs:02d}"
 
         if msg_to_draw:
-            painter.setFont(QFont("Consolas", 10, QFont.Weight.Bold))
+            font = QFont("Segoe UI", 10, QFont.Weight.Bold)
+            font.setStyleStrategy(QFont.StyleStrategy.PreferAntialias)
+            painter.setFont(font)
             fm = painter.fontMetrics()
             
             lines = msg_to_draw.split('\n')
             max_w = max(fm.horizontalAdvance(l) for l in lines)
-            bubble_w = max_w + 10
-            bubble_h = len(lines) * fm.height() + 4
+            pad_x = 16
+            pad_y = 10
+            bubble_w = max(max_w + (pad_x * 2), 70)
+            bubble_h = len(lines) * fm.height() + (pad_y * 2)
             
-            cat_height = 16 * self.settings.get("scale_factor", 5.0)
-            dest_y = cy - cat_height / 2
+            dest_cat_y = dest_y
+            bx = cx - (bubble_w / 2)
+            by = dest_cat_y - bubble_h - 14
             
-            bx = max(5, cx - bubble_w / 2)
-            by = max(5, dest_y - bubble_h - 35)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+            painter.setBrush(QColor(255, 255, 255, 245))
+            painter.setPen(QColor(180, 185, 200, 180))
+            painter.drawRoundedRect(int(bx), int(by), int(bubble_w), int(bubble_h), 12, 12)
             
-            painter.setBrush(Qt.GlobalColor.black)
+            # Pointer tail pointing down to cat head
+            pointer = QPolygonF([
+                QPointF(cx - 7, by + bubble_h),
+                QPointF(cx + 7, by + bubble_h),
+                QPointF(cx, by + bubble_h + 9)
+            ])
+            painter.setBrush(QColor(255, 255, 255, 245))
             painter.setPen(Qt.PenStyle.NoPen)
-            painter.drawRect(int(bx - 2), int(by - 2), int(bubble_w + 4), int(bubble_h + 4))
+            painter.drawPolygon(pointer)
             
-            painter.setBrush(Qt.GlobalColor.white)
-            painter.drawRect(int(bx), int(by), int(bubble_w), int(bubble_h))
+            painter.setPen(QColor(180, 185, 200, 180))
+            painter.drawLine(QPointF(cx - 7, by + bubble_h), QPointF(cx, by + bubble_h + 9))
+            painter.drawLine(QPointF(cx + 7, by + bubble_h), QPointF(cx, by + bubble_h + 9))
             
-            # Draw tail
-            painter.setBrush(Qt.GlobalColor.black)
-            painter.drawRect(int(cx - 3), int(by + bubble_h), 12, 16)
-            painter.drawRect(int(cx + 1), int(by + bubble_h + 16), 8, 12)
-            
-            painter.setBrush(Qt.GlobalColor.white)
-            painter.drawRect(int(cx - 1), int(by + bubble_h), 8, 12)
-            painter.drawRect(int(cx + 3), int(by + bubble_h + 12), 4, 12)
-            
-            painter.setPen(Qt.GlobalColor.black)
-            y_start = int(by + fm.ascent() + 2)
+            # Text rendering
+            painter.setPen(QColor(30, 35, 45))
+            y_start = int(by + pad_y + fm.ascent())
             for l in lines:
-                painter.drawText(int(bx + 5), y_start, l)
+                text_x = int(bx + (bubble_w - fm.horizontalAdvance(l)) / 2)
+                painter.drawText(text_x, y_start, l)
                 y_start += fm.height()
 
+        # 8. Floating Love Hearts
         if hasattr(self, 'hearts') and self.hearts:
-
-            # Override body color with settings
-            custom_r = self.settings.get("matrix_r", 198)
-            custom_g = self.settings.get("matrix_g", 154)
-            custom_b = self.settings.get("matrix_b", 150)
-            MATRIX_COLORS['P'] = QColor(custom_r, custom_g, custom_b)
-            
-            out_r = self.settings.get("matrix_outline_r", 160)
-            out_g = self.settings.get("matrix_outline_g", 110)
-            out_b = self.settings.get("matrix_outline_b", 110)
-            MATRIX_COLORS['S'] = QColor(out_r, out_g, out_b)
-            
+            heart_matrix = [
+                ".XX.XX.",
+                "XXXXXXX",
+                "XXXXXXX",
+                ".XXXXX.",
+                "..XXX..",
+                "...X..."
+            ]
             painter.setPen(Qt.PenStyle.NoPen)
+            ps = 2
             for h in self.hearts:
                 alpha = int(max(0, min(255, h[2])))
-                painter.setBrush(QColor(255, 50, 50, alpha))
                 hx = int(cx + h[0])
-                hy = int(cy + h[1] + y_offset)
-                ps = 2
-                painter.drawRect(hx-1*ps, hy-1*ps, ps, ps)
-                painter.drawRect(hx+1*ps, hy-1*ps, ps, ps)
-                painter.drawRect(hx-1*ps, hy, 3*ps, ps)
-                painter.drawRect(hx, hy+1*ps, ps, ps)
+                hy = int(cy + h[1])
+                
+                fill_color = QColor(255, 75, 115, alpha)
+                highlight_color = QColor(255, 185, 205, alpha)
+                
+                for r_idx, row in enumerate(heart_matrix):
+                    for c_idx, ch in enumerate(row):
+                        if ch == 'X':
+                            px = hx + (c_idx - 3) * ps
+                            py = hy + (r_idx - 3) * ps
+                            if r_idx == 1 and c_idx in (1, 4):
+                                painter.setBrush(highlight_color)
+                            else:
+                                painter.setBrush(fill_color)
+                            painter.drawRect(px, py, ps, ps)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            self.is_petting = True
-            self.is_dragging = False
+            self.is_dragging = True
+            self.is_petting = False
+            self.state = "DRAGGED"
             self.oldPos = event.globalPosition().toPoint()
+            self.last_drag_pos = event.globalPosition().toPoint()
+            self.drag_vx = 0.0
+            self.drag_vy = 0.0
+            self.wobble_angle = 0.0
+            self.wobble_vel = 0.0
+            self.setCursor(Qt.CursorShape.SizeAllCursor)
 
     def mouseMoveEvent(self, event):
-        from PyQt6.QtCore import QPoint
-        if hasattr(self, 'is_petting') and self.is_petting:
-            delta = QPoint(event.globalPosition().toPoint() - self.oldPos)
-            if delta.manhattanLength() > 5:
-                self.is_petting = False
-                self.is_dragging = True
-                self.state = "DRAGGED"
+        curr_pos = event.globalPosition().toPoint()
         if getattr(self, 'is_dragging', False):
-            delta = QPoint(event.globalPosition().toPoint() - self.oldPos)
-            self.move(self.x() + delta.x(), self.y() + delta.y())
-            self.oldPos = event.globalPosition().toPoint()
+            dx = curr_pos.x() - self.last_drag_pos.x()
+            dy = curr_pos.y() - self.last_drag_pos.y()
+            self.last_drag_pos = curr_pos
+            self.move(self.x() + dx, self.y() + dy)
+            # Fluid velocity tracking
+            self.drag_vx = self.drag_vx * 0.65 + dx * 0.35
+            self.drag_vy = self.drag_vy * 0.65 + dy * 0.35
+            self.update()
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
+            was_dragging = getattr(self, 'is_dragging', False)
             self.is_petting = False
             self.is_dragging = False
+            self.setCursor(Qt.CursorShape.PointingHandCursor)
+            if was_dragging:
+                self.state = "IDLE"
+                self.idle_time = 0
+            else:
+                self.state = "PURRING"
+                self.idle_time = 0
+                QTimer.singleShot(2500, self.reset_to_idle)
+            self.update()
+
+    def reset_to_idle(self):
+        if self.state == "PURRING":
             self.state = "IDLE"
-            self.idle_time = 0
+            self.update()
 
 if __name__ == '__main__':
     import traceback
