@@ -54,29 +54,27 @@ ACCESSORIES = {
     "bow": {
         "name": "Red Ribbon",
         "icon": "🎀",
-        "desc": "Cute ruby red ribbon bow on Nyx's ear",
+        "desc": "Cute ruby red ribbon bow below Nyx's neck",
         "sprite": [
-            "#WW##WW#",
-            "#RR##RR#",
-            "#RrYYrR#",
-            ".#RyyR#.",
-            "..#YY#..",
+            "..#...#..",
+            "#RR#Y#RR#",
+            "#RrYYYrR#",
+            ".#RrYrR#.",
+            "..#R#R#..",
+            "...#.#...",
         ],
         "colors": {
             'W': QColor(255, 255, 255),
-            'R': QColor(255, 42, 77),
-            'r': QColor(183, 28, 28),
+            'R': QColor(245, 40, 65),
+            'r': QColor(180, 20, 35),
             'Y': QColor(255, 215, 0),
-            'y': QColor(255, 160, 0),
+            'y': QColor(240, 160, 0),
             '#': QColor(40, 0, 10),
         },
         "offsets": {
-            "IDLE": (16, -2),
-            "TYPING": (22, -2),
-            "DRAGGED": (16, -2),
-            "STRETCHING_0": (19, 0),
-            "STRETCHING_1": (22, 3),
-            "STRETCHING_2": (23, 5),
+            "IDLE": (9, 15),
+            "DRAGGED": (9, 15),
+            "SLEEPING": (9, 15),
         }
     },
     "crown": {
@@ -88,9 +86,9 @@ ACCESSORIES = {
             "WGW.WGW.WGW",
             "WGGWWGGWWGW",
             "WGggGGggGGW",
-            "WGRBgRGBgRW",
-            "WGGGGGGGGGW",
-            "WWWWWWWWWWW",
+            ".WGRBgRGBW.",
+            "..WGGGGGW..",
+            "..WWWWWWW..",
         ],
         "colors": {
             'W': QColor(255, 255, 255),
@@ -101,12 +99,9 @@ ACCESSORIES = {
             '#': QColor(50, 35, 0),
         },
         "offsets": {
-            "IDLE": (9, -4),
-            "TYPING": (14, -4),
-            "DRAGGED": (9, -4),
-            "STRETCHING_0": (10, -2),
-            "STRETCHING_1": (13, 1),
-            "STRETCHING_2": (14, 3),
+            "IDLE": (8, -4),
+            "DRAGGED": (8, -4),
+            "SLEEPING": (8, -4),
         }
     },
     "wizard": {
@@ -120,8 +115,8 @@ ACCESSORIES = {
             "...WPpPW...",
             "...WPPPW...",
             "..WYYYYYW..",
-            ".WPPPPPPPW.",
-            "WWWWWWWWWWW",
+            "..WPPPPPW..",
+            "..WWWWWWW..",
         ],
         "colors": {
             'W': QColor(255, 255, 255),
@@ -131,12 +126,9 @@ ACCESSORIES = {
             '#': QColor(30, 15, 55),
         },
         "offsets": {
-            "IDLE": (9, -5),
-            "TYPING": (14, -5),
-            "DRAGGED": (9, -5),
-            "STRETCHING_0": (10, -3),
-            "STRETCHING_1": (13, 0),
-            "STRETCHING_2": (14, 2),
+            "IDLE": (8, -5),
+            "DRAGGED": (8, -5),
+            "SLEEPING": (8, -5),
         }
     }
 }
@@ -1304,7 +1296,7 @@ class SettingsWindow(QWidget):
         self.acc_buttons = []
         acc_list = [
             ("none", "None", "❌", "Natural Nyx without accessories"),
-            ("bow", "Red Ribbon", "🎀", "Cute ruby red ribbon bow on Nyx's ear"),
+            ("bow", "Red Ribbon", "🎀", "Cute ruby red ribbon bow below Nyx's neck"),
             ("wizard", "Wizard Hat", "🧙", "Mystical pointed purple hat with star band"),
             ("crown", "Golden Crown", "👑", "Sparkling royal gold crown with jewel insets"),
         ]
@@ -2735,23 +2727,25 @@ class PetWidget(QWidget):
                     painter.drawRect(px_x, px_y, pixel_size, pixel_size)
 
         # 3.5 Draw Equipped Wardrobe Accessory (Ribbon, Hat, Crown)
+        # Suppress accessories while typing, listening to music, or stretching
+        is_typing_active = (anim_name in ["TYPING", "TYPING_MUSIC"] or getattr(self, 'is_typing', False))
+        is_music_active = (anim_name in ["VIBING", "TYPING_MUSIC"] or getattr(self, 'is_listening_to_music', False))
+        is_stretching_active = (anim_name == "STRETCHING" or getattr(self, 'is_stretching', False))
+        
         acc_key = self.settings.get("accessory", "none")
+        if is_typing_active or is_music_active or is_stretching_active:
+            acc_key = "none"
+
         if acc_key in ACCESSORIES and acc_key != "none":
             acc_data = ACCESSORIES[acc_key]
             acc_sprite = acc_data.get("sprite", [])
             acc_colors = acc_data.get("colors", {})
             offsets = acc_data.get("offsets", {})
             
-            if anim_name == "TYPING":
-                off_key = "TYPING"
-            elif anim_name == "DRAGGED":
+            if anim_name == "DRAGGED":
                 off_key = "DRAGGED"
-            elif anim_name == "STRETCHING":
-                f_idx = getattr(self, 'current_frame_index', 0)
-                if f_idx in [0, 5]: s_sub = "0"
-                elif f_idx in [1, 4]: s_sub = "1"
-                else: s_sub = "2"
-                off_key = f"STRETCHING_{s_sub}"
+            elif anim_name == "SLEEPING":
+                off_key = "SLEEPING"
             else:
                 off_key = "IDLE"
                 

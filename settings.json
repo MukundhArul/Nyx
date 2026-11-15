@@ -8,9 +8,9 @@
     "pomo_break_min": 5,
     "reminders": [],
     "matrix_mode": true,
-    "matrix_r": 84,
-    "matrix_g": 52,
-    "matrix_b": 38,
+    "matrix_r": 24,
+    "matrix_g": 24,
+    "matrix_b": 27,
     "matrix_sr": 160,
     "matrix_sg": 68,
     "matrix_sb": 68,
@@ -21,5 +21,5 @@
     "matrix_mouth_g": 7,
     "matrix_mouth_b": 9,
     "always_on_top": true,
-    "accessory": "crown"
+    "accessory": "none"
 }
