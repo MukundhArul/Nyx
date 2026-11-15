@@ -1,6 +1,6 @@
 <div align="center">
   <h1>✨ Nyx ✨<br>Your Cozy Desktop Companion 🐾</h1>
-  <p>A lightweight, interactive pixel pet that lives on your screen to keep you company, help you focus, and vibe with your daily tasks!</p>
+  <p>A lightweight, interactive pixel pet that lives on your screen to keep you company, help you focus, and vibe with your daily workflow!</p>
   <img src="https://img.shields.io/badge/Windows-Supported-blue.svg?style=flat-square&logo=windows" alt="Windows">
   <img src="https://img.shields.io/badge/Python-3.10+-blue.svg?style=flat-square&logo=python" alt="Python">
   <img src="https://img.shields.io/badge/PyQt6-UI-green.svg?style=flat-square&logo=qt" alt="PyQt6">
@@ -8,83 +8,124 @@
 
 ---
 
-## 🌟 What's New in v1.1.1?
-Nyx has just received some amazing new features and optimizations!
-- **🎙️ Audio Interactivity:** Nyx now listens to your microphone! Talk out loud, and Nyx will open its mouth to talk back to you in real-time.
-- **✨ EPX High-Res Scaling:** A brand new scaling algorithm that smooths out pixel art when you make the cat larger. Toggle it right from the settings!
-- **🚀 Performance Optimizations:** Massive code cleanups, removal of duplicate rendering data, and fixed Spotify animation symmetry, making Nyx lighter and faster than ever.
+## 🌟 What's New in v1.2.0?
 
-## 🌟 What's New in v1.1.0?
-Nyx has received a massive internal and external overhaul!
-- **🎨 String-Based Matrix Rendering Engine:** Nyx no longer uses traditional image sprites! Every frame is procedurally generated from custom ASCII matrices, meaning absolutely zero blurry pixels and full RGB color customization!
-- **🎧 Intelligent Context Awareness:** Nyx now hooks directly into the Windows API to detect window focus without performance lag. Open Spotify, and Nyx will instantly throw on some headphones.
-- **⏱️ Pomodoro Workflow:** The custom settings menu now features an integrated Pomodoro timer system alongside the classic stretch and water reminders!
-- **⌨️ Enhanced Contextual Actions:** Completely revamped typing animations (faster typing = angry cat!), scrolling reactions, and idle sleep animations.
-  
+Nyx has received a major upgrade with cute new accessories, smart media tracking, posture reminders, and aesthetic refinements!
+
+- **🎩 Wardrobe & Cute Pixel Accessories:**
+  - Dress up Nyx from the new **Wardrobe** tab in Settings or directly from the System Tray menu!
+  - 🎀 **Red Ribbon:** A dapper ruby red ribbon bowtie resting right below the neck.
+  - 👑 **Golden Crown:** Sparkling royal gold crown with ruby and sapphire jewel insets, centered proudly on the head between the ears.
+  - 🧙 **Wizard Hat:** Pointed mystical purple wizard hat with a golden star band.
+  - 🧠 **Smart Context Hiding:** Accessories automatically tuck away while typing on the keyboard or jamming with headphones so there is never visual overlap or clutter.
+- **🎵 "Now Playing" Track Pop-Up:**
+  - When you listen to music on Spotify or supported media players, Nyx automatically pops up a cute speech bubble announcing the song title (e.g. `🎵 Now Playing: Starboy`) as soon as the track changes.
+- **🧘 Authentic Stretch Break Reminder & Animation:**
+  - Nyx now reminds you to stretch every 30 minutes with a dedicated 6-frame Comnyang stretching animation (arched back, anchored front paws, squint eyes `><`, and curled tail).
+  - Includes a **"Stretch Now"** button in settings to trigger your break anytime.
+- **🎨 Curated Dark Coat Presets & 3 Fixed Sizes:**
+  - Replaced clumsy color wheels with 4 distinct, aesthetic dark coat shades:
+    - 🖤 **Midnight Black**
+    - 🌑 **Charcoal Slate**
+    - ☕ **Espresso Brown**
+    - 🌌 **Abyssal Navy**
+  - Pick between 3 crisp pixel sizes: **Small (2x)**, **Medium (3x)**, and **Large (4x)**.
+- **✨ Pixel-Perfect Tail & Animation Polishing:**
+  - Connected tail in all states (Idle, Sleeping, Dragging, Listening).
+  - Reduced and calmed purring love hearts for a gentle, cozy petting experience.
+  - Screen boundary clamping to keep hearts, notes, and Zzzs strictly within desktop view.
+
+---
+
 ## 🌟 What is Nyx?
 
-Nyx is a totally free, open-source desktop overlay inspired by cozy companion apps. Nyx sits happily on your desktop, completely frameless and transparent, silently reacting to what you are doing without ever getting in your way! 🧡
+Nyx is a completely free, open-source desktop overlay inspired by cozy virtual pets and companions. Nyx sits happily on your desktop, fully transparent and frameless, reacting to your mouse, keystrokes, and active apps without ever getting in your way! 🧡
+
+---
 
 ## 🐈 Features & Animations
 
-Nyx isn't just a static image; it's a reactive companion powered by a custom string-rendering engine!
+Nyx is powered by a custom procedural string matrix engine: every frame is drawn natively with crisp pixel edges and full dynamic color support!
 
 ### 🎮 Interactive Animations
-*   **🖱️ Drag & Drop:** Click and hold to pick Nyx up and move it anywhere on your screen. When dragged, Nyx gracefully dangles!
-*   **⌨️ Keyboard Kneading:** Start typing an essay or writing code, and Nyx will tap its little paws along with your keystrokes.
-*   **🎙️ Talking (Mic Support):** Nyx uses your microphone to listen to you! If you start talking, Nyx's mouth will move to talk back to you.
-*   **💤 Sleep Mode:** If you step away from your keyboard and mouse for 30 seconds, Nyx will close its eyes and drift off to sleep.
+* **🖱️ Drag & Drop:** Click and hold to pick Nyx up. Nyx dangles gently with physics-based wobble while you move it around the desktop.
+* **⌨️ Keyboard Kneading:** Start typing code or writing documents, and Nyx taps its paws along with your keystrokes. Fast typing even makes Nyx sweat heat steam!
+* **👀 Cursor Tracking & Blinking:** Nyx's eyes follow your mouse cursor smoothly around your monitors, with natural blinking intervals when idle.
+* **💕 Purring:** Click or pet Nyx to make it happy! It will close its eyes in bliss and float gentle pink hearts.
+* **🎙️ Voice Reactions (Mic Support):** Speak into your microphone and Nyx opens its mouth in real-time to talk back with you.
+* **💤 Sleep Mode:** Step away from your computer for 30 seconds, and Nyx curls up into a peaceful nap with floating blue Zzzs.
 
-### 📱 App Reactions
-Nyx knows what you're doing and reacts accordingly!
-*   **🎧 Vibing:** Focus on **Spotify**, and Nyx will throw on headphones and vibe to your music.
-*   **📺 Watching:** Open **YouTube**, and Nyx's eyes will get huge to watch the videos with you!
-  
-### ⏰ Productivity Tools
-Nyx comes with built-in features to keep your workflow healthy and focused (accessible via right-clicking the System Tray icon):
-*   **🍅 Pomodoro Timers:** Toggle a custom focus timer directly from the settings menu to keep you productive.
-*   **💬 Pinned Sticky Notes:** Need to remember a quick task? Set a pinned message, and Nyx will hold it in a cute white **speech bubble** above its head.
-*   **🧘 Routine Reminders:** Configure Nyx to remind you to stretch or drink water during long computing sessions!
+### 📱 App & Media Reactions
+* **🎧 Vibing:** Open **Spotify** or a music player, and Nyx throws on retro coral headphones to bob to the beat.
+* **🎵 Now Playing Speech Bubble:** Track changes pop up right above Nyx's head so you always know what song is playing.
+* **📺 Watching:** Switch to **YouTube** or a video player, and Nyx widens its eyes to watch videos attentively with you.
+
+### ⏰ Productivity & Health Tools
+* **🍅 Pomodoro Timers:** Toggle customizable focus intervals and break timers right from the settings window.
+* **🧘 Posture & Stretch Reminders:** Set reminders every 30 minutes to stretch alongside Nyx.
+* **💬 Pinned Sticky Notes:** Keep a quick task or reminder pinned in a speech bubble above Nyx's head.
 
 ---
 
 ## 🚀 How to Run (Easy Way)
 
-You do not need to know how to code to use Nyx!
+You do not need to know how to code to enjoy Nyx!
 
-1. Go to the main page of this GitHub repository and download `Nyx_Cat.exe` (or `Nyx.exe`).
-2. Place it anywhere on your computer (like your Desktop).
-3. Double-click `Nyx_Cat.exe` to run it! 
-*(Note: Windows SmartScreen might prompt you that this is an unrecognized app. Click "More info" and "Run anyway").*
+1. Go to the [Releases](https://github.com/MukundhArul/Nyx/releases) page on GitHub.
+2. Download `Nyx_Cat.exe` (or `Nyx.exe`).
+3. Place it anywhere on your computer (e.g. your Desktop or Startup folder).
+4. Double-click `Nyx_Cat.exe` to run it!
+*(Note: Windows SmartScreen may show an unrecognized app banner on first launch. Click "More info" and "Run anyway").*
 
 ---
 
-## 🛠️ For Developers (Build from source)
+## 🛠️ For Developers (Build From Source)
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/MukundhArul/Nyx.git
-   cd Nyx
-   ```
-2. **Set up your environment:**
-   ```bash
-   python -m venv venv
-   # Windows:
-   .\venv\Scripts\activate
-   ```
-3. **Install Dependencies:**
-   ```bash
-   pip install PyQt6 pynput psutil Pillow
-   ```
-4. **Run Nyx:**
-   ```bash
-   python app.py
-   ```
-5. **Build Executable (Optional):**
-   ```bash
-   pip install pyinstaller Pillow
-   pyinstaller --noconfirm --onefile --windowed --name Nyx_Cat --icon=cat.ico app.py
-   ```
+### 1. Clone the repository
+```bash
+git clone https://github.com/MukundhArul/Nyx.git
+cd Nyx
+```
+
+### 2. Set up your virtual environment
+```bash
+python -m venv venv
+
+# Windows (Command Prompt / PowerShell):
+.\venv\Scripts\activate
+```
+
+### 3. Install dependencies
+```bash
+pip install PyQt6 pynput psutil Pillow PyAudio PyGetWindow
+```
+
+### 4. Run Nyx
+```bash
+python app.py
+```
+
+### 5. Build Standalone Executable (Optional)
+```bash
+pip install pyinstaller
+pyinstaller --noconfirm --onefile --windowed --name Nyx_Cat --icon=cat.ico app.py
+```
+
+---
+
+## ⚙️ Settings & Controls
+
+* **Right-Click Nyx or System Tray Icon**:
+  - Open **Settings** dialog
+  - Quick-switch **Wardrobe Accessories** (None, Red Ribbon, Golden Crown, Wizard Hat)
+  - Quick-trigger **Stretch Now**
+  - Toggle **Always on Top**
+  - Reset to Default or Exit Nyx
+
+* **Tabbed Settings Window**:
+  - **🎩 Wardrobe**: Preview and equip accessories with one click.
+  - **🎨 Appearance**: Choose between Midnight Black, Charcoal Slate, Espresso Brown, and Abyssal Navy coats; select Small (2x), Medium (3x), or Large (4x) cat sizes; toggle microphone reactions.
+  - **⏱️ Timers**: Configure Pomodoro study/work intervals, break reminders, and pinned message bubbles.
 
 ---
 
