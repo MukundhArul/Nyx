@@ -20,5 +20,6 @@
     "matrix_mouth_r": 7,
     "matrix_mouth_g": 7,
     "matrix_mouth_b": 9,
-    "always_on_top": true
+    "always_on_top": true,
+    "accessory": "crown"
 }
