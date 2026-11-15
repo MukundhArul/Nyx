@@ -23,7 +23,7 @@ import pygetwindow as gw
 
 SETTINGS_FILE = "settings.json"
 DEFAULT_SETTINGS = {
-    "scale_factor": 4.0,
+    "scale_factor": 3.0,
     "react_to_typing": True,
     "stretch_interval_min": 30,
     "water_interval_min": 60,
@@ -32,9 +32,9 @@ DEFAULT_SETTINGS = {
     "pomo_break_min": 5,
     "reminders": [],
     "matrix_mode": False,
-    "matrix_r": 26,
-    "matrix_g": 26,
-    "matrix_b": 26,
+    "matrix_r": 24,
+    "matrix_g": 24,
+    "matrix_b": 27,
     "matrix_outline_r": 20,
     "matrix_outline_g": 20,
     "matrix_outline_b": 20
@@ -56,7 +56,7 @@ MATRIX_COLORS = {
 }
 
 MATRIX_FRAMES = {
-    'IDLE': [
+'IDLE': [
         [
             ".......WWW.......WWW............",
             "......WWPW......WWPWW...........",
@@ -84,11 +84,11 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-            "...WWPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
         [
@@ -118,11 +118,11 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW..WPPPW",
             "...WPPPPPPPPPPPPPPPPPPPPW..WPPPW",
             "...WPPPPPPPPPPPPPPPPPPPPWW.WPPPW",
-            "...WWPPPPPPPPPPPPPPPPPPWW.WPPPW.",
-            "....WPPPPPPPPPPPPPPPPPPWW.WPPPW.",
-            "....WPPPPPPPPPPPPPPPPPPW.WPPPW..",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPWPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPPPPWPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPPPWPPPW..",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
         [
@@ -152,11 +152,11 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-            "...WWPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
         [
@@ -186,11 +186,11 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-            "...WWPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
     ],
@@ -285,15 +285,15 @@ MATRIX_FRAMES = {
     'TYPING_MUSIC': [
         [
             "..............P..........P....................",
-            ".............PP.WWWWWWWWPPP...................",
-            "............PPPMMMMMMMMMMPPP..................",
-            "............PPPPP......PPPPP..................",
-            ".........WMMWPPPPPPPPPPPPPWMMW................",
-            ".........WMMWPPPPPPPPPPPPPWMMW................",
-            ".........WMMWPPPPPPPPPPPPPWMMW................",
-            ".........WMMWPPPPPPPPPPPPPWMMW................",
-            ".........WMMWPPPPPPPPPPPPPWMMW................",
-            "..........WWPPPPPPPPPPPPPPPWWP...........PP...",
+            ".............PP.........PPP...................",
+            "............PPPPWWWWWWWWWPPP..................",
+            "............PPPWMMMMMMMMMWPP..................",
+            "........WWWWPPWMPPPPPPPPPMWWWWW...............",
+            ".......WMMMMWMPPPPPPPPPPPPWMMMMW..............",
+            ".......WMMMMWPPPPPPPPPPPPPWMMMMW..............",
+            ".......WMMMMWPPPPPPPPPPPPPWMMMMW..............",
+            ".......WMMMMWPPPPPPPPPPPPPWMMMMW..............",
+            "........WWWWPPPPPPPPPPPPPPPWWWW..........PP...",
             ".........PPPPPPPPPPPPPPPPPPPPPP.........PPPP..",
             ".........PPPWWWPPPPPPWWWPPPPPPPPP.......PPPPP.",
             ".........PPWPPPWPPPPWPPPWPPPPPPPPP......PPPPP.",
@@ -328,15 +328,15 @@ MATRIX_FRAMES = {
         ],
         [
             "..............P..........P....................",
-            ".............PP.WWWWWWWWPPP...................",
-            "............PPPMMMMMMMMMMPPP..................",
-            "............PPPPP......PPPPP..................",
-            ".........WMMWPPPPPPPPPPPPPWMMW................",
-            ".........WMMWPPPPPPPPPPPPPWMMW................",
-            ".........WMMWPPPPPPPPPPPPPWMMW................",
-            ".........WMMWPPPPPPPPPPPPPWMMW................",
-            ".........WMMWPPPPPPPPPPPPPWMMW................",
-            "..........WWPPPPPPPPPPPPPPPWWP................",
+            ".............PP.........PPP...................",
+            "............PPPPWWWWWWWWWPPP..................",
+            "............PPPWMMMMMMMMMWPP..................",
+            "........WWWWPPWMPPPPPPPPPMWWWWW...............",
+            ".......WMMMMWMPPPPPPPPPPPPWMMMMW..............",
+            ".......WMMMMWPPPPPPPPPPPPPWMMMMW..............",
+            ".......WMMMMWPPPPPPPPPPPPPWMMMMW..............",
+            ".......WMMMMWPPPPPPPPPPPPPWMMMMW..............",
+            "........WWWWPPPPPPPPPPPPPPPWWWW...............",
             ".........PPPPPPPPPPPPPPPPPPPPPP...............",
             ".........PPPWWWPPPPPPWWWPPPPPPPPP.........PP..",
             ".........PPWPPPWPPPPWPPPWPPPPPPPPP.......PPPP.",
@@ -370,7 +370,7 @@ MATRIX_FRAMES = {
             "..kkkkkkkkkkkkkP......kkkkkkkkkkkkkP..........",
         ],
     ],
-    'PURRING': [
+'PURRING': [
         [
             ".......WWW.......WWW............",
             "......WWPW......WWPWW...........",
@@ -398,11 +398,11 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-            "...WWPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
         [
@@ -432,11 +432,11 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW..WPPPW",
             "...WPPPPPPPPPPPPPPPPPPPPW..WPPPW",
             "...WPPPPPPPPPPPPPPPPPPPPWW.WPPPW",
-            "...WWPPPPPPPPPPPPPPPPPPWW.WPPPW.",
-            "....WPPPPPPPPPPPPPPPPPPWW.WPPPW.",
-            "....WPPPPPPPPPPPPPPPPPPW.WPPPW..",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPWPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPPPPWPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPPPWPPPW..",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
         [
@@ -466,11 +466,11 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-            "...WWPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
     ],
@@ -544,7 +544,7 @@ MATRIX_FRAMES = {
             "........WWWWWWWWWWWW............",
         ],
     ],
-    'DRAGGED': [
+'DRAGGED': [
         [
             ".......WWW........WWW...........",
             "......WWPWW......WWPWW..........",
@@ -577,9 +577,9 @@ MATRIX_FRAMES = {
             "......WPPPPPPPPPPPPPPW..........",
             "......WPPPPPPPPPPPPPPW...WWW....",
             "......WPPPPPPPPPPPPPPW..WPPPW...",
-            ".....WWPPPPPPPPPPPPPPWW.WPPPW...",
-            ".....WPPPPPPPPPPPPPPPPWWPPPW....",
-            ".....WPPPPPPPPPPPPPPPPPWWPW.....",
+            ".....WWPPPPPPPPPPPPPPWWPPPPPW...",
+            ".....WPPPPPPPPPPPPPPPPPPPPPW....",
+            ".....WPPPPPPPPPPPPPPPPPPPPW.....",
             ".....WPPPPPPPPPPPPPPPPPPWW......",
             ".....WPPPPPW....WWPPPPPW........",
             ".....WPPPPPW.....WPPPPPW........",
@@ -618,9 +618,9 @@ MATRIX_FRAMES = {
             "......WPPPPPPPPPPPPPPW..........",
             "......WPPPPPPPPPPPPPPW...WWW....",
             "......WPPPPPPPPPPPPPPW..WPPPW...",
-            ".....WWPPPPPPPPPPPPPPWW.WPPPW...",
-            ".....WPPPPPPPPPPPPPPPPWWPPPW....",
-            ".....WPPPPPPPPPPPPPPPPPWWPW.....",
+            ".....WWPPPPPPPPPPPPPPWWPPPPPW...",
+            ".....WPPPPPPPPPPPPPPPPPPPPPW....",
+            ".....WPPPPPPPPPPPPPPPPPPPPW.....",
             ".....WPPPPPPPPPPPPPPPPPPWW......",
             ".....WPPPPPWW....WWPPPPPPW......",
             ".....WPPPPPW......WPPPPPPW......",
@@ -659,9 +659,9 @@ MATRIX_FRAMES = {
             "......WPPPPPPPPPPPPPPW....WW....",
             "......WPPPPPPPPPPPPPPW...WPPPW..",
             "......WPPPPPPPPPPPPPPW...WPPPW..",
-            ".....WWPPPPPPPPPPPPPPWW..WPPPW..",
-            ".....WPPPPPPPPPPPPPPPPWWWWPPW...",
-            ".....WPPPPPPPPPPPPPPPPPWWPPW....",
+            ".....WWPPPPPPPPPPPPPPWWPPPPPPW..",
+            ".....WPPPPPPPPPPPPPPPPPPWWPPW...",
+            ".....WPPPPPPPPPPPPPPPPPPPPPW....",
             ".....WPPPPPPPPPPPPPPPPPPWW......",
             ".....WWPPPPPW....WPPPPPW........",
             "......WPPPPPW....WPPPPPW........",
@@ -669,17 +669,17 @@ MATRIX_FRAMES = {
             ".................WWWWWW.........",
         ],
     ],
-    'VIBING': [
+'VIBING': [
         [
             ".......WWW.......WWW............",
-            "......MMPWWWWWWWWWMMW...........",
-            ".....WMMMMMMMMMMMPMMWW..........",
-            "....WMMPPPWWWWWWWPPMMW..........",
-            "...WMMWPPPPPPPPPPPPWMMW.........",
-            "...WMMWPPPPPPPPPPPPWMMW.........",
-            "...WMMWPPPPPPPPPPPPWMMWW........",
-            "....WWPPPPPPPPPPPPPPWWPW........",
-            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "......WWPWWWWWWWWWPWW...........",
+            ".....WWPPWMMMMMMMMWPWW..........",
+            ".....WPPWMWWWWWWWPMWPW..........",
+            "..WWWWMWMPPPPPPPPPPMWMWWWW......",
+            ".WMMMWPPPPPPPPPPPPPPPWWMMMW.....",
+            ".WMMMWPPPPPPPPPPPPPPPPWMMMW.....",
+            ".WMMMWPPPPPPPPPPPPPPPPWMMMW.....",
+            "..WWWWPWWWPPPPPPPWWWPPWWWW......",
             "...WPPWPPPWPPPPPPWPPPWPPW.......",
             "...WPPWPPPWPPPPPPWPPPWPPW.......",
             "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
@@ -697,23 +697,23 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-            "...WWPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
         [
             ".......WWW.......WWW............",
-            "......MMPWWWWWWWWWMMW...........",
-            ".....WMMMMMMMMMMMPMMWW..........",
-            "....WMMPPPWWWWWWWPPMMW..........",
-            "...WMMWPPPPPPPPPPPPWMMW.........",
-            "...WMMWPPPPPPPPPPPPWMMW.........",
-            "...WMMWPPPPPPPPPPPPWMMWW........",
-            "....WWPPPPPPPPPPPPPPWWPW........",
-            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "......WWPWWWWWWWWWPWW...........",
+            ".....WWPPWMMMMMMMMWPWW..........",
+            ".....WPPWMWWWWWWWPMWPW..........",
+            "..WWWWMWMPPPPPPPPPPMWMWWWW......",
+            ".WMMMWPPPPPPPPPPPPPPPWWMMMW.....",
+            ".WMMMWPPPPPPPPPPPPPPPPWMMMW.....",
+            ".WMMMWPPPPPPPPPPPPPPPPWMMMW.....",
+            "..WWWWPWWWPPPPPPPWWWPPWWWW......",
             "...WPPWPPPWPPPPPPWPPPWPPW.......",
             "...WPPWPPPWPPPPPPWPPPWPPW.......",
             "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
@@ -731,23 +731,23 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW..WPPPW",
             "...WPPPPPPPPPPPPPPPPPPPPW..WPPPW",
             "...WPPPPPPPPPPPPPPPPPPPPWW.WPPPW",
-            "...WWPPPPPPPPPPPPPPPPPPWW.WPPPW.",
-            "....WPPPPPPPPPPPPPPPPPPWW.WPPPW.",
-            "....WPPPPPPPPPPPPPPPPPPW.WPPPW..",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPWPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPPPPWPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPPPWPPPW..",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
         [
             ".......WWW.......WWW............",
-            "......MMPWWWWWWWWWMMW...........",
-            ".....WMMMMMMMMMMMPMMWW..........",
-            "....WMMPPPWWWWWWWPPMMW..........",
-            "...WMMWPPPPPPPPPPPPWMMW.........",
-            "...WMMWPPPPPPPPPPPPWMMW.........",
-            "...WMMWPPPPPPPPPPPPWMMWW........",
-            "....WWPPPPPPPPPPPPPPWWPW........",
-            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "......WWPWWWWWWWWWPWW...........",
+            ".....WWPPWMMMMMMMMWPWW..........",
+            ".....WPPWMWWWWWWWPMWPW..........",
+            "..WWWWMWMPPPPPPPPPPMWMWWWW......",
+            ".WMMMWPPPPPPPPPPPPPPPWWMMMW.....",
+            ".WMMMWPPPPPPPPPPPPPPPPWMMMW.....",
+            ".WMMMWPPPPPPPPPPPPPPPPWMMMW.....",
+            "..WWWWPWWWPPPPPPPWWWPPWWWW......",
             "...WPPWPPPWPPPPPPWPPPWPPW.......",
             "...WPPWPPPWPPPPPPWPPPWPPW.......",
             "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
@@ -765,23 +765,23 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-            "...WWPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
         [
             ".......WWW.......WWW............",
-            "......MMPWWWWWWWWWMMW...........",
-            ".....WMMMMMMMMMMMPMMWW..........",
-            "....WMMPPPWWWWWWWPPMMW..........",
-            "...WMMWPPPPPPPPPPPPWMMW.........",
-            "...WMMWPPPPPPPPPPPPWMMW.........",
-            "...WMMWPPPPPPPPPPPPWMMWW........",
-            "....WWPPPPPPPPPPPPPPWWPW........",
-            "...WWPPWWWPPPPPPPWWWPPPW........",
+            "......WWPWWWWWWWWWPWW...........",
+            ".....WWPPWMMMMMMMMWPWW..........",
+            ".....WPPWMWWWWWWWPMWPW..........",
+            "..WWWWMWMPPPPPPPPPPMWMWWWW......",
+            ".WMMMWPPPPPPPPPPPPPPPWWMMMW.....",
+            ".WMMMWPPPPPPPPPPPPPPPPWMMMW.....",
+            ".WMMMWPPPPPPPPPPPPPPPPWMMMW.....",
+            "..WWWWPWWWPPPPPPPWWWPPWWWW......",
             "...WPPWPPPWPPPPPPWPPPWPPW.......",
             "...WPPWPPPWPPPPPPWPPPWPPW.......",
             "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
@@ -799,15 +799,15 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-            "...WWPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
     ],
-    'WATCHING': [
+'WATCHING': [
         [
             ".......WWW.......WWW............",
             "......WWPW......WWPWW...........",
@@ -835,11 +835,11 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-            "...WWPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
         [
@@ -869,11 +869,11 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW..WPPPW",
             "...WPPPPPPPPPPPPPPPPPPPPW..WPPPW",
             "...WPPPPPPPPPPPPPPPPPPPPWW.WPPPW",
-            "...WWPPPPPPPPPPPPPPPPPPWW.WPPPW.",
-            "....WPPPPPPPPPPPPPPPPPPWW.WPPPW.",
-            "....WPPPPPPPPPPPPPPPPPPW.WPPPW..",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPWPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPPPPWPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPPPWPPPW..",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
         [
@@ -903,11 +903,11 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-            "...WWPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
         ],
         [
@@ -937,12 +937,138 @@ MATRIX_FRAMES = {
             "...WPPPPPPPPPPPPPPPPPPPWW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
             "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-            "...WWPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WPPPPPPPPPPPPPPPPPPWPPPPW...",
-            "....WWWWPPPPPPPPPPPPWWWWWWPPW...",
-            "......WWWWPPWWWWPPWWWW...WWW....",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
+            "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
+            "......WWWWPPWWWWPPWWWWWWWWWWW...",
             "........WWWWWWWWWWWW............",
+        ],
+    ],
+'STRETCHING': [
+        [
+            "............................................WWW.",
+            "...........................................WPPPW",
+            "...........................................WPPPW",
+            "..........................................WPPPW.",
+            "..........WWW........WWW.......WWWWWW.....WPPPW.",
+            ".........WWPWW......WWPWW....WWPPPPPPWW...WPPPW.",
+            "........WWPPWW......WWPPWW..WWPPPPPPPPPWWWWPPW..",
+            "........WPPPPWWWWWWWWPPPPWWWWPPPPPPPPPPPPWWPW...",
+            ".......WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            ".......WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            "......WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            "......WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            ".....WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW....",
+            ".....WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW....",
+            "....WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW...",
+            ".WWWWPPPPPPPWWWWPPPPPPWWWWPPPPPPPPPPPPPPPPPPW...",
+            "WPPPPWWPPPPWPPPWPPPPPWPPPWPPPPPPPPPPPPPPPPPPWW..",
+            "WPPPPWWPPPPWPPPWPPPPPWPPPWPPPPPPPPPPPPPPPPPPPWW.",
+            ".WWWWWWPPPPWPPPWPPPPPWPPPWPPPPPPPPPPPPPPPPPPPPW.",
+            "....WWPPPPPWWWWPPPPPPWWWWPPPPPPPPPPPPPPPPPPPPPWW",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWWWWPPPPPPPPPW",
+            "...WPPPPPPWWWWPPPPPPPPWWWWPPPPPPPWWPPWWPPPPPPPW.",
+            "...WPPPPPWWPPWWPPPPPPWWPPWWPPPPPWWPPPPWWPPPPPPW.",
+            "...WPPPPPWWPPWWPPPPPPWWPPWWPPPPPWWPPPPWWPPPPPPW.",
+            "...WPPPPPWWPPWWPPPPPPWWPPWWPPPPPWWPPPPWWPPPPPPW.",
+            "...WWWWWWWPPPPWWWWWWWWPPPPWWWWWWWPPPPPPWWWWWWWW.",
+        ],
+        [
+            "............................................WWW.",
+            "...........................................WPPPW",
+            "...........................................WPPPW",
+            "..........................................WPPPW.",
+            "...............................WWWWWW.....WPPPW.",
+            "..........WWW........WWW.....WWPPPPPPWW...WPPPW.",
+            ".........WWPWW......WWPWW...WWPPPPPPPPPWWWWPPW..",
+            "........WWPPWW......WWPPWW.WWPPPPPPPPPPPPWWPW...",
+            "........WPPPPWWWWWWWWPPPPWWWWPPPPPPPPPPPPPWW....",
+            ".......WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            ".......WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            "......WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            "......WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            ".....WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW....",
+            ".....WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW....",
+            "....WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW...",
+            ".WWWWPPPPPPPWWWWPPPPPPWWWWPPPPPPPPPPPPPPPPPPW...",
+            "WPPPPWWPPPPWPPPWPPPPPWPPPWPPPPPPPPPPPPPPPPPPWW..",
+            "WPPPPWWPPPPWWWWWWWWWWWWWWWPPPPPPPPPPPPPPPPPPPWW.",
+            ".WWWWWWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW",
+            "....WWPPPPPWWWWWWWWWWWWWWWPPPPPPPPPPPPPPPPPPPPPWW",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWWWWPPPPPPPPPW",
+            "...WPPPPPPWWWWPPPPPPPPWWWWPPPPPPPWWPPWWPPPPPPPW.",
+            "...WPPPPPWWPPWWPPPPPPWWPPWWPPPPPWWPPPPWWPPPPPPW.",
+            "...WPPPPPWWPPWWPPPPPPWWPPWWPPPPPWWPPPPWWPPPPPPW.",
+            "...WPPPPPWWPPWWPPPPPPWWPPWWPPPPPWWPPPPWWPPPPPPW.",
+            "...WWWWWWWPPPPWWWWWWWWPPPPWWWWWWWPPPPPPWWWWWWWW.",
+        ],
+        [
+            "............................................WWW.",
+            "...........................................WPPPW",
+            "...........................................WPPPW",
+            "..........................................WPPPW.",
+            "...............................WWWWWW.....WPPPW.",
+            "..........WWW........WWW.....WWPPPPPPWW...WPPPW.",
+            ".........WWPWW......WWPWW...WWPPPPPPPPPWWWWPPW..",
+            "........WWPPWW......WWPPWW.WWPPPPPPPPPPPPWWPW...",
+            "........WPPPPWWWWWWWWPPPPWWWWPPPPPPPPPPPPPWW....",
+            ".......WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            ".......WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            "......WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            "......WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            ".....WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW....",
+            ".....WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW....",
+            "....WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW...",
+            ".WWWWPPPPPPPWWPPPPPPPPPPPPWWPPPPPPPPPPPPPPPPW...",
+            "WPPPPWWPPPPPPPWWPPPPPPPPWWPPPPPPPPPPPPPPPPPPWW..",
+            "WPPPPWWPPPPPPPPPWWPPPPWWPPPPPPPPPPPPPPPPPPPPPWW.",
+            ".WWWWWWPPPPPPPWWPPPPPPPPWWPPPPPPPPPPPPPPPPPPPPWW",
+            "....WWPPPPPPWWPPPPPPPPPPPPWWPPPPPPPPPPPPPPPPPPPWW",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWWWWPPPPPPPPPW",
+            "...WPPPPPPWWWWPPPPPPPPWWWWPPPPPPPWWPPWWPPPPPPPW.",
+            "...WPPPPPWWPPWWPPPPPPWWPPWWPPPPPWWPPPPWWPPPPPPW.",
+            "...WPPPPPWWPPWWPPPPPPWWPPWWPPPPPWWPPPPWWPPPPPPW.",
+            "...WPPPPPWWPPWWPPPPPPWWPPWWPPPPPWWPPPPWWPPPPPPW.",
+            "...WWWWWWWPPPPWWWWWWWWPPPPWWWWWWWPPPPPPWWWWWWWW.",
+        ],
+        [
+            "............................................WWW.",
+            "...........................................WPPPW",
+            "...........................................WPPPW",
+            "..........................................WPPPW.",
+            "...............................WWWWWW.....WPPPW.",
+            "..........WWW........WWW.....WWPPPPPPWW...WPPPW.",
+            ".........WWPWW......WWPWW...WWPPPPPPPPPWWWWPPW..",
+            "........WWPPWW......WWPPWW.WWPPPPPPPPPPPPWWPW...",
+            "........WPPPPWWWWWWWWPPPPWWWWPPPPPPPPPPPPPWW....",
+            ".......WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            ".......WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            "......WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            "......WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW....",
+            ".....WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW....",
+            ".....WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW....",
+            "....WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW...",
+            ".WWWWPPPPPPPWWWWPPPPPPWWWWPPPPPPPPPPPPPPPPPPW...",
+            "WPPPPWWPPPPWPPPWPPPPPWPPPWPPPPPPPPPPPPPPPPPPWW..",
+            "WPPPPWWPPPPWWWWWWWWWWWWWWWPPPPPPPPPPPPPPPPPPPWW.",
+            ".WWWWWWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWW",
+            "....WWPPPPPWWWWWWWWWWWWWWWPPPPPPPPPPPPPPPPPPPPPWW",
+            "...WWPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW",
+            "...WPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPWWWWPPPPPPPPPW",
+            "...WPPPPPPWWWWPPPPPPPPWWWWPPPPPPPWWPPWWPPPPPPPW.",
+            "...WPPPPPWWPPWWPPPPPPWWPPWWPPPPPWWPPPPWWPPPPPPW.",
+            "...WPPPPPWWPPWWPPPPPPWWPPWWPPPPPWWPPPPWWPPPPPPW.",
+            "...WPPPPPWWPPWWPPPPPPWWPPWWPPPPPWWPPPPWWPPPPPPW.",
+            "...WWWWWWWPPPPWWWWWWWWPPPPWWWWWWWPPPPPPWWWWWWWW.",
         ],
     ],
 }
@@ -1030,15 +1156,31 @@ class SettingsWindow(QWidget):
 
         layout = QVBoxLayout()
         
-        # Size
-        size_layout = QHBoxLayout()
-        size_layout.addWidget(QLabel("Size"))
-        self.size_slider = QSlider(Qt.Orientation.Horizontal)
-        self.size_slider.setRange(20, 100) # 2.0 to 10.0 scale
-        self.size_slider.setValue(int(self.pet.settings["scale_factor"] * 10))
-        self.size_slider.valueChanged.connect(self.on_size_changed)
-        size_layout.addWidget(self.size_slider)
-        layout.addLayout(size_layout)
+        # Cat Size (Small, Medium, Large)
+        size_group = QGroupBox("Cat Size")
+        size_layout = QVBoxLayout()
+        size_btns_layout = QHBoxLayout()
+        size_btns_layout.setSpacing(8)
+        self.size_presets = [
+            ("Small", 2.0),
+            ("Medium", 3.0),
+            ("Large", 4.0),
+        ]
+        self.size_buttons = []
+        for name, factor in self.size_presets:
+            btn = QPushButton(name)
+            btn.setCursor(Qt.CursorShape.PointingHandCursor)
+            btn.clicked.connect(lambda checked, f=factor: self.set_size(f))
+            size_btns_layout.addWidget(btn)
+            self.size_buttons.append((btn, factor))
+        size_layout.addLayout(size_btns_layout)
+        
+        self.size_status_label = QLabel()
+        self.size_status_label.setStyleSheet("font-size: 11px; margin-top: 4px;")
+        size_layout.addWidget(self.size_status_label)
+        size_group.setLayout(size_layout)
+        layout.addWidget(size_group)
+        self.update_size_buttons_ui()
         
         # React to typing
         self.typing_cb = QCheckBox("React to typing")
@@ -1046,7 +1188,7 @@ class SettingsWindow(QWidget):
         self.typing_cb.stateChanged.connect(self.on_typing_changed)
         layout.addWidget(self.typing_cb)
         
-        # --- Predefined Cat Colors (Black and Dark Shades) ---
+        # --- Predefined Cat Colors (Distinct Dark Coat Shades) ---
         color_group = QGroupBox("Cat Coat Color")
         color_layout = QVBoxLayout()
         
@@ -1055,10 +1197,10 @@ class SettingsWindow(QWidget):
         color_layout.addWidget(desc_label)
         
         self.color_presets = [
-            ("Black", (26, 26, 26), "#1A1A1A"),
-            ("Charcoal", (50, 52, 58), "#32343A"),
-            ("Navy", (28, 34, 48), "#1C2230"),
-            ("Espresso", (44, 34, 30), "#2C221E"),
+            ("Black", (24, 24, 27), "#18181B"),
+            ("Charcoal", (72, 78, 92), "#484E5C"),
+            ("Navy", (34, 56, 96), "#223860"),
+            ("Espresso", (84, 52, 38), "#543426"),
         ]
         
         swatches_layout = QHBoxLayout()
@@ -1118,6 +1260,25 @@ class SettingsWindow(QWidget):
         self.stretch_spin.setValue(self.pet.settings["stretch_interval_min"])
         self.stretch_spin.valueChanged.connect(self.on_stretch_changed)
         s_row.addWidget(self.stretch_spin)
+        
+        test_stretch_btn = QPushButton("Stretch Nyx")
+        test_stretch_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        test_stretch_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #2a2d3d;
+                color: #5c9aff;
+                border: 1px solid #5c6bc0;
+                border-radius: 5px;
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+            QPushButton:hover {
+                background-color: #33364a;
+                border: 1px solid #7986cb;
+            }
+        """)
+        test_stretch_btn.clicked.connect(self.pet.trigger_stretch)
+        s_row.addWidget(test_stretch_btn)
         int_layout.addLayout(s_row)
         
         w_row = QHBoxLayout()
@@ -1157,10 +1318,42 @@ class SettingsWindow(QWidget):
         
         self.setLayout(layout)
 
-    def on_size_changed(self, val):
-        self.pet.settings["scale_factor"] = val / 10.0
-        self.pet.scale_factor = val / 10.0
+    def set_size(self, factor):
+        self.pet.settings["scale_factor"] = factor
+        self.pet.scale_factor = factor
         self.pet.save_and_apply_settings()
+        self.update_size_buttons_ui()
+        self.pet.update()
+
+    def update_size_buttons_ui(self):
+        curr_scale = round(float(self.pet.settings.get("scale_factor", 3.0)))
+        matched_name = "Medium"
+        for btn, factor in self.size_buttons:
+            is_active = (round(factor) == curr_scale)
+            if is_active:
+                for name, f in self.size_presets:
+                    if round(f) == curr_scale:
+                        matched_name = name
+                        break
+            border_col = "#5c6bc0" if is_active else "#444455"
+            border_width = "2px" if is_active else "1px"
+            bg_col = "#2a2d3d" if is_active else "#1e1e28"
+            btn.setStyleSheet(f"""
+                QPushButton {{
+                    background-color: {bg_col};
+                    color: {'#5c9aff' if is_active else '#FFFFFF'};
+                    border: {border_width} solid {border_col};
+                    border-radius: 5px;
+                    padding: 5px 2px;
+                    font-size: 11px;
+                    font-weight: {'bold' if is_active else 'normal'};
+                }}
+                QPushButton:hover {{
+                    background-color: #33364a;
+                    border: 1px solid #7986cb;
+                }}
+            """)
+        self.size_status_label.setText(f"Active Size: <b>{matched_name}</b>")
 
     def on_typing_changed(self, val):
         self.pet.settings["react_to_typing"] = bool(val)
@@ -1176,9 +1369,9 @@ class SettingsWindow(QWidget):
         self.pet.update()
 
     def update_preset_buttons_ui(self):
-        curr_r = self.pet.settings.get("matrix_r", 26)
-        curr_g = self.pet.settings.get("matrix_g", 26)
-        curr_b = self.pet.settings.get("matrix_b", 26)
+        curr_r = self.pet.settings.get("matrix_r", 24)
+        curr_g = self.pet.settings.get("matrix_g", 24)
+        curr_b = self.pet.settings.get("matrix_b", 27)
         
         matched_name = "Custom"
         for btn, (r, g, b), hex_col in self.preset_buttons:
@@ -1639,6 +1832,7 @@ class PetWidget(QWidget):
         
         # Actions
         show_action = QAction("Show", self)
+        stretch_action = QAction("Stretch Nyx 🐾", self)
         set_task_action = QAction("Set Pomodoro Task...", self)
         toggle_alarm_action = QAction("Toggle Pomodoro", self)
         set_pin_action = QAction("Set Pinned Message...", self)
@@ -1651,6 +1845,7 @@ class PetWidget(QWidget):
         quit_action = QAction("Exit Nyx", self)
         
         show_action.triggered.connect(self.show)
+        stretch_action.triggered.connect(self.trigger_stretch)
         set_task_action.triggered.connect(self.set_pomodoro_task)
         set_pin_action.triggered.connect(self.prompt_pinned_message)
         clear_pin_action.triggered.connect(self.clear_pinned_message)
@@ -1687,6 +1882,7 @@ class PetWidget(QWidget):
             }
         """)
         tray_menu.addAction(show_action)
+        tray_menu.addAction(stretch_action)
         tray_menu.addSeparator()
         tray_menu.addAction(pin_window_action)
         tray_menu.addSeparator()
@@ -1875,12 +2071,29 @@ class PetWidget(QWidget):
         self.track_bubble_message = None
         self.update()
 
+    def trigger_stretch(self):
+        if getattr(self, 'is_dragging', False):
+            return
+        self.state = "STRETCHING"
+        self.current_frame_index = 0
+        self.idle_time = 0
+        self.stretch_cycles_left = 3
+        self.track_bubble_message = "Time to stretch! 🐾\nTake a quick break"
+        if hasattr(self, '_track_bubble_timer') and self._track_bubble_timer:
+            self._track_bubble_timer.stop()
+        self._track_bubble_timer = QTimer(self)
+        self._track_bubble_timer.setSingleShot(True)
+        self._track_bubble_timer.timeout.connect(self.clear_track_bubble)
+        self._track_bubble_timer.start(5500)
+        self.update()
+
     def on_active_window(self, title):
         self.current_window_title = title.lower()
         self.update_active_app_state()
 
     def get_current_animation_name(self):
         if self.state == "DRAGGED": return "DRAGGED"
+        if self.state == "STRETCHING": return "STRETCHING"
         if hasattr(self, 'is_petting') and self.is_petting: return "PURRING"
         
         is_typing = getattr(self, 'is_typing', False)
@@ -1936,7 +2149,7 @@ class PetWidget(QWidget):
             self.stretch_timer += 1
             if self.stretch_timer >= s_min * 60:
                 self.stretch_timer = 0
-                self.pinned_message = "Time to Stretch!"
+                self.trigger_stretch()
                 self.play_alarm_sound()
                 
         # Water
@@ -1967,8 +2180,8 @@ class PetWidget(QWidget):
                 h[0] += math.sin(h[1] * 0.12) * 0.6
             self.hearts = [h for h in self.hearts if h[2] > 0]
             
-            if hasattr(self, 'is_petting') and self.is_petting and self.tick_count % 3 == 0:
-                self.hearts.append([random.randint(-16, 16), random.randint(-38, -15), 255.0, random.uniform(1.2, 2.0)])
+            if hasattr(self, 'is_petting') and self.is_petting and len(self.hearts) < 2 and self.tick_count % 30 == 0:
+                self.hearts.append([random.randint(-10, 10), random.randint(-30, -18), 255.0, random.uniform(0.8, 1.3)])
 
         anim_name = self.get_current_animation_name()
         
@@ -2033,9 +2246,11 @@ class PetWidget(QWidget):
             speed = 7  # ~140ms per frame (energetic rhythmic beat bounce)
         elif anim_name == "WATCHING":
             speed = 16 # ~320ms per frame (calm, attentive screen gazing)
+        elif anim_name == "STRETCHING":
+            speed = 10 # ~200ms per frame (smooth satisfying cat stretch)
             
-        # Natural blinking logic (NEVER while typing, dragged, sleeping, or purring!)
-        if getattr(self, 'is_typing', False) or anim_name in ["TYPING", "DRAGGED", "SLEEPING", "PURRING"]:
+        # Natural blinking logic (NEVER while typing, dragged, sleeping, purring, or stretching!)
+        if getattr(self, 'is_typing', False) or anim_name in ["TYPING", "DRAGGED", "SLEEPING", "PURRING", "STRETCHING"]:
             self.is_blinking = False
             self.blink_timer = random.randint(300, 500)
         else:
@@ -2102,7 +2317,19 @@ class PetWidget(QWidget):
         if anim_name != "TYPING":
             if self.tick_count % speed == 0:
                 anim_list_len = len(MATRIX_FRAMES.get(anim_name, [0]))
-                self.current_frame_index = (self.current_frame_index + 1) % max(1, anim_list_len)
+                if anim_name == "STRETCHING":
+                    next_idx = self.current_frame_index + 1
+                    if next_idx >= anim_list_len:
+                        self.stretch_cycles_left = getattr(self, 'stretch_cycles_left', 1) - 1
+                        if self.stretch_cycles_left <= 0:
+                            self.state = "IDLE"
+                            self.current_frame_index = 0
+                        else:
+                            self.current_frame_index = 0
+                    else:
+                        self.current_frame_index = next_idx
+                else:
+                    self.current_frame_index = (self.current_frame_index + 1) % max(1, anim_list_len)
 
         if self.typing_timer > 0:
             self.typing_timer -= 1
@@ -2290,16 +2517,7 @@ class PetWidget(QWidget):
         # Eye tracking is active in BOTH IDLE and TYPING (and VIBING/WATCHING)!
         has_dynamic_eyes = (anim_name in ["IDLE", "TYPING", "VIBING", "WATCHING"])
         
-        if anim_name == "PURRING" or (hasattr(self, 'is_petting') and self.is_petting):
-            # Rosy blushing cheeks!
-            blush_color = QColor(255, 110, 150, 180)
-            painter.setBrush(blush_color)
-            painter.setPen(Qt.PenStyle.NoPen)
-            ps = pixel_size
-            painter.drawEllipse(int(dest_x + 6.5 * ps), int(dest_y + 12 * ps), int(4 * ps), int(2.5 * ps))
-            painter.drawEllipse(int(dest_x + 18.5 * ps), int(dest_y + 12 * ps), int(4 * ps), int(2.5 * ps))
-
-        elif getattr(self, 'is_blinking', False) and anim_name != "DRAGGED":
+        if getattr(self, 'is_blinking', False) and anim_name != "DRAGGED":
             # Natural blinking: clean sleeping slit _ _ across row 10 (IDLE) or row 13 (TYPING)
             ps = pixel_size
             painter.setPen(Qt.PenStyle.NoPen)
@@ -2504,8 +2722,7 @@ class PetWidget(QWidget):
                 self.state = "PURRING"
                 self.is_petting = True
                 self.idle_time = 0
-                for _ in range(5):
-                    self.hearts.append([random.randint(-16, 16), random.randint(-35, -15), 255.0, random.uniform(1.2, 2.0)])
+                self.hearts.append([random.randint(-8, 8), random.randint(-28, -16), 255.0, random.uniform(0.8, 1.4)])
                 QTimer.singleShot(3000, self.reset_to_idle)
             self.update()
 
