@@ -13,5 +13,6 @@ env/
 # PyInstaller build outputs
 build/
 dist/
+releases/
 *.spec
 *.exe
