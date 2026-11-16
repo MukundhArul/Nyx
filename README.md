@@ -43,9 +43,69 @@ Nyx is a completely free, open-source desktop overlay inspired by cozy virtual p
 
 ---
 
+## 📐 Architecture & How It Works
+
+Nyx runs asynchronously with low CPU usage, combining Windows OS hooks, an event-driven state machine, and a procedural pixel engine:
+
+```mermaid
+flowchart TD
+    subgraph Inputs ["System & User Inputs"]
+        KBD["Keyboard & Mouse Activity<br>(pynput hook)"]
+        WIN["Active Windows & Media Titles<br>(Windows API / ctypes)"]
+        MIC["Microphone Audio Stream<br>(PyAudio)"]
+        CFG["User Config & Timers<br>(settings.json)"]
+    end
+
+    subgraph Core ["Nyx Core Engine (PetWidget)"]
+        TRACK["Context & Activity Monitor<br>• Typing Heat / WPM<br>• Idle / Sleep Tracker<br>• Pomodoro & 30m Stretch Clock"]
+        SM["Interactive State Machine<br>(IDLE, TYPING, VIBING, DRAGGED,<br>SLEEPING, PURRING, STRETCHING)"]
+        WARD["Smart Wardrobe Controller<br>• Dynamic Offsets<br>• Typing & Music Suppression"]
+    end
+
+    subgraph Rendering ["Procedural Matrix Canvas"]
+        MAT["String Matrix Frame Engine<br>(Procedural ASCII to Pixel Grid)"]
+        PARTS["Particle & Overlay Engine<br>• Floating Hearts & Zzzs<br>• Retro Coral Headphones<br>• Track Title Speech Bubbles"]
+        CANVAS["Transparent Frameless Desktop Window<br>(PyQt6 Canvas)"]
+    end
+
+    Inputs --> TRACK
+    TRACK --> SM
+    SM --> WARD
+    SM --> MAT
+    WARD --> MAT
+    SM --> PARTS
+    MAT --> CANVAS
+    PARTS --> CANVAS
+```
+
+---
+
 ## 🐈 Features & Animations
 
 Nyx is powered by a custom procedural string matrix engine: every frame is drawn natively with crisp pixel edges and full dynamic color support!
+
+### 🔄 Reactive State Machine
+
+Nyx continuously monitors system activity and transitions smoothly between states:
+
+```mermaid
+stateDiagram-v2
+    [*] --> IDLE
+    IDLE --> TYPING : User types on keyboard
+    TYPING --> IDLE : Typing pauses
+    IDLE --> VIBING : Spotify or media playing
+    VIBING --> IDLE : Media pauses
+    IDLE --> WATCHING : Video or browser focused
+    WATCHING --> IDLE : Window minimized / unfocused
+    IDLE --> DRAGGED : Left-click & drag
+    DRAGGED --> IDLE : Release mouse button
+    IDLE --> SLEEPING : Inactive > 30 seconds
+    SLEEPING --> IDLE : Mouse move or key press
+    IDLE --> PURRING : Clicked or petted
+    PURRING --> IDLE : Petting finishes
+    IDLE --> STRETCHING : 30-min timer or manual trigger
+    STRETCHING --> IDLE : Stretch routine completes
+```
 
 ### 🎮 Interactive Animations
 * **🖱️ Drag & Drop:** Click and hold to pick Nyx up. Nyx dangles gently with physics-based wobble while you move it around the desktop.
@@ -54,6 +114,19 @@ Nyx is powered by a custom procedural string matrix engine: every frame is drawn
 * **💕 Purring:** Click or pet Nyx to make it happy! It will close its eyes in bliss and float gentle pink hearts.
 * **🎙️ Voice Reactions (Mic Support):** Speak into your microphone and Nyx opens its mouth in real-time to talk back with you.
 * **💤 Sleep Mode:** Step away from your computer for 30 seconds, and Nyx curls up into a peaceful nap with floating blue Zzzs.
+
+### 🎩 Wardrobe & Context-Aware Accessories
+
+Accessories automatically adjust and suppress themselves depending on what Nyx is currently doing:
+
+```mermaid
+flowchart LR
+    ACC["Equipped Accessory<br>(Ribbon, Crown, Wizard Hat)"] --> CHECK{"Current State?"}
+    CHECK -->|"Typing (Keyboard)"| HIDE1["❌ Auto-Hidden<br>(Clear view of typing)"]
+    CHECK -->|"Music (Headphones)"| HIDE2["❌ Auto-Hidden<br>(No headphone collision)"]
+    CHECK -->|"Stretching (Break)"| HIDE3["❌ Auto-Hidden<br>(Clean body posture)"]
+    CHECK -->|"Idle / Sleeping / Dragged"| SHOW["✅ Rendered<br>(Accurate head/neck placement)"]
+```
 
 ### 📱 App & Media Reactions
 * **🎧 Vibing:** Open **Spotify** or a music player, and Nyx throws on retro coral headphones to bob to the beat.
