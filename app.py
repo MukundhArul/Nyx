@@ -210,7 +210,7 @@ COAT_PRESETS = {
         "outline_r": 180, "outline_g": 185, "outline_b": 195,
         "nose_r": 255, "nose_g": 140, "nose_b": 165,
         "hex": "#DADEE4",
-        "desc": "Soft light grey with ginger and black ear-to-eye split"
+        "desc": "Soft light grey with abstract ginger and obsidian blotches"
     }
 }
 
@@ -3009,94 +3009,174 @@ class PetWidget(QWidget):
                 return g_brown
             return g_orange
 
-        # 8. Calico Skin: Left ear-to-eye Orange, Right ear-to-eye Black, Dominant Body Patches, Reduced Grey Accent
+        # 8. Calico Skin: Abstract Fluid Organic Blotches & Marbled Patches
         if coat == 'calico':
             c_grey = QColor(218, 222, 228)
             c_orange = QColor(230, 115, 30)
             c_black = QColor(28, 28, 32)
 
             if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING"]:
-                # 1. Left upper body & ear (Orange): rows 1 to 21, cols 4 to 11
-                if 1 <= r <= 21 and 4 <= c <= 11:
-                    return c_orange
-                # 2. Right upper body & ear (Black): rows 1 to 21, cols 16 to 25
-                elif 1 <= r <= 21 and 16 <= c <= 25:
-                    return c_black
-                # 3. Left lower hip/flank (Black): rows 22 to 26, cols 4 to 11
-                elif 22 <= r <= 26 and 4 <= c <= 11:
-                    return c_black
-                # 4. Right lower hip/flank (Orange): rows 22 to 26, cols 16 to 24
-                elif 22 <= r <= 26 and 16 <= c <= 24:
-                    return c_orange
-                # 5. Center light grey accent (facial blaze & chest)
-                if (3 <= r <= 26 and 12 <= c <= 15):
-                    return c_grey
-                # 6. Legs: Left leg is ORANGE, Right leg is BLACK!
-                if (26 <= r <= 30 and 8 <= c <= 12):
-                    return c_orange
-                elif (26 <= r <= 30 and 14 <= c <= 19):
-                    return c_black
-                # 7. Tail patches (calico tail)
-                if (17 <= r <= 21 and 24 <= c <= 30):
-                    return c_black
-                elif (22 <= r <= 26 and 24 <= c <= 30):
-                    return c_orange
+                # 1. Left Ear & Temple (Orange) - organic curved contour
+                if (1 <= r <= 3 and 6 <= c <= 9): return c_orange
+                if (4 <= r <= 6 and 5 <= c <= 13): return c_orange
+                if (7 <= r <= 9 and 4 <= c <= 11): return c_orange
+                if (10 <= r <= 14 and 4 <= c <= 8): return c_orange
+                # Cute abstract chin/muzzle splash
+                if (13 <= r <= 15 and 9 <= c <= 11): return c_orange
+
+                # 2. Right Ear & Temple (Black) - asymmetric jagged crest
+                if (1 <= r <= 3 and 18 <= c <= 21): return c_black
+                if (4 <= r <= 6 and 16 <= c <= 22): return c_black
+                if (7 <= r <= 10 and 17 <= c <= 25): return c_black
+                if (11 <= r <= 14 and 19 <= c <= 24): return c_black
+
+                # 3. Torso Abstract Blotches:
+                # Flowing Orange left shoulder & flank sweep
+                if (15 <= r <= 17 and 5 <= c <= 10): return c_orange
+                if (18 <= r <= 21 and 5 <= c <= 12): return c_orange
+                if (20 <= r <= 23 and 6 <= c <= 14): return c_orange
+
+                # Bold Black right shoulder mantle
+                if (16 <= r <= 19 and 13 <= c <= 22): return c_black
+                if (19 <= r <= 21 and 16 <= c <= 23): return c_black
+
+                # Lower-left flank & hip Black splash
+                if (23 <= r <= 27 and 4 <= c <= 11): return c_black
+
+                # Abstract Orange floating island on lower belly
+                if (24 <= r <= 26 and 13 <= c <= 15): return c_orange
+
+                # Lower-right flank & hip Orange sweep
+                if (22 <= r <= 27 and 17 <= c <= 25): return c_orange
+
+                # Paws: Left black sock, Right orange sock
+                if (27 <= r <= 30 and 8 <= c <= 12): return c_black
+                if (27 <= r <= 30 and 15 <= c <= 19): return c_orange
+
+                # Tail: 3 abstract segments
+                if (16 <= r <= 19 and 25 <= c <= 30): return c_orange
+                if (20 <= r <= 23 and 25 <= c <= 30): return c_black
+                if (24 <= r <= 26 and 24 <= c <= 30): return c_orange
 
                 return c_grey
 
             elif anim_name in ["TYPING", "TYPING_MUSIC"]:
-                # Left upper body & ear (Orange)
-                if 0 <= r <= 23 and 7 <= c <= 15:
-                    return c_orange
-                # Right upper body & ear (Black)
-                elif 0 <= r <= 23 and 20 <= c <= 33:
-                    return c_black
-                # Lower back/rump patch (Orange)
-                elif 18 <= r <= 23 and 27 <= c <= 33:
-                    return c_orange
-                # Center light grey blaze/chest
-                if (4 <= r <= 23 and 16 <= c <= 19):
-                    return c_grey
-                # Typing paws: Left is ORANGE, Right is BLACK!
-                if 24 <= r <= 34 and 13 <= c <= 19:
-                    return c_orange
-                elif 24 <= r <= 34 and 20 <= c <= 28:
-                    return c_black
+                # Head left ear & temple (Orange)
+                if (0 <= r <= 3 and 11 <= c <= 15): return c_orange
+                if (4 <= r <= 9 and 8 <= c <= 16): return c_orange
+                if (10 <= r <= 15 and 7 <= c <= 14): return c_orange
+                # Forehead abstract splash
+                if (3 <= r <= 6 and 15 <= c <= 18): return c_orange
+
+                # Head right ear & temple (Black)
+                if (0 <= r <= 3 and 22 <= c <= 27): return c_black
+                if (4 <= r <= 9 and 20 <= c <= 29): return c_black
+                if (10 <= r <= 15 and 21 <= c <= 28): return c_black
+
+                # Body:
+                # Chest left side (Orange)
+                if (16 <= r <= 23 and 8 <= c <= 15): return c_orange
+                # Center chest blaze (Grey)
+                if (16 <= r <= 23 and 16 <= c <= 19): return c_grey
+                # Upper back & shoulder (Black)
+                if (16 <= r <= 23 and 20 <= c <= 30): return c_black
+                # Mid/lower back flank (Orange)
+                if (17 <= r <= 23 and 30 <= c <= 38): return c_orange
+
+                # Typing paws:
+                if (24 <= r <= 34 and 13 <= c <= 19): return c_orange
+                if (24 <= r <= 34 and 20 <= c <= 28): return c_black
+
                 # Tail
-                if 10 <= r <= 13 and 39 <= c <= 44:
-                    return c_black
-                elif 14 <= r <= 17 and 39 <= c <= 44:
-                    return c_orange
+                if (9 <= r <= 13 and 39 <= c <= 44): return c_black
+                if (14 <= r <= 17 and 39 <= c <= 44): return c_orange
 
                 return c_grey
 
             elif anim_name == "DRAGGED":
-                if 1 <= r <= 28 and 4 <= c <= 11: return c_orange
-                elif 1 <= r <= 28 and 16 <= c <= 25: return c_black
-                if 3 <= r <= 28 and 12 <= c <= 15: return c_grey
-                if 29 <= r <= 36 and 6 <= c <= 11: return c_orange
-                elif 29 <= r <= 36 and 15 <= c <= 20: return c_black
+                # Head:
+                if (1 <= r <= 4 and 6 <= c <= 9): return c_orange
+                if (5 <= r <= 9 and 5 <= c <= 12): return c_orange
+                if (10 <= r <= 14 and 4 <= c <= 10): return c_orange
+
+                if (1 <= r <= 4 and 18 <= c <= 21): return c_black
+                if (5 <= r <= 9 and 17 <= c <= 23): return c_black
+                if (10 <= r <= 14 and 18 <= c <= 24): return c_black
+
+                # Torso:
+                if (15 <= r <= 20 and 5 <= c <= 11): return c_orange
+                if (20 <= r <= 28 and 4 <= c <= 12): return c_black
+
+                if (16 <= r <= 21 and 15 <= c <= 23): return c_black
+                if (21 <= r <= 28 and 13 <= c <= 23): return c_orange
+
+                # Dangling legs:
+                if (29 <= r <= 36 and 6 <= c <= 11): return c_orange
+                if (29 <= r <= 36 and 15 <= c <= 20): return c_black
+
+                # Tail
+                if (29 <= r <= 34 and 22 <= c <= 27): return c_black
+
                 return c_grey
 
             elif anim_name == "SLEEPING":
-                if 1 <= r <= 22 and 4 <= c <= 11: return c_orange
-                elif 1 <= r <= 22 and 16 <= c <= 25: return c_black
-                if 3 <= r <= 22 and 12 <= c <= 15: return c_grey
-                if 23 <= r <= 30 and 11 <= c <= 16: return c_orange
-                elif 18 <= r <= 25 and 24 <= c <= 29: return c_black
+                # Head:
+                if (1 <= r <= 3 and 6 <= c <= 9): return c_orange
+                if (4 <= r <= 6 and 5 <= c <= 13): return c_orange
+                if (7 <= r <= 9 and 4 <= c <= 11): return c_orange
+                if (10 <= r <= 14 and 4 <= c <= 8): return c_orange
+                if (13 <= r <= 15 and 9 <= c <= 11): return c_orange
+
+                if (1 <= r <= 3 and 18 <= c <= 21): return c_black
+                if (4 <= r <= 6 and 16 <= c <= 22): return c_black
+                if (7 <= r <= 10 and 17 <= c <= 25): return c_black
+                if (11 <= r <= 14 and 19 <= c <= 24): return c_black
+
+                # Body:
+                if (15 <= r <= 17 and 5 <= c <= 10): return c_orange
+                if (18 <= r <= 21 and 5 <= c <= 12): return c_orange
+                if (20 <= r <= 23 and 6 <= c <= 14): return c_orange
+
+                if (16 <= r <= 19 and 13 <= c <= 22): return c_black
+                if (19 <= r <= 21 and 16 <= c <= 23): return c_black
+
+                if (23 <= r <= 27 and 4 <= c <= 11): return c_black
+                if (24 <= r <= 26 and 13 <= c <= 15): return c_orange
+                if (22 <= r <= 27 and 17 <= c <= 25): return c_orange
+
+                if (27 <= r <= 30 and 8 <= c <= 12): return c_black
+                if (27 <= r <= 30 and 15 <= c <= 19): return c_orange
+
+                if (16 <= r <= 19 and 25 <= c <= 30): return c_orange
+                if (20 <= r <= 23 and 25 <= c <= 30): return c_black
+                if (24 <= r <= 26 and 24 <= c <= 30): return c_orange
+
                 return c_grey
 
             elif anim_name == "STRETCHING":
-                # Head: Left orange, Right black, center grey
-                if 2 <= r <= 18 and 6 <= c <= 12: return c_orange
-                elif 2 <= r <= 18 and 18 <= c <= 25: return c_black
-                if 4 <= r <= 18 and 13 <= c <= 17: return c_grey
-                # Arched back & flanks: Orange saddle and Black rump/tail
-                if 5 <= r <= 25 and 24 <= c <= 35: return c_orange
-                elif 5 <= r <= 25 and 36 <= c <= 52: return c_black
-                # Paws
-                if 27 <= r <= 32 and 9 <= c <= 14: return c_orange
-                elif 27 <= r <= 32 and 19 <= c <= 24: return c_black
+                # Head:
+                if (2 <= r <= 5 and 7 <= c <= 11): return c_orange
+                if (6 <= r <= 11 and 6 <= c <= 12): return c_orange
+                if (12 <= r <= 22 and 5 <= c <= 12): return c_orange
+
+                if (2 <= r <= 5 and 18 <= c <= 22): return c_black
+                if (6 <= r <= 11 and 18 <= c <= 24): return c_black
+                if (12 <= r <= 22 and 18 <= c <= 24): return c_black
+
+                # Arched back & rump:
+                if (5 <= r <= 23 and 24 <= c <= 35): return c_orange
+                if (5 <= r <= 25 and 36 <= c <= 48): return c_black
+
+                # Paws:
+                if (27 <= r <= 33 and 9 <= c <= 14): return c_orange
+                if (27 <= r <= 33 and 16 <= c <= 23): return c_black
+                if (27 <= r <= 33 and 28 <= c <= 35): return c_orange
+                if (27 <= r <= 33 and 38 <= c <= 46): return c_black
+
+                # Tail
+                if (3 <= r <= 9 and 44 <= c <= 53): return c_black
+                if (10 <= r <= 14 and 44 <= c <= 53): return c_orange
+
                 return c_grey
 
         return cat_body_color
