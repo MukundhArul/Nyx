@@ -1968,6 +1968,8 @@ class PetWidget(QWidget):
         self.bubble_interactive_rect = QRect()
         self.track_bubble_message = None
         self._track_bubble_timer = None
+        self.landing_cushion_frames = 0
+        self.waking_frames = 0
         
         # Phase 4 Productivity states
         self.pinned_message = ""
@@ -2276,11 +2278,20 @@ class PetWidget(QWidget):
         else:
             self.pomo_seconds = 0
 
+    def wake_up(self):
+        if self.state == "SLEEPING":
+            self.state = "WAKING"
+            self.waking_frames = 15  # ~300ms waking blink transition at 50 FPS
+            self.is_blinking = True
+            if hasattr(self, 'sleeping_zzzs'):
+                self.sleeping_zzzs.clear()
+            self.current_frame_index = 0
+
     # --- Signals ---
     def on_input_activity(self):
         self.idle_time = 0
         if self.state == "SLEEPING":
-            self.state = "IDLE"
+            self.wake_up()
         self.update()
             
     def on_typing_activity(self):
@@ -2288,11 +2299,12 @@ class PetWidget(QWidget):
             return
         self.idle_time = 0
         if self.state == "SLEEPING":
-            self.state = "IDLE"
+            self.wake_up()
         self.is_typing = True
-        # Crucial: NEVER blink while typing!
-        self.is_blinking = False
-        self.blink_timer = random.randint(300, 500)
+        if self.state != "WAKING":
+            # Crucial: NEVER blink while typing unless waking up!
+            self.is_blinking = False
+            self.blink_timer = random.randint(300, 500)
         # Hold keycaps for ~700ms after keystroke
         self.typing_timer = 24
         
@@ -2353,13 +2365,13 @@ class PetWidget(QWidget):
             self.active_app_state = "VIBING"
             self.idle_time = 0
             if self.state == "SLEEPING":
-                self.state = "IDLE"
+                self.wake_up()
         elif is_watching:
             self.is_listening_to_music = False
             self.active_app_state = "WATCHING"
             self.idle_time = 0
             if self.state == "SLEEPING":
-                self.state = "IDLE"
+                self.wake_up()
         else:
             self.is_listening_to_music = False
             self.active_app_state = ""
@@ -2426,7 +2438,8 @@ class PetWidget(QWidget):
         if self.state == "SLEEPING":
             return "SLEEPING"
             
-
+        if self.state == "WAKING":
+            return "IDLE"
             
         return self.state
 
@@ -2435,7 +2448,7 @@ class PetWidget(QWidget):
         if getattr(self, 'active_app_state', '') in ["WATCHING", "VIBING"]:
             self.idle_time = 0
             if self.state == "SLEEPING":
-                self.state = "IDLE"
+                self.wake_up()
         elif not self.is_dragging:
             self.idle_time += 1
             if self.idle_time > self.SLEEP_THRESHOLD:
@@ -2570,7 +2583,9 @@ class PetWidget(QWidget):
             speed = 10 # ~200ms per frame (smooth satisfying cat stretch)
             
         # Natural blinking logic (NEVER while typing, dragged, sleeping, purring, or stretching!)
-        if getattr(self, 'is_typing', False) or anim_name in ["TYPING", "DRAGGED", "SLEEPING", "PURRING", "STRETCHING"]:
+        if getattr(self, 'state', '') == "WAKING":
+            self.is_blinking = True
+        elif getattr(self, 'is_typing', False) or anim_name in ["TYPING", "DRAGGED", "SLEEPING", "PURRING", "STRETCHING"]:
             self.is_blinking = False
             self.blink_timer = random.randint(300, 500)
         else:
@@ -2632,6 +2647,20 @@ class PetWidget(QWidget):
                 self.wobble_angle = 0.0
             self.wobble_vel = 0.0
             self.current_stretch_rows += (0.0 - self.current_stretch_rows) * 0.30
+
+        # Cushioned Landing on Drop: decay frame counter
+        if getattr(self, 'landing_cushion_frames', 0) > 0:
+            self.landing_cushion_frames -= 1
+
+        # Gentle Wake-Up Transition: decay waking frames and open eyes
+        if getattr(self, 'state', '') == "WAKING":
+            self.waking_frames = getattr(self, 'waking_frames', 0) - 1
+            if self.waking_frames <= 0:
+                self.state = "IDLE"
+                self.is_blinking = False
+                self.blink_timer = random.randint(180, 360)
+            else:
+                self.is_blinking = True
 
         # Advance frames for multi-frame animations (typing steps via keystrokes)
         if anim_name != "TYPING":
@@ -2754,8 +2783,25 @@ class PetWidget(QWidget):
 
         # 2. Scruff Pivot Physics & Transforms
         painter.save()
-        
 
+        # Cushioned Landing on Drop: squash and rebound
+        cushion_frames = getattr(self, 'landing_cushion_frames', 0)
+        if cushion_frames > 0 and anim_name != "DRAGGED":
+            if cushion_frames >= 4:
+                # Squash phase (frames 6, 5, 4): cat compresses slightly into the floor and widens
+                sy = 0.91
+                sx = 1.07
+            elif cushion_frames >= 2:
+                # Rebound phase (frames 3, 2): slight upward bounce
+                sy = 1.04
+                sx = 0.98
+            else:
+                # Settle phase (frame 1)
+                sy = 1.01
+                sx = 0.99
+            painter.translate(cx, floor_y)
+            painter.scale(sx, sy)
+            painter.translate(-cx, -floor_y)
 
         # Pendulum wobble when dragged
         wobble = getattr(self, 'wobble_angle', 0.0)
@@ -3042,8 +3088,20 @@ class PetWidget(QWidget):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            if hasattr(self, 'track_bubble_message') and self.track_bubble_message:
-                self.track_bubble_message = None
+            # 1. Click-to-Dismiss Speech Bubbles ("Now Playing" or sticky reminders)
+            if hasattr(self, 'bubble_interactive_rect') and not self.bubble_interactive_rect.isNull():
+                if self.bubble_interactive_rect.contains(event.pos()):
+                    self.track_bubble_message = None
+                    self.pinned_message = ""
+                    if hasattr(self, '_track_bubble_timer') and self._track_bubble_timer:
+                        self._track_bubble_timer.stop()
+                    self.bubble_interactive_rect = QRect()
+                    self.update()
+                    return  # Dismiss immediately without waiting for timeout, consume click
+
+            if self.state == "SLEEPING":
+                self.wake_up()
+
             self.mouse_press_pos = event.globalPosition().toPoint()
             self.last_drag_pos = event.globalPosition().toPoint()
             self.drag_has_started = False
@@ -3084,13 +3142,15 @@ class PetWidget(QWidget):
             if was_dragging:
                 self.state = "IDLE"
                 self.idle_time = 0
+                self.landing_cushion_frames = 6  # ~120ms squash-and-rebound cushion upon landing
             else:
-                # Petting / Purring on click!
-                self.state = "PURRING"
-                self.is_petting = True
-                self.idle_time = 0
-                self.hearts.append([random.randint(-8, 8), random.randint(-28, -16), 255.0, random.uniform(0.8, 1.4)])
-                QTimer.singleShot(3000, self.reset_to_idle)
+                if self.state != "WAKING":
+                    # Petting / Purring on click!
+                    self.state = "PURRING"
+                    self.is_petting = True
+                    self.idle_time = 0
+                    self.hearts.append([random.randint(-8, 8), random.randint(-28, -16), 255.0, random.uniform(0.8, 1.4)])
+                    QTimer.singleShot(3000, self.reset_to_idle)
             self.update()
 
     def reset_to_idle(self):
