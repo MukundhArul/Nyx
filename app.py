@@ -206,11 +206,11 @@ COAT_PRESETS = {
     "calico": {
         "name": "Calico",
         "icon": "🎨",
-        "r": 250, "g": 244, "b": 234,
-        "outline_r": 200, "outline_g": 190, "outline_b": 180,
+        "r": 218, "g": 222, "b": 228,
+        "outline_r": 180, "outline_g": 185, "outline_b": 195,
         "nose_r": 255, "nose_g": 140, "nose_b": 165,
-        "hex": "#FAF4EA",
-        "desc": "Japanese Mi-Ke tri-color with cute sparkling eyes"
+        "hex": "#DADEE4",
+        "desc": "Soft light grey with ginger and black ear-to-eye split"
     }
 }
 
@@ -3009,16 +3009,16 @@ class PetWidget(QWidget):
                 return g_brown
             return g_orange
 
-        # 8. Calico Skin: Left ear-to-eye Orange, Right ear-to-eye Black, Colored Legs, Rest White
+        # 8. Calico Skin: Left ear-to-eye Orange, Right ear-to-eye Black, Colored Legs, Rest Light Grey
         if coat == 'calico':
-            c_white = QColor(255, 255, 255)
+            c_grey = QColor(218, 222, 228)
             c_orange = QColor(230, 115, 30)
             c_black = QColor(28, 28, 32)
 
             if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING"]:
-                # Center forehead and muzzle blaze is strictly WHITE!
+                # Center forehead and muzzle blaze is light grey!
                 if (12 <= c <= 15 and 3 <= r <= 15):
-                    return c_white
+                    return c_grey
 
                 # Left ear-to-eye patch (ORANGE)
                 if (1 <= r <= 7 and 4 <= c <= 11) or (8 <= r <= 12 and 4 <= c <= 11):
@@ -3040,13 +3040,13 @@ class PetWidget(QWidget):
                 if (22 <= r <= 25 and 24 <= c <= 28):
                     return c_orange
 
-                # Rest of body is pure white!
-                return c_white
+                # Rest of body is light grey!
+                return c_grey
 
             elif anim_name in ["TYPING", "TYPING_MUSIC"]:
                 # Center blaze
                 if (16 <= c <= 19 and 4 <= r <= 16):
-                    return c_white
+                    return c_grey
 
                 # Left ear-to-eye (ORANGE)
                 if (0 <= r <= 9 and 8 <= c <= 15) or (10 <= r <= 15 and 7 <= c <= 15):
@@ -3068,31 +3068,31 @@ class PetWidget(QWidget):
                 if (14 <= r <= 17 and 39 <= c <= 44):
                     return c_orange
 
-                return c_white
+                return c_grey
 
             elif anim_name == "DRAGGED":
-                if (11 <= c <= 16 and 4 <= r <= 13): return c_white
+                if (11 <= c <= 16 and 4 <= r <= 13): return c_grey
                 if (1 <= r <= 12 and 4 <= c <= 10): return c_orange
                 if (1 <= r <= 12 and 17 <= c <= 24): return c_black
                 if (31 <= r <= 36 and 6 <= c <= 10): return c_orange
                 if (31 <= r <= 36 and 16 <= c <= 20): return c_black
-                return c_white
+                return c_grey
 
             elif anim_name == "SLEEPING":
-                if (11 <= c <= 16 and 4 <= r <= 13): return c_white
+                if (11 <= c <= 16 and 4 <= r <= 13): return c_grey
                 if (1 <= r <= 12 and 4 <= c <= 10): return c_orange
                 if (1 <= r <= 12 and 17 <= c <= 24): return c_black
                 if (26 <= r <= 30 and 11 <= c <= 16): return c_orange
                 if (18 <= r <= 23 and 24 <= c <= 28): return c_black
-                return c_white
+                return c_grey
 
             elif anim_name == "STRETCHING":
-                if (13 <= c <= 17 and 6 <= r <= 18): return c_white
+                if (13 <= c <= 17 and 6 <= r <= 18): return c_grey
                 if (2 <= r <= 18 and 6 <= c <= 12): return c_orange
                 if (2 <= r <= 18 and 18 <= c <= 24): return c_black
                 if (28 <= r <= 32 and 10 <= c <= 14): return c_orange
                 if (28 <= r <= 32 and 20 <= c <= 24): return c_black
-                return c_white
+                return c_grey
 
         return cat_body_color
 

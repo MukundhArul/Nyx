@@ -31,7 +31,7 @@ Nyx has received a major upgrade with cute new accessories, smart media tracking
     - ☕ **Espresso:** Rich roasted coffee mocha brown.
     - 🎩 **Tuxedo:** Dapper black cat with a neat white chest ascot.
     - 🧡 **Ginger:** Warm marmalade tabby with sweet cinnamon stripes and bright white eye rings.
-    - 🎨 **Calico:** Traditional Japanese Mi-Ke tri-color with cute sparkling eyes.
+    - 🎨 **Calico:** Soft light grey coat with ginger and black ear-to-eye split, colored legs, and sparkling anime eyes.
   - 👁️ **Eye Protection:** Face and eye zones are strictly protected—stripes and patches never cut across the eyes, paws, or keyboard.
   - Pick between 3 crisp pixel sizes: **Small (2x)**, **Medium (3x)**, and **Large (4x)**.
 - **✨ Pixel-Perfect Tail & Animation Polishing:**
