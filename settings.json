@@ -11,13 +11,12 @@
     "matrix_r": 24,
     "matrix_g": 24,
     "matrix_b": 27,
-    "matrix_outline_r": 20,
-    "matrix_outline_g": 20,
-    "matrix_outline_b": 20,
-    "coat_preset": "black",
-    "coat_pattern": "solid",
-    "accessory": "none",
+    "matrix_outline_r": 12,
+    "matrix_outline_g": 12,
+    "matrix_outline_b": 14,
     "matrix_nose_r": 255,
     "matrix_nose_g": 140,
-    "matrix_nose_b": 165
+    "matrix_nose_b": 165,
+    "coat_preset": "black",
+    "accessory": "none"
 }

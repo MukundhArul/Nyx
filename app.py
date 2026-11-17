@@ -40,7 +40,6 @@ DEFAULT_SETTINGS = {
     "matrix_outline_g": 20,
     "matrix_outline_b": 20,
     "coat_preset": "black",
-    "coat_pattern": "solid",
     "accessory": "none"
 }
 
@@ -53,110 +52,69 @@ ACCESSORIES = {
         "colors": {},
         "offsets": {},
     },
-    "bow": {
-        "name": "Red Ribbon",
-        "icon": "🎀",
-        "desc": "Cute ruby red ribbon bow below Nyx's neck",
-        "sprite": [
-            "..#...#..",
-            "#RR#Y#RR#",
-            "#RrYYYrR#",
-            ".#RrYrR#.",
-            "..#R#R#..",
-            "...#.#...",
-        ],
-        "colors": {
-            'W': QColor(255, 255, 255),
-            'R': QColor(245, 40, 65),
-            'r': QColor(180, 20, 35),
-            'Y': QColor(255, 215, 0),
-            'y': QColor(240, 160, 0),
-            '#': QColor(40, 0, 10),
-        },
-        "offsets": {
-            "IDLE": (9, 15),
-            "DRAGGED": (9, 15),
-            "SLEEPING": (9, 15),
-        }
-    },
     "crown": {
         "name": "Golden Crown",
         "icon": "👑",
-        "desc": "Sparkling royal gold crown with jewel insets",
+        "desc": "Grand royal gold crown with sparkling jewel insets",
         "sprite": [
-            ".W...W...W.",
-            "WGW.WGW.WGW",
-            "WGGWWGGWWGW",
-            "WGggGGggGGW",
-            ".WGRBgRGBW.",
-            "..WGGGGGW..",
-            "..WWWWWWW..",
+            ".W.....W.....W.",
+            "WGW...WGW...WGW",
+            "WGGW.WGGGW.WGGW",
+            "WGGGWWGGGWGGGGW",
+            "WGgGGggGGggGGgW",
+            "WGRBgRGBggGRBgW",
+            "WGGGGGGGGGGGGGW",
+            ".WGGGGGGGGGGGW.",
+            "..WWWWWWWWWWW..",
         ],
         "colors": {
             'W': QColor(255, 255, 255),
             'G': QColor(255, 215, 0),
-            'g': QColor(230, 150, 0),
-            'R': QColor(255, 23, 68),
-            'B': QColor(0, 229, 255),
+            'g': QColor(220, 145, 0),
+            'R': QColor(255, 30, 70),
+            'B': QColor(0, 220, 255),
             '#': QColor(50, 35, 0),
         },
         "offsets": {
-            "IDLE": (8, -4),
-            "DRAGGED": (8, -4),
-            "SLEEPING": (8, -4),
+            "IDLE": (6, -5),
+            "DRAGGED": (6, -5),
+            "SLEEPING": (6, -5),
         }
     },
     "wizard": {
         "name": "Wizard Hat",
         "icon": "🧙",
-        "desc": "Mystical pointed purple hat with golden star band",
+        "desc": "Grand mystical purple hat with glowing golden star band",
         "sprite": [
-            ".....WW....",
-            "....WPPW...",
-            "....WPPW...",
-            "...WPpPW...",
-            "...WPPPW...",
-            "..WYYYYYW..",
-            "..WPPPPPW..",
-            "..WWWWWWW..",
+            "........YYY......",
+            "........YYY......",
+            ".........W.......",
+            "........WPPW.....",
+            ".......WPpPW.....",
+            ".......WPPPW.....",
+            "......WPpPPW.....",
+            "......WPPPPW.....",
+            ".....WPPpPPPW....",
+            "....WPPPPPPPW....",
+            "...WYYYYYYYYYW...",
+            "...WYgBggBgGYW...",
+            "..WPPPPPPPPPPPW..",
+            ".WWWWWWWWWWWWWWW.",
+            ".###############.",
         ],
         "colors": {
             'W': QColor(255, 255, 255),
-            'P': QColor(142, 68, 230),
-            'p': QColor(81, 35, 145),
+            'P': QColor(138, 65, 225),
+            'p': QColor(78, 30, 140),
             'Y': QColor(255, 215, 0),
-            '#': QColor(30, 15, 55),
+            'g': QColor(215, 140, 0),
+            'B': QColor(0, 230, 255),
+            '#': QColor(25, 12, 45),
         },
         "offsets": {
-            "IDLE": (8, -5),
-            "DRAGGED": (8, -5),
-            "SLEEPING": (8, -5),
-        }
-    },
-    "scarf": {
-        "name": "Winter Scarf",
-        "icon": "🧣",
-        "desc": "Warm festive crimson knit scarf with fringe tassels",
-        "sprite": [
-            "..#RRRRRRRR#..",
-            ".#RRWWRRWW#...",
-            ".#RRWWRRWW##..",
-            "..###RRWW#T#..",
-            "....#RRWW#....",
-            "....#TTTT#....",
-        ],
-        "colors": {
-            '#': QColor(50, 10, 20),
-            'R': QColor(225, 35, 55),
-            'r': QColor(160, 20, 35),
-            'W': QColor(250, 250, 255),
-            'w': QColor(210, 215, 230),
-            'T': QColor(250, 210, 85),
-        },
-        "offsets": {
-            "IDLE": (7, 15),
-            "DRAGGED": (7, 15),
-            "SLEEPING": (7, 15),
+            "IDLE": (5, -10),
+            "DRAGGED": (5, -10),
+            "SLEEPING": (5, -10),
         }
     },
     "party": {
@@ -194,7 +152,6 @@ COAT_PRESETS = {
     "black": {
         "name": "Midnight Black",
         "icon": "🌑",
-        "pattern": "solid",
         "r": 24, "g": 24, "b": 27,
         "outline_r": 20, "outline_g": 20, "outline_b": 20,
         "nose_r": 255, "nose_g": 140, "nose_b": 165,
@@ -204,7 +161,6 @@ COAT_PRESETS = {
     "charcoal": {
         "name": "Charcoal Slate",
         "icon": "🌪️",
-        "pattern": "solid",
         "r": 72, "g": 78, "b": 92,
         "outline_r": 40, "outline_g": 44, "outline_b": 54,
         "nose_r": 255, "nose_g": 150, "nose_b": 170,
@@ -214,7 +170,6 @@ COAT_PRESETS = {
     "navy": {
         "name": "Abyssal Navy",
         "icon": "🌊",
-        "pattern": "solid",
         "r": 34, "g": 56, "b": 96,
         "outline_r": 18, "outline_g": 30, "outline_b": 54,
         "nose_r": 255, "nose_g": 145, "nose_b": 175,
@@ -224,42 +179,11 @@ COAT_PRESETS = {
     "espresso": {
         "name": "Espresso Brown",
         "icon": "☕",
-        "pattern": "solid",
         "r": 84, "g": 52, "b": 38,
         "outline_r": 48, "outline_g": 28, "outline_b": 20,
         "nose_r": 255, "nose_g": 155, "nose_b": 160,
         "hex": "#543426",
         "desc": "Rich roasted coffee mocha brown"
-    },
-    "tuxedo": {
-        "name": "Tuxedo",
-        "icon": "🎩",
-        "pattern": "tuxedo",
-        "r": 24, "g": 24, "b": 28,
-        "outline_r": 18, "outline_g": 18, "outline_b": 20,
-        "nose_r": 255, "nose_g": 140, "nose_b": 165,
-        "hex": "#2B2D38",
-        "desc": "Sleek black coat with crisp white chest bib & paws"
-    },
-    "ginger": {
-        "name": "Ginger Tabby",
-        "icon": "🧡",
-        "pattern": "ginger",
-        "r": 224, "g": 118, "b": 38,
-        "outline_r": 130, "outline_g": 50, "outline_b": 15,
-        "nose_r": 255, "nose_g": 150, "nose_b": 150,
-        "hex": "#D96E26",
-        "desc": "Warm vibrant marmalade ginger with sunny tabby stripes"
-    },
-    "calico": {
-        "name": "Calico",
-        "icon": "🎨",
-        "pattern": "calico",
-        "r": 246, "g": 243, "b": 238,
-        "outline_r": 80, "outline_g": 50, "outline_b": 40,
-        "nose_r": 255, "nose_g": 140, "nose_b": 165,
-        "hex": "#E09C5A",
-        "desc": "Whimsical tri-color patches: cream, ginger orange & obsidian"
     }
 }
 
@@ -1536,11 +1460,9 @@ class SettingsWindow(QWidget):
         self.acc_buttons = []
         acc_list = [
             ("none", "None", "❌", "Natural Nyx without accessories"),
-            ("bow", "Red Ribbon", "🎀", "Cute ruby red ribbon bow below Nyx's neck"),
-            ("scarf", "Winter Scarf", "🧣", "Warm festive crimson knit scarf with fringe tassels"),
+            ("crown", "Golden Crown", "👑", "Grand royal gold crown with sparkling jewel insets"),
+            ("wizard", "Wizard Hat", "🧙", "Grand mystical purple hat with glowing star band"),
             ("party", "Party Hat", "🎉", "Joyful festive party cone hat with confetti & pom-pom"),
-            ("wizard", "Wizard Hat", "🧙", "Mystical pointed purple hat with golden star band"),
-            ("crown", "Golden Crown", "👑", "Sparkling royal gold crown with jewel insets"),
         ]
         
         acc_cards_layout = QGridLayout()
@@ -1598,42 +1520,27 @@ class SettingsWindow(QWidget):
         app_layout.addWidget(size_group)
         self.update_size_buttons_ui()
         
-        # --- Predefined Cat Coats (Solid Shades & Special Breeds) ---
-        color_group = QGroupBox("Cat Coat Shades & Breeds")
+        # --- Predefined Cat Coats (Solid Dark Shades) ---
+        color_group = QGroupBox("Cat Coat Shades")
         color_layout = QVBoxLayout()
         color_layout.setSpacing(6)
         
-        desc_label = QLabel("Choose a dark coat shade or special feline breed pattern:")
+        desc_label = QLabel("Choose a curated dark coat shade for Nyx:")
         desc_label.setStyleSheet("color: #a0a5b5; font-size: 11px;")
         color_layout.addWidget(desc_label)
         
-        solid_title = QLabel("Dark Coat Shades:")
-        solid_title.setStyleSheet("color: #8892b0; font-size: 10px; font-weight: bold; margin-top: 2px;")
-        color_layout.addWidget(solid_title)
-        
-        swatches_layout1 = QHBoxLayout()
-        swatches_layout1.setSpacing(6)
-        
-        breed_title = QLabel("Special Breeds & Patterns:")
-        breed_title.setStyleSheet("color: #8892b0; font-size: 10px; font-weight: bold; margin-top: 4px;")
-        
-        swatches_layout2 = QHBoxLayout()
-        swatches_layout2.setSpacing(6)
+        swatches_layout = QHBoxLayout()
+        swatches_layout.setSpacing(8)
         
         self.preset_buttons = []
         for key, info in COAT_PRESETS.items():
             btn = QPushButton(f"{info['icon']} {info['name']}")
             btn.setCursor(Qt.CursorShape.PointingHandCursor)
             btn.clicked.connect(lambda checked, k=key: self.set_coat_preset(k))
-            if info["pattern"] == "solid":
-                swatches_layout1.addWidget(btn)
-            else:
-                swatches_layout2.addWidget(btn)
+            swatches_layout.addWidget(btn)
             self.preset_buttons.append((btn, key, info["hex"]))
             
-        color_layout.addLayout(swatches_layout1)
-        color_layout.addWidget(breed_title)
-        color_layout.addLayout(swatches_layout2)
+        color_layout.addLayout(swatches_layout)
         
         self.color_status_label = QLabel()
         self.color_status_label.setStyleSheet("font-size: 11px; margin-top: 4px;")
@@ -1855,7 +1762,6 @@ class SettingsWindow(QWidget):
             return
         preset = COAT_PRESETS[preset_key]
         self.pet.settings["coat_preset"] = preset_key
-        self.pet.settings["coat_pattern"] = preset.get("pattern", "solid")
         self.pet.settings["matrix_r"] = preset["r"]
         self.pet.settings["matrix_g"] = preset["g"]
         self.pet.settings["matrix_b"] = preset["b"]
@@ -1875,7 +1781,6 @@ class SettingsWindow(QWidget):
         self.pet.settings["matrix_r"] = r
         self.pet.settings["matrix_g"] = g
         self.pet.settings["matrix_b"] = b
-        self.pet.settings["coat_pattern"] = "solid"
         self.update_preset_buttons_ui()
         self.pet.save_and_apply_settings()
         self.pet.update()
@@ -2343,11 +2248,9 @@ class PetWidget(QWidget):
         self.tray_wardrobe_actions = {}
         wardrobe_items = [
             ("none", ("None", "❌")),
-            ("bow", ("Red Ribbon", "🎀")),
-            ("scarf", ("Winter Scarf", "🧣")),
-            ("party", ("Party Hat", "🎉")),
-            ("wizard", ("Wizard Hat", "🧙")),
             ("crown", ("Golden Crown", "👑")),
+            ("wizard", ("Wizard Hat", "🧙")),
+            ("party", ("Party Hat", "🎉")),
         ]
         for k, info in wardrobe_items:
             act = QAction(f"{info[1]}  {info[0]}", self)
@@ -2407,7 +2310,6 @@ class PetWidget(QWidget):
             if coat_key in COAT_PRESETS:
                 p = COAT_PRESETS[coat_key]
                 self.settings["coat_preset"] = coat_key
-                self.settings["coat_pattern"] = p.get("pattern", "solid")
                 self.settings["matrix_r"] = p["r"]
                 self.settings["matrix_g"] = p["g"]
                 self.settings["matrix_b"] = p["b"]
@@ -2894,83 +2796,6 @@ class PetWidget(QWidget):
                 
         self.update() 
 
-    def get_matrix_pixel_color(self, coat_pattern, anim_name, r, c, grid_w, grid_h, char, custom_r, custom_g, custom_b):
-        if char not in ['P', 'L', 'D']:
-            return MATRIX_COLORS.get(char, None)
-            
-        heat = getattr(self, 'typing_heat', 0.0)
-        is_angry = getattr(self, 'is_angry', False)
-        if anim_name == "TYPING" and is_angry and heat > 0.35:
-            # Overrides to flaming angry red when sustained typing speed > 60 WPM
-            t = min(1.0, (heat - 0.35) / 0.50)
-            cr = int(custom_r + (235 - custom_r) * t)
-            cg = int(custom_g + (40 - custom_g) * t)
-            cb = int(custom_b + (40 - custom_b) * t)
-            if char == 'L': return QColor(min(255, cr + 20), min(255, cg + 20), min(255, cb + 20))
-            elif char == 'D': return QColor(max(0, cr - 20), max(0, cg - 20), max(0, cb - 20))
-            return QColor(cr, cg, cb)
-
-        if coat_pattern == "solid":
-            if char == 'L':
-                return QColor(min(255, custom_r + 20), min(255, custom_g + 20), min(255, custom_b + 20))
-            elif char == 'D':
-                return QColor(max(0, custom_r - 20), max(0, custom_g - 20), max(0, custom_b - 20))
-            return MATRIX_COLORS.get('P', QColor(custom_r, custom_g, custom_b))
-
-        # Normalize coordinates across sprite grids (e.g. stretching 55 columns)
-        nc = int(c * 32.0 / max(1, grid_w))
-        nr = int(r * 32.0 / max(1, grid_h))
-
-        if coat_pattern == "tuxedo":
-            is_paw = (nr >= 28 and 6 <= nc <= 16)
-            is_bib = (15 <= nr <= 24 and 9 <= nc <= 14) or (16 <= nr <= 22 and 8 <= nc <= 15)
-            is_muzzle = (13 <= nr <= 14 and 11 <= nc <= 14)
-            if is_paw or is_bib or is_muzzle:
-                if char == 'D': return QColor(220, 225, 235)
-                elif char == 'L': return QColor(255, 255, 255)
-                return QColor(248, 250, 255)
-            else:
-                if char == 'D': return QColor(14, 14, 16)
-                elif char == 'L': return QColor(44, 44, 50)
-                return QColor(24, 24, 28)
-
-        elif coat_pattern == "ginger":
-            is_bib = (14 <= nr <= 22 and 10 <= nc <= 14)
-            is_paw = (nr >= 29 and 6 <= nc <= 15)
-            if is_bib or is_paw:
-                if char == 'D': return QColor(235, 215, 195)
-                return QColor(252, 244, 230)
-                
-            is_forehead_stripe = (3 <= nr <= 7 and (nc in [8, 9, 12, 15, 16]))
-            is_flank_stripe = (nr in [17, 19, 21, 23, 25] and (4 <= nc <= 9 or 15 <= nc <= 23))
-            is_tail_stripe = (nr in [18, 21, 24, 27] and nc >= 24)
-            if is_forehead_stripe or is_flank_stripe or is_tail_stripe:
-                return QColor(175, 75, 18)
-            else:
-                if char == 'D': return QColor(195, 95, 25)
-                elif char == 'L': return QColor(245, 150, 60)
-                return QColor(228, 120, 36)
-
-        elif coat_pattern == "calico":
-            is_orange_head = (nr <= 7 and 4 <= nc <= 11) or (nr in [8, 9] and 4 <= nc <= 8)
-            is_orange_flank = (18 <= nr <= 24 and 4 <= nc <= 11)
-            is_black_head = (nr <= 7 and 16 <= nc <= 23) or (nr in [8, 9] and 18 <= nc <= 23)
-            is_black_back = (19 <= nr <= 25 and 17 <= nc <= 23) or (nc >= 25 and 17 <= nr <= 27)
-            if is_orange_head or is_orange_flank:
-                if char == 'D': return QColor(195, 95, 25)
-                elif char == 'L': return QColor(245, 145, 55)
-                return QColor(228, 120, 36)
-            elif is_black_head or is_black_back:
-                if char == 'D': return QColor(16, 16, 20)
-                elif char == 'L': return QColor(48, 48, 54)
-                return QColor(28, 28, 32)
-            else:
-                if char == 'D': return QColor(220, 215, 210)
-                elif char == 'L': return QColor(255, 255, 255)
-                return QColor(246, 243, 238)
-
-        return QColor(custom_r, custom_g, custom_b)
-
     # --- Drawing ---
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -3096,10 +2921,17 @@ class PetWidget(QWidget):
 
         # 3. Draw Cat Matrix
         painter.setPen(Qt.PenStyle.NoPen)
-        coat_pattern = self.settings.get("coat_pattern", "solid")
         for r, row_str in enumerate(frame_data):
             for c, char in enumerate(row_str):
-                color = self.get_matrix_pixel_color(coat_pattern, anim_name, r, c, grid_w, grid_h, char, custom_r, custom_g, custom_b)
+                if char == 'L':
+                    color = QColor(min(255, custom_r + 20), min(255, custom_g + 20), min(255, custom_b + 20))
+                elif char == 'D':
+                    color = QColor(max(0, custom_r - 20), max(0, custom_g - 20), max(0, custom_b - 20))
+                elif char in MATRIX_COLORS:
+                    color = MATRIX_COLORS[char]
+                else:
+                    color = None
+                    
                 if color:
                     painter.setBrush(color)
                     px_x = int(dest_x + c * pixel_size)
