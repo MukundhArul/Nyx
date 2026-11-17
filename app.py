@@ -2867,21 +2867,23 @@ class PetWidget(QWidget):
 
         # 2. Outer outline and whiskers
         if char == 'W':
-            # For calico in sleeping pose, closed curved eyes are dark obsidian so they are clearly visible
-            if coat == 'calico' and anim_name == 'SLEEPING' and r in [9, 10] and ((5 <= c <= 9) or (16 <= c <= 20)):
-                return QColor(24, 24, 27)
+            # For calico in sleeping pose, the closed eye on the black patch is white, and on orange is dark
+            if coat == 'calico' and anim_name == 'SLEEPING':
+                if r in [9, 10] and (16 <= c <= 20):
+                    return QColor(255, 255, 255)
+                elif r in [9, 10] and (5 <= c <= 9):
+                    return QColor(24, 24, 27)
             return MATRIX_COLORS.get('W', QColor(255, 255, 255))
 
         # 3. Eye Pupil Handling across all coats (dark pupils with cute specular glints)
         if is_eye_pupil(anim_name, r, c):
-            if coat in ['ginger', 'calico']:
-                # Cute anime specular glint in top-left of pupil
-                if anim_name in ['IDLE', 'VIBING', 'WATCHING'] and r == 9 and c in [7, 18]:
-                    return QColor(255, 255, 255)
-                elif anim_name in ['TYPING', 'TYPING_MUSIC'] and r == 12 and c in [12, 21]:
-                    return QColor(255, 255, 255)
-                elif anim_name == 'DRAGGED' and r == 9 and c in [7, 19]:
-                    return QColor(255, 255, 255)
+            # Specular anime glint in top-left of pupil
+            if anim_name in ['IDLE', 'VIBING', 'WATCHING'] and r == 9 and c in [7, 18]:
+                return QColor(255, 255, 255)
+            elif anim_name in ['TYPING', 'TYPING_MUSIC'] and r == 12 and c in [12, 21]:
+                return QColor(255, 255, 255)
+            elif anim_name == 'DRAGGED' and r == 9 and c in [7, 19]:
+                return QColor(255, 255, 255)
             return QColor(24, 24, 27)
 
         # 4. Cute Pink Nose & Shading
@@ -2898,120 +2900,199 @@ class PetWidget(QWidget):
                 return QColor(max(0, custom_r - 20), max(0, custom_g - 20), max(0, custom_b - 20))
             return cat_body_color
 
-        # 6. Tuxedo Skin: Sleek black with neat white chest ascot/bib
+        # 6. Tuxedo Skin: Sleek black with organic chest bib, belly stream, and white mittens
         if coat == 'tuxedo':
-            is_bib = False
-            if anim_name in ['IDLE', 'VIBING', 'WATCHING', 'PURRING']:
-                if (r == 15 and 12 <= c <= 14) or \
-                   (r == 16 and 11 <= c <= 15) or \
-                   (r == 17 and 10 <= c <= 16) or \
-                   (r == 18 and 11 <= c <= 15) or \
-                   (r == 19 and 12 <= c <= 14):
-                    is_bib = True
-            elif anim_name in ['TYPING', 'TYPING_MUSIC']:
-                if (r == 16 and 18 <= c <= 20) or \
-                   (r == 17 and 17 <= c <= 21) or \
-                   (r == 18 and 17 <= c <= 21) or \
-                   (r == 19 and 18 <= c <= 20):
-                    is_bib = True
-            elif anim_name == 'DRAGGED':
-                if (r in [15, 16, 17] and 11 <= c <= 16) or (r == 18 and 12 <= c <= 15):
-                    is_bib = True
-            elif anim_name == 'SLEEPING':
-                if r in [16, 17, 18] and 11 <= c <= 15:
-                    is_bib = True
-            elif anim_name == 'STRETCHING':
-                if r in [19, 20, 21] and 12 <= c <= 15:
-                    is_bib = True
+            is_white = False
+            if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING"]:
+                # Organic white throat, chest bib, and belly stream
+                if (r in [14, 15] and 11 <= c <= 15) or \
+                   (r in [16, 17, 18] and 9 <= c <= 17) or \
+                   (r in [19, 20, 21] and 10 <= c <= 16) or \
+                   (r in [22, 23, 24] and 11 <= c <= 15) or \
+                   (r == 25 and 12 <= c <= 14):
+                    is_white = True
+                # White mittens / socks on paws
+                elif (r in [29, 30] and ((8 <= c <= 12) or (14 <= c <= 18))):
+                    is_white = True
+                elif (r in [28, 29] and 20 <= c <= 24):
+                    is_white = True
+            elif anim_name in ["TYPING", "TYPING_MUSIC"]:
+                # Throat, chest, and belly
+                if (r in [15, 16] and 17 <= c <= 21) or \
+                   (r in [17, 18, 19] and 16 <= c <= 22) or \
+                   (r in [20, 21, 22] and 17 <= c <= 21):
+                    is_white = True
+                # White mittens tapping on the keys!
+                elif (28 <= r <= 33 and ((14 <= c <= 18) or (22 <= c <= 26))):
+                    is_white = True
+            elif anim_name == "DRAGGED":
+                if (15 <= r <= 23 and 10 <= c <= 17):
+                    is_white = True
+                if (31 <= r <= 36 and ((6 <= c <= 10) or (16 <= c <= 20))):
+                    is_white = True
+            elif anim_name == "SLEEPING":
+                if (16 <= r <= 22 and 10 <= c <= 16):
+                    is_white = True
+                if (r in [27, 28, 29] and 11 <= c <= 15):
+                    is_white = True
+            elif anim_name == "STRETCHING":
+                if (18 <= r <= 24 and 11 <= c <= 16):
+                    is_white = True
+                if (r in [30, 31] and ((10 <= c <= 14) or (20 <= c <= 24))):
+                    is_white = True
 
-            if is_bib:
+            if is_white:
                 return QColor(255, 255, 255)
             return cat_body_color
 
-        # 7. Ginger Tabby Skin: Warm marmalade with cinnamon tabby stripes & cream bib
+        # 7. Ginger Tabby Skin: Full orange body with rich dark brown tiger/tabby stripes
         if coat == 'ginger':
-            g_base = cat_body_color if (getattr(self, 'is_angry', False) and getattr(self, 'typing_heat', 0.0) > 0.35) else QColor(230, 120, 38)
-            g_stripe = QColor(165, 65, 15)
-            g_cream = QColor(255, 242, 225)
+            g_orange = cat_body_color if (getattr(self, 'is_angry', False) and getattr(self, 'typing_heat', 0.0) > 0.35) else QColor(235, 120, 30)
+            g_brown = QColor(120, 48, 14)
 
-            # Chest bib
-            if anim_name in ['IDLE', 'VIBING', 'WATCHING', 'PURRING'] and (r in [15, 16, 17, 18] and 11 <= c <= 15):
-                return g_cream
-            if anim_name in ['TYPING', 'TYPING_MUSIC'] and (r in [16, 17, 18] and 18 <= c <= 20):
-                return g_cream
-
-            # Protected eye zone: strictly base fur, NO STRIPES OVER EYES!
+            # Protected eye zone (eyes stay clean with bright orange frame)
             if is_eye_protected_zone(anim_name, r, c):
-                return g_base
+                return g_orange
 
-            # Tabby stripes (strictly outside eye zone)
-            if anim_name in ['IDLE', 'VIBING', 'WATCHING']:
-                if (r == 4 and 12 <= c <= 14) or (r == 5 and 11 <= c <= 15) or (r == 6 and 12 <= c <= 14):
-                    return g_stripe
-                if r in [20, 23, 26] and 18 <= c <= 22:
-                    return g_stripe
-                if r in [19, 22, 25] and 25 <= c <= 28:
-                    return g_stripe
-            elif anim_name in ['TYPING', 'TYPING_MUSIC']:
-                if r in [7, 8, 9] and 15 <= c <= 19:
-                    return g_stripe
-                if r in [18, 20, 22] and 27 <= c <= 33:
-                    return g_stripe
+            is_stripe = False
+            if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING"]:
+                # Forehead stripes (above eyes)
+                if (r == 4 and ((10 <= c <= 12) or (14 <= c <= 16))) or \
+                   (r == 5 and 10 <= c <= 16) or \
+                   (r == 6 and 12 <= c <= 14):
+                    is_stripe = True
+                # Cheeks / whisker bars
+                elif (r in [9, 11] and ((3 <= c <= 5) or (21 <= c <= 23))):
+                    is_stripe = True
+                # Body & flank tiger stripes
+                elif (r in [17, 18] and ((8 <= c <= 11) or (15 <= c <= 18))) or \
+                     (r in [20, 21] and ((6 <= c <= 9) or (16 <= c <= 20))) or \
+                     (r in [23, 24] and ((6 <= c <= 9) or (17 <= c <= 21))) or \
+                     (r in [26, 27] and ((7 <= c <= 10) or (17 <= c <= 22))):
+                    is_stripe = True
+                # Tail tiger rings
+                elif (r in [18, 21, 24, 27] and 24 <= c <= 29):
+                    is_stripe = True
+                # Leg bars
+                elif (r == 29 and ((8 <= c <= 11) or (15 <= c <= 18))):
+                    is_stripe = True
 
-            return g_base
+            elif anim_name in ["TYPING", "TYPING_MUSIC"]:
+                # Forehead stripes
+                if (r in [6, 7] and ((14 <= c <= 16) or (18 <= c <= 20))) or \
+                   (r in [8, 9] and 15 <= c <= 19):
+                    is_stripe = True
+                # Cheeks
+                elif (r in [13, 14] and ((8 <= c <= 10) or (25 <= c <= 27))):
+                    is_stripe = True
+                # Back & flank tiger stripes
+                elif (r in [17, 18] and 26 <= c <= 33) or \
+                     (r in [20, 21] and 26 <= c <= 33) or \
+                     (r in [23, 24] and 25 <= c <= 32):
+                    is_stripe = True
+                # Tail
+                elif (r in [11, 13, 15] and 39 <= c <= 44):
+                    is_stripe = True
 
-        # 8. Calico Skin: Japanese Mi-Ke tri-color with cute sparkling eyes
+            elif anim_name == "DRAGGED":
+                if (r in [4, 5] and 11 <= c <= 17): is_stripe = True
+                if (r in [17, 20, 23, 26] and 8 <= c <= 19): is_stripe = True
+            elif anim_name == "SLEEPING":
+                if (r in [4, 5] and 11 <= c <= 17): is_stripe = True
+                if (r in [19, 22, 25] and 12 <= c <= 22): is_stripe = True
+                if (r in [19, 22, 25] and 24 <= c <= 28): is_stripe = True
+            elif anim_name == "STRETCHING":
+                if (r in [6, 7] and 12 <= c <= 18): is_stripe = True
+                if (r in [16, 20, 24] and 28 <= c <= 42): is_stripe = True
+
+            if is_stripe:
+                return g_brown
+            return g_orange
+
+        # 8. Calico Skin: Left ear-to-eye Orange, Right ear-to-eye Black, Colored Legs, Rest White
         if coat == 'calico':
-            c_cream = QColor(250, 244, 234)
+            c_white = QColor(255, 255, 255)
+            c_orange = QColor(230, 115, 30)
             c_black = QColor(28, 28, 32)
-            c_ginger = QColor(228, 115, 38)
 
-            # Protected eye zone: clean pure cream face, NO PATCHES OVER EYES!
-            if is_eye_protected_zone(anim_name, r, c):
-                return c_cream
+            if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING"]:
+                # Center forehead and muzzle blaze is strictly WHITE!
+                if (12 <= c <= 15 and 3 <= r <= 15):
+                    return c_white
 
-            # Ear patches (strictly rows 1-7, above row 8 eyes)
-            if anim_name in ['IDLE', 'VIBING', 'WATCHING', 'PURRING']:
-                if 1 <= r <= 7 and 4 <= c <= 11:
-                    return c_ginger
-                if 1 <= r <= 7 and 17 <= c <= 24:
-                    return c_black
-                if 18 <= r <= 22 and 6 <= c <= 10:
-                    return c_ginger
-                if 20 <= r <= 25 and 17 <= c <= 22:
-                    return c_black
-                if 18 <= r <= 21 and 25 <= c <= 29:
-                    return c_black
-                if 23 <= r <= 26 and 24 <= c <= 28:
-                    return c_ginger
-            elif anim_name in ['TYPING', 'TYPING_MUSIC']:
-                if 1 <= r <= 9 and 8 <= c <= 14:
-                    return c_ginger
-                if 1 <= r <= 9 and 22 <= c <= 28:
-                    return c_black
-                if 18 <= r <= 23 and 27 <= c <= 32:
-                    return c_black
-            elif anim_name == 'DRAGGED':
-                if 1 <= r <= 7 and 4 <= c <= 10:
-                    return c_ginger
-                if 1 <= r <= 7 and 18 <= c <= 24:
-                    return c_black
-                if 20 <= r <= 26 and 17 <= c <= 22:
-                    return c_black
-            elif anim_name == 'SLEEPING':
-                if 1 <= r <= 7 and 4 <= c <= 11:
-                    return c_ginger
-                if 1 <= r <= 7 and 17 <= c <= 24:
-                    return c_black
-                if 18 <= r <= 24 and 16 <= c <= 22:
-                    return c_black
-            elif anim_name == 'STRETCHING':
-                if 2 <= r <= 8 and 6 <= c <= 12:
-                    return c_ginger
-                if 2 <= r <= 8 and 18 <= c <= 24:
+                # Left ear-to-eye patch (ORANGE)
+                if (1 <= r <= 7 and 4 <= c <= 11) or (8 <= r <= 12 and 4 <= c <= 11):
+                    return c_orange
+
+                # Right ear-to-eye patch (BLACK)
+                if (1 <= r <= 7 and 16 <= c <= 25) or (8 <= r <= 12 and 16 <= c <= 24):
                     return c_black
 
-            return c_cream
+                # Legs: Left leg is ORANGE, Right leg is BLACK!
+                if (26 <= r <= 30 and 8 <= c <= 12):
+                    return c_orange
+                if (26 <= r <= 30 and 15 <= c <= 19):
+                    return c_black
+
+                # Tail patches (organic calico tail)
+                if (17 <= r <= 21 and 25 <= c <= 29):
+                    return c_black
+                if (22 <= r <= 25 and 24 <= c <= 28):
+                    return c_orange
+
+                # Rest of body is pure white!
+                return c_white
+
+            elif anim_name in ["TYPING", "TYPING_MUSIC"]:
+                # Center blaze
+                if (16 <= c <= 19 and 4 <= r <= 16):
+                    return c_white
+
+                # Left ear-to-eye (ORANGE)
+                if (0 <= r <= 9 and 8 <= c <= 15) or (10 <= r <= 15 and 7 <= c <= 15):
+                    return c_orange
+
+                # Right ear-to-eye (BLACK)
+                if (0 <= r <= 9 and 20 <= c <= 29) or (10 <= r <= 15 and 20 <= c <= 28):
+                    return c_black
+
+                # Typing paws: Left paw is ORANGE, Right paw is BLACK!
+                if (25 <= r <= 33 and 13 <= c <= 19):
+                    return c_orange
+                if (24 <= r <= 33 and 22 <= c <= 28):
+                    return c_black
+
+                # Tail
+                if (10 <= r <= 13 and 39 <= c <= 44):
+                    return c_black
+                if (14 <= r <= 17 and 39 <= c <= 44):
+                    return c_orange
+
+                return c_white
+
+            elif anim_name == "DRAGGED":
+                if (11 <= c <= 16 and 4 <= r <= 13): return c_white
+                if (1 <= r <= 12 and 4 <= c <= 10): return c_orange
+                if (1 <= r <= 12 and 17 <= c <= 24): return c_black
+                if (31 <= r <= 36 and 6 <= c <= 10): return c_orange
+                if (31 <= r <= 36 and 16 <= c <= 20): return c_black
+                return c_white
+
+            elif anim_name == "SLEEPING":
+                if (11 <= c <= 16 and 4 <= r <= 13): return c_white
+                if (1 <= r <= 12 and 4 <= c <= 10): return c_orange
+                if (1 <= r <= 12 and 17 <= c <= 24): return c_black
+                if (26 <= r <= 30 and 11 <= c <= 16): return c_orange
+                if (18 <= r <= 23 and 24 <= c <= 28): return c_black
+                return c_white
+
+            elif anim_name == "STRETCHING":
+                if (13 <= c <= 17 and 6 <= r <= 18): return c_white
+                if (2 <= r <= 18 and 6 <= c <= 12): return c_orange
+                if (2 <= r <= 18 and 18 <= c <= 24): return c_black
+                if (28 <= r <= 32 and 10 <= c <= 14): return c_orange
+                if (28 <= r <= 32 and 20 <= c <= 24): return c_black
+                return c_white
 
         return cat_body_color
 
