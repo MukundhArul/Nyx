@@ -15,20 +15,25 @@ Nyx has received a major upgrade with cute new accessories, smart media tracking
 - **🎩 Wardrobe & Cute Pixel Accessories:**
   - Dress up Nyx from the new **Wardrobe** tab in Settings or directly from the System Tray menu!
   - 🎀 **Red Ribbon:** A dapper ruby red ribbon bowtie resting right below the neck.
+  - 🧣 **Winter Scarf:** A warm festive crimson knit scarf wrapped cozily with dangling tassel fringe.
+  - 🎉 **Party Hat:** A joyful festive cone party hat featuring colorful confetti stripes and a fluffy pom-pom.
   - 👑 **Golden Crown:** Sparkling royal gold crown with ruby and sapphire jewel insets, centered proudly on the head between the ears.
   - 🧙 **Wizard Hat:** Pointed mystical purple wizard hat with a golden star band.
   - 🧠 **Smart Context Hiding:** Accessories automatically tuck away while typing on the keyboard or jamming with headphones so there is never visual overlap or clutter.
 - **🎵 "Now Playing" Track Pop-Up:**
-  - When you listen to music on Spotify or supported media players, Nyx automatically pops up a cute speech bubble announcing the song title (e.g. `🎵 Now Playing: Starboy`) as soon as the track changes.
+  - When you listen to music on Spotify or supported media players, Nyx automatically pops up a cute speech bubble announcing the song title (e.g. `🎵 Now Playing: Starboy`) as soon as the track changes. Click directly on the bubble to dismiss it immediately!
 - **🧘 Authentic Stretch Break Reminder & Animation:**
   - Nyx now reminds you to stretch every 30 minutes with a dedicated 6-frame Comnyang stretching animation (arched back, anchored front paws, squint eyes `><`, and curled tail).
   - Includes a **"Stretch Now"** button in settings to trigger your break anytime.
-- **🎨 Curated Dark Coat Presets & 3 Fixed Sizes:**
-  - Replaced clumsy color wheels with 4 distinct, aesthetic dark coat shades:
+- **🎨 Curated Dark Coats, Feline Breeds & 3 Fixed Sizes:**
+  - Choose between sleek dark coats and special procedural cat breed patterns:
     - 🖤 **Midnight Black**
     - 🌑 **Charcoal Slate**
     - ☕ **Espresso Brown**
     - 🌌 **Abyssal Navy**
+    - 🎩 **Tuxedo:** Crisp white chest bib and white socks on a sleek midnight coat.
+    - 🧡 **Ginger Tabby:** Vibrant marmalade orange with warm caramel tabby stripes and cream bib.
+    - 🎨 **Calico:** Whimsical tri-color pattern with ginger orange and obsidian black patches on a warm cream base.
   - Pick between 3 crisp pixel sizes: **Small (2x)**, **Medium (3x)**, and **Large (4x)**.
 - **✨ Pixel-Perfect Tail & Animation Polishing:**
   - Connected tail in all states (Idle, Sleeping, Dragging, Listening).
@@ -121,7 +126,7 @@ Accessories automatically adjust and suppress themselves depending on what Nyx i
 
 ```mermaid
 flowchart LR
-    ACC["Equipped Accessory<br>(Ribbon, Crown, Wizard Hat)"] --> CHECK{"Current State?"}
+    ACC["Equipped Accessory<br>(Ribbon, Scarf, Party Hat, Crown, Wizard Hat)"] --> CHECK{"Current State?"}
     CHECK -->|"Typing (Keyboard)"| HIDE1["❌ Auto-Hidden<br>(Clear view of typing)"]
     CHECK -->|"Music (Headphones)"| HIDE2["❌ Auto-Hidden<br>(No headphone collision)"]
     CHECK -->|"Stretching (Break)"| HIDE3["❌ Auto-Hidden<br>(Clean body posture)"]
@@ -190,14 +195,15 @@ pyinstaller --noconfirm --onefile --windowed --name Nyx_Cat --icon=cat.ico app.p
 
 * **Right-Click Nyx or System Tray Icon**:
   - Open **Settings** dialog
-  - Quick-switch **Wardrobe Accessories** (None, Red Ribbon, Golden Crown, Wizard Hat)
+  - Quick-switch **Wardrobe Accessories** (None, Red Ribbon, Winter Scarf, Party Hat, Wizard Hat, Golden Crown)
+  - Quick-switch **Coat Presets & Breeds** (Midnight Black, Charcoal Slate, Abyssal Navy, Espresso Brown, Tuxedo, Ginger Tabby, Calico)
   - Quick-trigger **Stretch Now**
   - Toggle **Always on Top**
   - Reset to Default or Exit Nyx
 
 * **Tabbed Settings Window**:
-  - **🎩 Wardrobe**: Preview and equip accessories with one click.
-  - **🎨 Appearance**: Choose between Midnight Black, Charcoal Slate, Espresso Brown, and Abyssal Navy coats; select Small (2x), Medium (3x), or Large (4x) cat sizes; toggle microphone reactions.
+  - **🎩 Wardrobe**: Preview and equip accessories in a clean 2-column grid.
+  - **🎨 Appearance**: Choose between sleek dark coats and special feline breeds (Tuxedo, Ginger Tabby, Calico); select Small (2x), Medium (3x), or Large (4x) cat sizes; toggle typing paw tap reactions.
   - **⏱️ Timers**: Configure Pomodoro study/work intervals, break reminders, and pinned message bubbles.
 
 ---
