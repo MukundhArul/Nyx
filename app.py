@@ -32,7 +32,7 @@ DEFAULT_SETTINGS = {
     "pomo_focus_min": 25,
     "pomo_break_min": 5,
     "reminders": [],
-    "matrix_mode": False,
+    "always_on_top": True,
     "matrix_r": 24,
     "matrix_g": 24,
     "matrix_b": 27,
@@ -1498,6 +1498,17 @@ class SettingsWindow(QWidget):
         
         color_group.setLayout(color_layout)
         app_layout.addWidget(color_group)
+
+        # Behavior & Reactions
+        beh_group = QGroupBox("Behavior")
+        beh_layout = QVBoxLayout()
+        self.typing_cb = QCheckBox("React to typing (tap paws along with keystrokes)")
+        self.typing_cb.setChecked(self.pet.settings.get("react_to_typing", True))
+        self.typing_cb.stateChanged.connect(self.on_typing_changed)
+        beh_layout.addWidget(self.typing_cb)
+        beh_group.setLayout(beh_layout)
+        app_layout.addWidget(beh_group)
+
         app_layout.addStretch()
         tab_appearance.setLayout(app_layout)
         
@@ -1508,12 +1519,6 @@ class SettingsWindow(QWidget):
         gen_layout = QVBoxLayout()
         gen_layout.setContentsMargins(10, 12, 10, 10)
         gen_layout.setSpacing(10)
-        
-        # React to typing
-        self.typing_cb = QCheckBox("React to typing")
-        self.typing_cb.setChecked(self.pet.settings["react_to_typing"])
-        self.typing_cb.stateChanged.connect(self.on_typing_changed)
-        gen_layout.addWidget(self.typing_cb)
         
         # Intervals / Timers
         int_group = QGroupBox("Timers")
@@ -1705,7 +1710,6 @@ class SettingsWindow(QWidget):
         self.pet.settings["matrix_r"] = r
         self.pet.settings["matrix_g"] = g
         self.pet.settings["matrix_b"] = b
-        self.pet.settings["matrix_mode"] = True
         self.update_preset_buttons_ui()
         self.pet.save_and_apply_settings()
         self.pet.update()
@@ -1740,10 +1744,6 @@ class SettingsWindow(QWidget):
                 }}
             """)
         self.color_status_label.setText(f"Active Shade: <b>{matched_name}</b>")
-
-    def on_matrix_changed(self, val):
-        self.pet.settings["matrix_mode"] = bool(val)
-        self.pet.save_and_apply_settings()
         
     def on_stretch_changed(self, val):
         self.pet.settings["stretch_interval_min"] = val
@@ -1791,8 +1791,14 @@ class MonitorThread(QThread):
     track_changed = pyqtSignal(str)
 
     def run(self):
+        last_move_time = 0.0
+
         def on_move(x, y):
-            self.input_activity.emit()
+            nonlocal last_move_time
+            now = time.time()
+            if now - last_move_time >= 0.5:
+                last_move_time = now
+                self.input_activity.emit()
         
         def on_click(x, y, button, pressed):
             self.input_activity.emit()
@@ -1813,6 +1819,7 @@ class MonitorThread(QThread):
         kernel32 = ctypes.windll.kernel32
         psapi = ctypes.windll.psapi
         
+        WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, wintypes.HWND, wintypes.LPARAM)
         last_track = ""
         
         while True:
@@ -1865,7 +1872,6 @@ class MonitorThread(QThread):
                     return True
 
                 try:
-                    WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, wintypes.HWND, wintypes.LPARAM)
                     user32.EnumWindows(WNDENUMPROC(enum_spotify_cb), 0)
                 except Exception:
                     pass
@@ -1897,61 +1903,6 @@ class MonitorThread(QThread):
             except Exception:
                 pass
             time.sleep(1)
-
-
-def epx_scale(frame):
-    height = len(frame)
-    width = max((len(r) for r in frame), default=0)
-    out = [["." for _ in range(width * 2)] for _ in range(height * 2)]
-    def get_p(x, y):
-        if y < 0 or y >= height or x < 0 or x >= len(frame[y]): return "."
-        return frame[y][x]
-    for y in range(height):
-        for x in range(width):
-            P = get_p(x, y)
-            A = get_p(x, y - 1)
-            B = get_p(x + 1, y)
-            C = get_p(x, y + 1)
-            D = get_p(x - 1, y)
-            P1, P2, P3, P4 = P, P, P, P
-            if A != C and B != D:
-                if A == D: P1 = A
-                if A == B: P2 = B
-                if C == D: P3 = C
-                if C == B: P4 = B
-                
-            if P == 'P':
-                if P1 == 'P' and (x + y) % 2 == 0: P1 = 'L'
-                if P2 == 'P' and (x + y) % 3 == 0: P2 = 'D'
-                if P3 == 'P' and (x + y) % 3 == 1: P3 = 'D'
-                if P4 == 'P' and (x + y) % 2 == 1: P4 = 'L'
-                
-            out[y*2][x*2] = P1
-            out[y*2][x*2+1] = P2
-            out[y*2+1][x*2] = P3
-            out[y*2+1][x*2+1] = P4
-    return ["".join(row) for row in out]
-
-# Apply EPX to all matrix frames
-MATRIX_FRAMES_HIGH_RES = {}
-scaled_ids = {}
-for anim_name, frames in MATRIX_FRAMES.items():
-    if id(frames) in scaled_ids:
-        MATRIX_FRAMES_HIGH_RES[anim_name] = scaled_ids[id(frames)]
-        continue
-    if isinstance(frames, list) and isinstance(frames[0], list):
-        new_frames = []
-        for frame in frames:
-            if isinstance(frame[0], str):
-                new_frames.append(epx_scale(frame))
-            else:
-                new_frames.append(frame)
-        MATRIX_FRAMES_HIGH_RES[anim_name] = new_frames
-        scaled_ids[id(frames)] = new_frames
-    else:
-        MATRIX_FRAMES_HIGH_RES[anim_name] = frames
-
-
 
 
 def generate_mochi_sprite(base_matrix, stretch_rows=0):
