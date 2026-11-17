@@ -150,7 +150,7 @@ ACCESSORIES = {
 
 COAT_PRESETS = {
     "black": {
-        "name": "Midnight Black",
+        "name": "Black",
         "icon": "🌑",
         "r": 24, "g": 24, "b": 27,
         "outline_r": 20, "outline_g": 20, "outline_b": 20,
@@ -158,8 +158,8 @@ COAT_PRESETS = {
         "hex": "#18181B",
         "desc": "Classic sleek obsidian midnight shade"
     },
-    "charcoal": {
-        "name": "Charcoal Slate",
+    "slate": {
+        "name": "Slate",
         "icon": "🌪️",
         "r": 72, "g": 78, "b": 92,
         "outline_r": 40, "outline_g": 44, "outline_b": 54,
@@ -168,7 +168,7 @@ COAT_PRESETS = {
         "desc": "Cool smoky graphite slate shade"
     },
     "navy": {
-        "name": "Abyssal Navy",
+        "name": "Navy",
         "icon": "🌊",
         "r": 34, "g": 56, "b": 96,
         "outline_r": 18, "outline_g": 30, "outline_b": 54,
@@ -177,13 +177,40 @@ COAT_PRESETS = {
         "desc": "Deep oceanic midnight starlight blue"
     },
     "espresso": {
-        "name": "Espresso Brown",
+        "name": "Espresso",
         "icon": "☕",
         "r": 84, "g": 52, "b": 38,
         "outline_r": 48, "outline_g": 28, "outline_b": 20,
         "nose_r": 255, "nose_g": 155, "nose_b": 160,
         "hex": "#543426",
         "desc": "Rich roasted coffee mocha brown"
+    },
+    "tuxedo": {
+        "name": "Tuxedo",
+        "icon": "🎩",
+        "r": 24, "g": 24, "b": 27,
+        "outline_r": 20, "outline_g": 20, "outline_b": 20,
+        "nose_r": 255, "nose_g": 140, "nose_b": 165,
+        "hex": "#24242A",
+        "desc": "Dapper black cat with crisp white chest ascot"
+    },
+    "ginger": {
+        "name": "Ginger",
+        "icon": "🧡",
+        "r": 230, "g": 120, "b": 38,
+        "outline_r": 150, "outline_g": 60, "outline_b": 15,
+        "nose_r": 255, "nose_g": 145, "nose_b": 160,
+        "hex": "#E67826",
+        "desc": "Warm marmalade tabby with sweet cinnamon stripes"
+    },
+    "calico": {
+        "name": "Calico",
+        "icon": "🎨",
+        "r": 250, "g": 244, "b": 234,
+        "outline_r": 200, "outline_g": 190, "outline_b": 180,
+        "nose_r": 255, "nose_g": 140, "nose_b": 165,
+        "hex": "#FAF4EA",
+        "desc": "Japanese Mi-Ke tri-color with cute sparkling eyes"
     }
 }
 
@@ -201,6 +228,32 @@ MATRIX_COLORS = {
     'M': QColor(255, 75, 95),    # Coral red headphones
     'L': QColor(42, 42, 42),     # Subtle fur highlight
 }
+
+def is_eye_pupil(anim_name, r, c):
+    """Accurately identifies pupil pixels (char 'P' inside eye white ring) across all animations."""
+    if anim_name in ["IDLE", "VIBING", "WATCHING"]:
+        return (9 <= r <= 11) and ((7 <= c <= 9) or (18 <= c <= 20))
+    elif anim_name in ["TYPING", "TYPING_MUSIC"]:
+        return (12 <= r <= 14) and ((12 <= c <= 14) or (21 <= c <= 23))
+    elif anim_name == "DRAGGED":
+        return (9 <= r <= 11) and ((7 <= c <= 8) or (19 <= c <= 20))
+    elif anim_name == "STRETCHING":
+        return (15 <= r <= 17) and ((9 <= c <= 11) or (20 <= c <= 22))
+    elif anim_name == "PURRING":
+        return (9 <= r <= 10) and ((7 <= c <= 9) or (18 <= c <= 20))
+    return False
+
+def is_eye_protected_zone(anim_name, r, c):
+    """Zone around eyes and face that should NEVER be overlaid by stripes or patches."""
+    if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING"]:
+        return (8 <= r <= 13) and (5 <= c <= 23)
+    elif anim_name in ["TYPING", "TYPING_MUSIC"]:
+        return (11 <= r <= 15) and (10 <= c <= 26)
+    elif anim_name == "DRAGGED":
+        return (8 <= r <= 13) and (5 <= c <= 23)
+    elif anim_name == "STRETCHING":
+        return (14 <= r <= 18) and (7 <= c <= 25)
+    return False
 
 MATRIX_FRAMES = {
 'IDLE': [
@@ -1520,24 +1573,26 @@ class SettingsWindow(QWidget):
         app_layout.addWidget(size_group)
         self.update_size_buttons_ui()
         
-        # --- Predefined Cat Coats (Solid Dark Shades) ---
-        color_group = QGroupBox("Cat Coat Shades")
+        # --- Predefined Cat Coats (Solid Dark Shades & Special Skins) ---
+        color_group = QGroupBox("Cat Coats & Skins")
         color_layout = QVBoxLayout()
         color_layout.setSpacing(6)
         
-        desc_label = QLabel("Choose a curated dark coat shade for Nyx:")
+        desc_label = QLabel("Choose a coat shade or special cat skin:")
         desc_label.setStyleSheet("color: #a0a5b5; font-size: 11px;")
         color_layout.addWidget(desc_label)
         
-        swatches_layout = QHBoxLayout()
+        swatches_layout = QGridLayout()
         swatches_layout.setSpacing(8)
         
         self.preset_buttons = []
-        for key, info in COAT_PRESETS.items():
+        for idx, (key, info) in enumerate(COAT_PRESETS.items()):
             btn = QPushButton(f"{info['icon']} {info['name']}")
             btn.setCursor(Qt.CursorShape.PointingHandCursor)
             btn.clicked.connect(lambda checked, k=key: self.set_coat_preset(k))
-            swatches_layout.addWidget(btn)
+            row = idx // 4
+            col = idx % 4
+            swatches_layout.addWidget(btn, row, col)
             self.preset_buttons.append((btn, key, info["hex"]))
             
         color_layout.addLayout(swatches_layout)
@@ -1787,20 +1842,23 @@ class SettingsWindow(QWidget):
 
     def update_preset_buttons_ui(self):
         curr_preset = self.pet.settings.get("coat_preset", "black")
+        if curr_preset == "charcoal":
+            curr_preset = "slate"
         matched_info = COAT_PRESETS.get(curr_preset, COAT_PRESETS["black"])
         
         for btn, key, hex_col in self.preset_buttons:
             is_active = (key == curr_preset)
             border_col = "#5c6bc0" if is_active else "#444455"
             border_width = "2px" if is_active else "1px"
+            text_col = '#5c9aff' if is_active else ('#18181B' if key == 'calico' else '#FFFFFF')
             btn.setStyleSheet(f"""
                 QPushButton {{
                     background-color: {hex_col};
-                    color: {'#5c9aff' if is_active else '#FFFFFF'};
+                    color: {text_col};
                     border: {border_width} solid {border_col};
                     border-radius: 5px;
-                    padding: 5px 4px;
-                    font-size: 10px;
+                    padding: 6px 4px;
+                    font-size: 11px;
                     font-weight: {'bold' if is_active else 'normal'};
                 }}
                 QPushButton:hover {{
@@ -2325,6 +2383,8 @@ class PetWidget(QWidget):
 
     def update_tray_coat_checks(self):
         curr = self.settings.get("coat_preset", "black")
+        if curr == "charcoal":
+            curr = "slate"
         if hasattr(self, 'tray_coat_actions'):
             for k, act in self.tray_coat_actions.items():
                 act.setChecked(k == curr)
@@ -2797,6 +2857,164 @@ class PetWidget(QWidget):
         self.update() 
 
     # --- Drawing ---
+    def get_matrix_pixel_color(self, coat, anim_name, r, c, char, cat_body_color, custom_r, custom_g, custom_b):
+        if char == '.':
+            return None
+
+        # 1. Non-body matrix elements (keycaps, headphones, zzzs, dark pupils)
+        if char in ['K', 'k', 'D', 'M', 'B', 'Z']:
+            return MATRIX_COLORS.get(char)
+
+        # 2. Outer outline and whiskers
+        if char == 'W':
+            # For calico in sleeping pose, closed curved eyes are dark obsidian so they are clearly visible
+            if coat == 'calico' and anim_name == 'SLEEPING' and r in [9, 10] and ((5 <= c <= 9) or (16 <= c <= 20)):
+                return QColor(24, 24, 27)
+            return MATRIX_COLORS.get('W', QColor(255, 255, 255))
+
+        # 3. Eye Pupil Handling across all coats (dark pupils with cute specular glints)
+        if is_eye_pupil(anim_name, r, c):
+            if coat in ['ginger', 'calico']:
+                # Cute anime specular glint in top-left of pupil
+                if anim_name in ['IDLE', 'VIBING', 'WATCHING'] and r == 9 and c in [7, 18]:
+                    return QColor(255, 255, 255)
+                elif anim_name in ['TYPING', 'TYPING_MUSIC'] and r == 12 and c in [12, 21]:
+                    return QColor(255, 255, 255)
+                elif anim_name == 'DRAGGED' and r == 9 and c in [7, 19]:
+                    return QColor(255, 255, 255)
+            return QColor(24, 24, 27)
+
+        # 4. Cute Pink Nose & Shading
+        if char == 'N':
+            return MATRIX_COLORS.get('N', QColor(255, 140, 165))
+        if char == 'S':
+            return MATRIX_COLORS.get('S', QColor(20, 20, 20))
+
+        # 5. Solid Dark Coats (Black, Slate, Navy, Espresso)
+        if coat not in ['tuxedo', 'ginger', 'calico']:
+            if char == 'L':
+                return QColor(min(255, custom_r + 20), min(255, custom_g + 20), min(255, custom_b + 20))
+            elif char == 'D':
+                return QColor(max(0, custom_r - 20), max(0, custom_g - 20), max(0, custom_b - 20))
+            return cat_body_color
+
+        # 6. Tuxedo Skin: Sleek black with neat white chest ascot/bib
+        if coat == 'tuxedo':
+            is_bib = False
+            if anim_name in ['IDLE', 'VIBING', 'WATCHING', 'PURRING']:
+                if (r == 15 and 12 <= c <= 14) or \
+                   (r == 16 and 11 <= c <= 15) or \
+                   (r == 17 and 10 <= c <= 16) or \
+                   (r == 18 and 11 <= c <= 15) or \
+                   (r == 19 and 12 <= c <= 14):
+                    is_bib = True
+            elif anim_name in ['TYPING', 'TYPING_MUSIC']:
+                if (r == 16 and 18 <= c <= 20) or \
+                   (r == 17 and 17 <= c <= 21) or \
+                   (r == 18 and 17 <= c <= 21) or \
+                   (r == 19 and 18 <= c <= 20):
+                    is_bib = True
+            elif anim_name == 'DRAGGED':
+                if (r in [15, 16, 17] and 11 <= c <= 16) or (r == 18 and 12 <= c <= 15):
+                    is_bib = True
+            elif anim_name == 'SLEEPING':
+                if r in [16, 17, 18] and 11 <= c <= 15:
+                    is_bib = True
+            elif anim_name == 'STRETCHING':
+                if r in [19, 20, 21] and 12 <= c <= 15:
+                    is_bib = True
+
+            if is_bib:
+                return QColor(255, 255, 255)
+            return cat_body_color
+
+        # 7. Ginger Tabby Skin: Warm marmalade with cinnamon tabby stripes & cream bib
+        if coat == 'ginger':
+            g_base = cat_body_color if (getattr(self, 'is_angry', False) and getattr(self, 'typing_heat', 0.0) > 0.35) else QColor(230, 120, 38)
+            g_stripe = QColor(165, 65, 15)
+            g_cream = QColor(255, 242, 225)
+
+            # Chest bib
+            if anim_name in ['IDLE', 'VIBING', 'WATCHING', 'PURRING'] and (r in [15, 16, 17, 18] and 11 <= c <= 15):
+                return g_cream
+            if anim_name in ['TYPING', 'TYPING_MUSIC'] and (r in [16, 17, 18] and 18 <= c <= 20):
+                return g_cream
+
+            # Protected eye zone: strictly base fur, NO STRIPES OVER EYES!
+            if is_eye_protected_zone(anim_name, r, c):
+                return g_base
+
+            # Tabby stripes (strictly outside eye zone)
+            if anim_name in ['IDLE', 'VIBING', 'WATCHING']:
+                if (r == 4 and 12 <= c <= 14) or (r == 5 and 11 <= c <= 15) or (r == 6 and 12 <= c <= 14):
+                    return g_stripe
+                if r in [20, 23, 26] and 18 <= c <= 22:
+                    return g_stripe
+                if r in [19, 22, 25] and 25 <= c <= 28:
+                    return g_stripe
+            elif anim_name in ['TYPING', 'TYPING_MUSIC']:
+                if r in [7, 8, 9] and 15 <= c <= 19:
+                    return g_stripe
+                if r in [18, 20, 22] and 27 <= c <= 33:
+                    return g_stripe
+
+            return g_base
+
+        # 8. Calico Skin: Japanese Mi-Ke tri-color with cute sparkling eyes
+        if coat == 'calico':
+            c_cream = QColor(250, 244, 234)
+            c_black = QColor(28, 28, 32)
+            c_ginger = QColor(228, 115, 38)
+
+            # Protected eye zone: clean pure cream face, NO PATCHES OVER EYES!
+            if is_eye_protected_zone(anim_name, r, c):
+                return c_cream
+
+            # Ear patches (strictly rows 1-7, above row 8 eyes)
+            if anim_name in ['IDLE', 'VIBING', 'WATCHING', 'PURRING']:
+                if 1 <= r <= 7 and 4 <= c <= 11:
+                    return c_ginger
+                if 1 <= r <= 7 and 17 <= c <= 24:
+                    return c_black
+                if 18 <= r <= 22 and 6 <= c <= 10:
+                    return c_ginger
+                if 20 <= r <= 25 and 17 <= c <= 22:
+                    return c_black
+                if 18 <= r <= 21 and 25 <= c <= 29:
+                    return c_black
+                if 23 <= r <= 26 and 24 <= c <= 28:
+                    return c_ginger
+            elif anim_name in ['TYPING', 'TYPING_MUSIC']:
+                if 1 <= r <= 9 and 8 <= c <= 14:
+                    return c_ginger
+                if 1 <= r <= 9 and 22 <= c <= 28:
+                    return c_black
+                if 18 <= r <= 23 and 27 <= c <= 32:
+                    return c_black
+            elif anim_name == 'DRAGGED':
+                if 1 <= r <= 7 and 4 <= c <= 10:
+                    return c_ginger
+                if 1 <= r <= 7 and 18 <= c <= 24:
+                    return c_black
+                if 20 <= r <= 26 and 17 <= c <= 22:
+                    return c_black
+            elif anim_name == 'SLEEPING':
+                if 1 <= r <= 7 and 4 <= c <= 11:
+                    return c_ginger
+                if 1 <= r <= 7 and 17 <= c <= 24:
+                    return c_black
+                if 18 <= r <= 24 and 16 <= c <= 22:
+                    return c_black
+            elif anim_name == 'STRETCHING':
+                if 2 <= r <= 8 and 6 <= c <= 12:
+                    return c_ginger
+                if 2 <= r <= 8 and 18 <= c <= 24:
+                    return c_black
+
+            return c_cream
+
+        return cat_body_color
+
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
@@ -2921,17 +3139,12 @@ class PetWidget(QWidget):
 
         # 3. Draw Cat Matrix
         painter.setPen(Qt.PenStyle.NoPen)
+        coat = self.settings.get("coat_preset", "black")
+        if coat == "charcoal":
+            coat = "slate"
         for r, row_str in enumerate(frame_data):
             for c, char in enumerate(row_str):
-                if char == 'L':
-                    color = QColor(min(255, custom_r + 20), min(255, custom_g + 20), min(255, custom_b + 20))
-                elif char == 'D':
-                    color = QColor(max(0, custom_r - 20), max(0, custom_g - 20), max(0, custom_b - 20))
-                elif char in MATRIX_COLORS:
-                    color = MATRIX_COLORS[char]
-                else:
-                    color = None
-                    
+                color = self.get_matrix_pixel_color(coat, anim_name, r, c, char, cat_body_color, custom_r, custom_g, custom_b)
                 if color:
                     painter.setBrush(color)
                     px_x = int(dest_x + c * pixel_size)

@@ -23,12 +23,16 @@ Nyx has received a major upgrade with cute new accessories, smart media tracking
 - **🧘 Authentic Stretch Break Reminder & Animation:**
   - Nyx now reminds you to stretch every 30 minutes with a dedicated 6-frame Comnyang stretching animation (arched back, anchored front paws, squint eyes `><`, and curled tail).
   - Includes a **"Stretch Now"** button in settings to trigger your break anytime.
-- **🎨 4 Curated Dark Coat Presets & 3 Fixed Sizes:**
-  - Distinct, aesthetic dark coat shades tailored to look sharp on any display:
-    - 🖤 **Midnight Black**
-    - 🌑 **Charcoal Slate**
-    - ☕ **Espresso Brown**
-    - 🌌 **Abyssal Navy**
+- **🎨 7 Curated Coats & Feline Skins (with Crisp Eyes & Zero Overlay):**
+  - Choose between sleek solid shades and specially crafted feline skins:
+    - 🌑 **Black:** Classic sleek obsidian midnight shade.
+    - 🌪️ **Slate:** Cool smoky graphite slate shade.
+    - 🌊 **Navy:** Deep oceanic midnight starlight blue.
+    - ☕ **Espresso:** Rich roasted coffee mocha brown.
+    - 🎩 **Tuxedo:** Dapper black cat with a neat white chest ascot.
+    - 🧡 **Ginger:** Warm marmalade tabby with sweet cinnamon stripes and bright white eye rings.
+    - 🎨 **Calico:** Traditional Japanese Mi-Ke tri-color with cute sparkling eyes.
+  - 👁️ **Eye Protection:** Face and eye zones are strictly protected—stripes and patches never cut across the eyes, paws, or keyboard.
   - Pick between 3 crisp pixel sizes: **Small (2x)**, **Medium (3x)**, and **Large (4x)**.
 - **✨ Pixel-Perfect Tail & Animation Polishing:**
   - Connected tail in all states (Idle, Sleeping, Dragging, Listening).
@@ -191,14 +195,14 @@ pyinstaller --noconfirm --onefile --windowed --name Nyx_Cat --icon=cat.ico app.p
 * **Right-Click Nyx or System Tray Icon**:
   - Open **Settings** dialog
   - Quick-switch **Wardrobe Accessories** (None, Golden Crown, Wizard Hat, Party Hat)
-  - Quick-switch **Coat Presets** (Midnight Black, Charcoal Slate, Abyssal Navy, Espresso Brown)
+  - Quick-switch **Coat Presets & Skins** (Black, Slate, Navy, Espresso, Tuxedo, Ginger, Calico)
   - Quick-trigger **Stretch Now**
   - Toggle **Always on Top**
   - Reset to Default or Exit Nyx
 
 * **Tabbed Settings Window**:
   - **🎩 Wardrobe**: Preview and equip head accessories in a clean 2x2 card grid.
-  - **🎨 Appearance**: Choose between 4 curated dark coats (Midnight Black, Charcoal Slate, Abyssal Navy, Espresso Brown); select Small (2x), Medium (3x), or Large (4x) cat sizes; toggle typing paw tap reactions.
+  - **🎨 Appearance**: Choose between 7 coats and feline skins (Black, Slate, Navy, Espresso, Tuxedo, Ginger, Calico); select Small (2x), Medium (3x), or Large (4x) cat sizes; toggle typing paw tap reactions.
   - **⏱️ Timers**: Configure Pomodoro study/work intervals, break reminders, and pinned message bubbles.
 
 ---
