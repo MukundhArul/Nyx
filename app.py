@@ -288,8 +288,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
         [
             ".......WWW.......WWW............",
@@ -322,8 +323,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPWPPPW.",
             "....WPPPPPPPPPPPPPPPPPPPPWPPPW..",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
         [
             ".......WWW.......WWW............",
@@ -356,8 +358,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
         [
             ".......WWW.......WWW............",
@@ -390,8 +393,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
     ],
     'TYPING': [
@@ -602,8 +606,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
         [
             ".......WWW.......WWW............",
@@ -636,8 +641,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPWPPPW.",
             "....WPPPPPPPPPPPPPPPPPPPPWPPPW..",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
         [
             ".......WWW.......WWW............",
@@ -670,8 +676,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
     ],
     'SLEEPING': [
@@ -706,8 +713,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
         [
             ".......WWW.......WWW............",
@@ -740,8 +748,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPWPPPW.",
             "....WPPPPPPPPPPPPPPPPPPPPWPPPW..",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
     ],
 'DRAGGED': [
@@ -901,8 +910,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
         [
             ".......WWW.......WWW............",
@@ -935,8 +945,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPWPPPW.",
             "....WPPPPPPPPPPPPPPPPPPPPWPPPW..",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
         [
             ".......WWW.......WWW............",
@@ -969,8 +980,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
         [
             ".......WWW.......WWW............",
@@ -1003,8 +1015,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
     ],
 'WATCHING': [
@@ -1039,8 +1052,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
         [
             ".......WWW.......WWW............",
@@ -1073,8 +1087,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPWPPPW.",
             "....WPPPPPPPPPPPPPPPPPPPPWPPPW..",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
         [
             ".......WWW.......WWW............",
@@ -1107,8 +1122,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
         [
             ".......WWW.......WWW............",
@@ -1141,8 +1157,9 @@ MATRIX_FRAMES = {
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
             "....WWWWPPPPPPPPPPPPWWWWPPPPW...",
-            "......WWWWPPWWWWPPWWWWWWWWWWW...",
-            "........WWWWWWWWWWWW............",
+            ".....WWWPPPPWWWWPPPPWWWWWWWWW...",
+            ".......WPPPPW..WPPPPW...........",
+            ".......WWWWWW..WWWWWW...........",
         ],
     ],
     'STRETCHING': [
@@ -2912,7 +2929,7 @@ class PetWidget(QWidget):
                    (r == 25 and 12 <= c <= 14):
                     is_white = True
                 # White mittens / socks on paws
-                elif (r in [29, 30] and ((8 <= c <= 12) or (14 <= c <= 18))):
+                elif (29 <= r <= 32 and ((8 <= c <= 12) or (15 <= c <= 19))):
                     is_white = True
                 elif (r in [28, 29] and 20 <= c <= 24):
                     is_white = True
@@ -2934,6 +2951,8 @@ class PetWidget(QWidget):
                 if (16 <= r <= 22 and 10 <= c <= 16):
                     is_white = True
                 if (r in [27, 28, 29] and 11 <= c <= 15):
+                    is_white = True
+                elif (29 <= r <= 32 and ((8 <= c <= 12) or (15 <= c <= 19))):
                     is_white = True
             elif anim_name == "STRETCHING":
                 if (18 <= r <= 24 and 11 <= c <= 16):
@@ -3050,8 +3069,8 @@ class PetWidget(QWidget):
                 if (22 <= r <= 27 and 17 <= c <= 25): return c_orange
 
                 # Paws: Left black sock, Right orange sock
-                if (27 <= r <= 30 and 8 <= c <= 12): return c_black
-                if (27 <= r <= 30 and 15 <= c <= 19): return c_orange
+                if (27 <= r <= 32 and 8 <= c <= 12): return c_black
+                if (27 <= r <= 32 and 15 <= c <= 19): return c_orange
 
                 # Tail: 3 abstract segments
                 if (16 <= r <= 19 and 25 <= c <= 30): return c_orange
@@ -3144,8 +3163,8 @@ class PetWidget(QWidget):
                 if (24 <= r <= 26 and 13 <= c <= 15): return c_orange
                 if (22 <= r <= 27 and 17 <= c <= 25): return c_orange
 
-                if (27 <= r <= 30 and 8 <= c <= 12): return c_black
-                if (27 <= r <= 30 and 15 <= c <= 19): return c_orange
+                if (27 <= r <= 32 and 8 <= c <= 12): return c_black
+                if (27 <= r <= 32 and 15 <= c <= 19): return c_orange
 
                 if (16 <= r <= 19 and 25 <= c <= 30): return c_orange
                 if (20 <= r <= 23 and 25 <= c <= 30): return c_black
