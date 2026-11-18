@@ -16,3 +16,7 @@ dist/
 releases/
 *.spec
 *.exe
+
+# Scratch test directories
+scratch/
+
