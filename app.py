@@ -781,19 +781,19 @@ MATRIX_FRAMES = {
             "...WPPWPPPPPPPPPPPPPPWPPW.......",
             "...WWPWPPPPPPPPPPPPPPWPWW.......",
             "....WWPPPPPPPPPPPPPPPPWW........",
-            "......WPPPPPPPPPPPPPPW..........",
-            "......WPPPPPPPPPPPPPPW..........",
+            ".....WPPPPPPPPPPPPPPPPW.........",
             "......WPPPPPPPPPPPPPPW..........",
             "......WPPPPPPPPPPPPPPW...WWW....",
-            "......WPPPPPPPPPPPPPPW..WPPPW...",
-            ".....WWPPPPPPPPPPPPPPWWPPPPPW...",
-            ".....WPPPPPPPPPPPPPPPPPPPPPW....",
-            ".....WPPPPPPPPPPPPPPPPPPPPW.....",
-            ".....WPPPPPPPPPPPPPPPPPPWW......",
-            ".....WPPPPPW....WWPPPPPW........",
-            ".....WPPPPPW.....WPPPPPW........",
-            ".....WPPPPPW.....WWWWWW.........",
-            ".....WWWWWW.....................",
+            ".....WPPPPPPPPPPPPPPPPW.WPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPWWPPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPW....",
+            "....WPPPPPPPPPPPPPPPPPPPPPW.....",
+            ".....WPPPPPPPPPPPPPPPPPPPW......",
+            ".....WPPPPPPWWWWPPPPPPW.........",
+            ".....WPPPPPW....WPPPPPW.........",
+            ".....WPPPPPW.....WWWWW..........",
+            ".....WPPPPPW....................",
+            "......WWWWW.....................",
         ],
         [
             ".......WWW........WWW...........",
@@ -822,19 +822,19 @@ MATRIX_FRAMES = {
             "...WPPWPPPPPPPPPPPPPPWPPW.......",
             "...WWPWPPPPPPPPPPPPPPWPWW.......",
             "....WWPPPPPPPPPPPPPPPPWW........",
+            ".....WPPPPPPPPPPPPPPPPW.........",
             "......WPPPPPPPPPPPPPPW..........",
-            "......WPPPPPPPPPPPPPPW..........",
-            "......WPPPPPPPPPPPPPPW..........",
-            "......WPPPPPPPPPPPPPPW...WWW....",
-            "......WPPPPPPPPPPPPPPW..WPPPW...",
-            ".....WWPPPPPPPPPPPPPPWWPPPPPW...",
-            ".....WPPPPPPPPPPPPPPPPPPPPPW....",
-            ".....WPPPPPPPPPPPPPPPPPPPPW.....",
-            ".....WPPPPPPPPPPPPPPPPPPWW......",
-            ".....WPPPPPWW....WWPPPPPPW......",
-            ".....WPPPPPW......WPPPPPPW......",
-            ".....WPPPPPW......WPPPPPPW......",
-            ".....WWWWWW......WWWWWW.........",
+            "......WPPPPPPPPPPPPPPW....WWW...",
+            ".....WPPPPPPPPPPPPPPPPW..WPPPW..",
+            "....WPPPPPPPPPPPPPPPPPPW.WPPPW..",
+            "....WPPPPPPPPPPPPPPPPPPPWWPPW...",
+            "....WPPPPPPPPPPPPPPPPPPPPPPW....",
+            ".....WPPPPPPPPPPPPPPPPPPPW......",
+            ".....WPPPPPPWWWWPPPPPPW.........",
+            ".....WPPPPPW....WPPPPPW.........",
+            ".....WPPPPPW....WPPPPPW.........",
+            "......WWWWW......WWWWW..........",
+            "................................",
         ],
         [
             ".......WWW........WWW...........",
@@ -863,19 +863,19 @@ MATRIX_FRAMES = {
             "...WPPWPPPPPPPPPPPPPPWPPW.......",
             "...WWPWPPPPPPPPPPPPPPWPWW.......",
             "....WWPPPPPPPPPPPPPPPPWW........",
+            ".....WPPPPPPPPPPPPPPPPW.........",
             "......WPPPPPPPPPPPPPPW..........",
-            "......WPPPPPPPPPPPPPPW..........",
-            "......WPPPPPPPPPPPPPPW....WW....",
-            "......WPPPPPPPPPPPPPPW...WPPPW..",
-            "......WPPPPPPPPPPPPPPW...WPPPW..",
-            ".....WWPPPPPPPPPPPPPPWWPPPPPPW..",
-            ".....WPPPPPPPPPPPPPPPPPPWWPPW...",
-            ".....WPPPPPPPPPPPPPPPPPPPPPW....",
-            ".....WPPPPPPPPPPPPPPPPPPWW......",
-            ".....WWPPPPPW....WPPPPPW........",
-            "......WPPPPPW....WPPPPPW........",
-            "......WWWWWW.....WPPPPPW........",
-            ".................WWWWWW.........",
+            "......WPPPPPPPPPPPPPPW.....WWW..",
+            ".....WPPPPPPPPPPPPPPPPW...WPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPW..WPPPW.",
+            "....WPPPPPPPPPPPPPPPPPPPWWPPPW..",
+            "....WPPPPPPPPPPPPPPPPPPPPPPW....",
+            ".....WPPPPPPPPPPPPPPPPPPPW......",
+            ".....WPPPPPPWWWWPPPPPPW.........",
+            ".....WPPPPPW....WPPPPPW.........",
+            "......WWWWW.....WPPPPPW.........",
+            "................WPPPPPW.........",
+            ".................WWWWW..........",
         ],
     ],
 'VIBING': [
@@ -2945,7 +2945,7 @@ class PetWidget(QWidget):
             elif anim_name == "DRAGGED":
                 if (15 <= r <= 23 and 10 <= c <= 17):
                     is_white = True
-                if (31 <= r <= 36 and ((6 <= c <= 10) or (16 <= c <= 20))):
+                if (34 <= r <= 38 and ((6 <= c <= 10) or (17 <= c <= 21))):
                     is_white = True
             elif anim_name == "SLEEPING":
                 if (16 <= r <= 22 and 10 <= c <= 16):
@@ -3016,6 +3016,8 @@ class PetWidget(QWidget):
             elif anim_name == "DRAGGED":
                 if (r in [4, 5] and 11 <= c <= 17): is_stripe = True
                 if (r in [17, 20, 23, 26] and 8 <= c <= 19): is_stripe = True
+                if (r in [29, 31] and 24 <= c <= 28): is_stripe = True
+                if (r in [34, 36] and ((7 <= c <= 9) or (18 <= c <= 20))): is_stripe = True
             elif anim_name == "SLEEPING":
                 if (r in [4, 5] and 11 <= c <= 17): is_stripe = True
                 if (r in [19, 22, 25] and 12 <= c <= 22): is_stripe = True
@@ -3130,11 +3132,11 @@ class PetWidget(QWidget):
                 if (21 <= r <= 28 and 13 <= c <= 23): return c_orange
 
                 # Dangling legs:
-                if (29 <= r <= 36 and 6 <= c <= 11): return c_orange
-                if (29 <= r <= 36 and 15 <= c <= 20): return c_black
+                if (29 <= r <= 38 and 6 <= c <= 11): return c_orange
+                if (29 <= r <= 38 and 16 <= c <= 21): return c_black
 
                 # Tail
-                if (29 <= r <= 34 and 22 <= c <= 27): return c_black
+                if (27 <= r <= 34 and 23 <= c <= 30): return c_black
 
                 return c_grey
 
