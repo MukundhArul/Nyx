@@ -8,12 +8,34 @@
 
 ---
 
-## 🌟 What's New in v1.2.0?
+## 🌟 What's New in v1.3.0?
 
-Nyx has received a major upgrade with cute new accessories, smart media tracking, posture reminders, and aesthetic refinements!
+Nyx has received a major visual polish and feline grace upgrade, featuring extended resting paws, an organic scruff-drag redesign, seamless connected tail anatomy, and hand-crafted feline coats!
 
-- **🎩 Wardrobe & Head Accessories:**
-  - Dress up Nyx from the **Wardrobe** tab in Settings or directly from the System Tray menu!
+- **🐾 Extended Front Paws & Rounded Mittens:**
+  - Front paws extend forward naturally in `IDLE`, `SLEEPING`, `VIBING` (music), `WATCHING`, and `PURRING` animations.
+  - Features individual rounded kitten mitten paw contours and clean floor seals behind the paws for a relaxed, resting loaf posture.
+- **🐱 Organic Dragged Scruff Animation Redesign:**
+  - Soft feline waist taper (`width 18 → 16`) and rounded hips (`width 20`) replacing the rigid 5-row rectangular column.
+  - Symmetrical 7-pixel dangling legs with cute rounded mitten paws (`..WWWWW..`) replacing the flat wooden blocks.
+  - Fluid bicycle pedaling kick cycle across 3 frames with 1-pixel vertical stepping (`Frame 0: Left 38, Right 36` → `Frame 1: Mid-swing 37` → `Frame 2: Left 36, Right 38`).
+  - Glitch-free curving tail swaying naturally by 1 pixel per frame with zero internal white streak artifacts.
+- **✨ Pixel-Perfect Connected Sitting Tail:**
+  - Completely re-engineered tail base across rows 25–28 in all sitting poses.
+  - 100% physically connected body-to-tail pixels (verified via BFS graph traversal).
+  - Completely eliminated both the disconnected floating tail gap and the jagged rectangular bottom-right rump shelf.
+- **🎨 7 Curated Coats & Feline Skins (with Crisp Protected Eyes):**
+  - Choose between sleek solid shades and hand-crafted feline coats:
+    - 🌑 **Black:** Classic sleek obsidian midnight shade.
+    - 🌪️ **Slate:** Cool smoky graphite slate shade.
+    - 🌊 **Navy:** Deep oceanic midnight starlight blue.
+    - ☕ **Espresso:** Rich roasted coffee mocha brown.
+    - 🎩 **Tuxedo:** Dapper black cat with a neat white chest ascot and cute white ankle socks on dangling paws.
+    - 🧡 **Ginger:** Warm marmalade tabby with sweet cinnamon stripes and bright white eye rings.
+    - 🎨 **Calico:** Soft light grey coat with ginger and black ear-to-eye split, colored legs, and sparkling anime eyes.
+  - 👁️ **Eye Protection:** Face and eye zones are strictly protected—stripes and patches never cut across the eyes, paws, or keyboard.
+  - Pick between 3 crisp pixel sizes: **Small (2x)**, **Medium (3x)**, and **Large (4x)**.
+- **👑 Scaled-Up Royal Accessories:**
   - 👑 **Grand Golden Crown:** A majestic, larger royal gold crown with ruby and sapphire jewel insets, centered proudly on Nyx's head.
   - 🧙 **Grand Wizard Hat:** A stylish, larger pointed mystical violet wizard hat with a celestial golden sash and glowing star tip.
   - 🎉 **Party Hat:** A joyful festive cone party hat featuring colorful confetti stripes and a fluffy white pom-pom.
@@ -21,23 +43,8 @@ Nyx has received a major upgrade with cute new accessories, smart media tracking
 - **🎵 "Now Playing" Track Pop-Up:**
   - When you listen to music on Spotify or supported media players, Nyx automatically pops up a cute speech bubble announcing the song title (e.g. `🎵 Now Playing: Starboy`) as soon as the track changes. Click directly on the bubble to dismiss it immediately!
 - **🧘 Authentic Stretch Break Reminder & Animation:**
-  - Nyx now reminds you to stretch every 30 minutes with a dedicated 6-frame Comnyang stretching animation (arched back, anchored front paws, squint eyes `><`, and curled tail).
+  - Nyx reminds you to stretch every 30 minutes with a dedicated 6-frame Comnyang stretching animation (arched back, anchored front paws, squint eyes `><`, and curled tail).
   - Includes a **"Stretch Now"** button in settings to trigger your break anytime.
-- **🎨 7 Curated Coats & Feline Skins (with Crisp Eyes & Zero Overlay):**
-  - Choose between sleek solid shades and specially crafted feline skins:
-    - 🌑 **Black:** Classic sleek obsidian midnight shade.
-    - 🌪️ **Slate:** Cool smoky graphite slate shade.
-    - 🌊 **Navy:** Deep oceanic midnight starlight blue.
-    - ☕ **Espresso:** Rich roasted coffee mocha brown.
-    - 🎩 **Tuxedo:** Dapper black cat with a neat white chest ascot.
-    - 🧡 **Ginger:** Warm marmalade tabby with sweet cinnamon stripes and bright white eye rings.
-    - 🎨 **Calico:** Soft light grey coat with ginger and black ear-to-eye split, colored legs, and sparkling anime eyes.
-  - 👁️ **Eye Protection:** Face and eye zones are strictly protected—stripes and patches never cut across the eyes, paws, or keyboard.
-  - Pick between 3 crisp pixel sizes: **Small (2x)**, **Medium (3x)**, and **Large (4x)**.
-- **✨ Pixel-Perfect Tail & Animation Polishing:**
-  - Connected tail in all states (Idle, Sleeping, Dragging, Listening).
-  - Reduced and calmed purring love hearts for a gentle, cozy petting experience.
-  - Screen boundary clamping to keep hearts, notes, and Zzzs strictly within desktop view.
 
 ---
 
@@ -112,7 +119,8 @@ stateDiagram-v2
 ```
 
 ### 🎮 Interactive Animations
-* **🖱️ Drag & Drop:** Click and hold to pick Nyx up. Nyx dangles gently with physics-based wobble while you move it around the desktop.
+* **🖱️ Drag & Drop:** Click and hold to pick Nyx up. Nyx dangles cutely with organic body tapering, soft rounded kitten mitten paws, and a fluid bicycle pedaling kick cycle as you move it across the desktop.
+* **🐾 Resting Paws:** When sitting idle, resting, sleeping, or vibing to music, Nyx extends its front paws forward into cozy rounded mittens.
 * **⌨️ Keyboard Kneading:** Start typing code or writing documents, and Nyx taps its paws along with your keystrokes. Fast typing even makes Nyx sweat heat steam!
 * **👀 Cursor Tracking & Blinking:** Nyx's eyes follow your mouse cursor smoothly around your monitors, with natural blinking intervals when idle.
 * **💕 Purring:** Click or pet Nyx to make it happy! It will close its eyes in bliss and float gentle pink hearts.
