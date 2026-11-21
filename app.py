@@ -259,14 +259,16 @@ def is_eye_protected_zone(anim_name, r, c):
     return False
 
 FISH_PIXELS = [
-    "....WWWWWW....",
-    "...WSSMSSSW...",
-    "..WSOOOSSSWW..",
-    ".WSSSSSSSSSSW.",
-    "WSSMSSSSSSSSSW",
-    ".WSSSSSSSSSSW.",
-    "..WSSMSSSSWW..",
-    "....WWWWWW....",
+    "....WWWWWW......",
+    "..WWDDDDDDWW..WW",
+    ".WSSSSSSSSSSWWDDW",
+    "WEYSSSSSSSSSSSDDW",
+    "WEYSSSSSSSSSSSSDW",
+    "WSSSSSSSSSSSS...",
+    "WSSSSSSSSSSSSSSDW",
+    ".WLLSSSSSSSSWWDDW",
+    "..WWLLLLLLWW..WW",
+    "....WWWWWW......",
 ]
 
 JUMP_FRAME = [
@@ -283,9 +285,9 @@ JUMP_FRAME = [
     "...WPPWPPPWPPPPPPWPPPWPPW.......",
     "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
     "...WPPPWWWPPPPPPPPWWWPPPPW......",
-    "WWWWPPPPPPPPPWWPPPPPPPPPPWWWW...",
-    "...WPPPPPPPPWBBWPPPPPPPPPWW.....",
-    "...WWPPPPPPPWWWWPPPPPPPPWW......",
+    "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+    "...WPPPPPPPPPPPPPPPPPPPPPW......",
+    "...WWPPPPPPPPPPPPPPPPPPPWW......",
     "....WWPPPPPPPPPPPPPPPPPWW.......",
     ".....WPPPPPPPPPPPPPPPPPW........",
     "....WWPPPPPPPPPPPPPPPPPPW...WWW.",
@@ -319,7 +321,7 @@ EAT_FRAME_0 = [
     "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
     "...WPPPWWWPPPPPPPPWWWPPPPW......",
     "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
-    "...WPPPPPPPPPWWPPPPPPPPPPW......",
+    "...WPPPPPPPPPPPPPPPPPPPPPW......",
     "...WWPPPPPPPPPPPPPPPPPPPWW......",
     "....WPPPPPPPPPPPPPPPPPWW....WWW.",
     "....WWPPPPPPPPPPPPPPPWW....WPPPW",
@@ -350,12 +352,12 @@ EAT_FRAME_1 = [
     "....WPPPPPPPPPPPPPPPPPWW........",
     "....WPPPPPPPPPPPPPPPPPPW........",
     "...WWPPWWWPPPPPPPWWWPPPW........",
-    "...WPPWPWWPPPPPPWPWWPPPW........",
-    "...WPWWPPWPPPPPPWPPWWPPWW.......",
+    "...WPWWPPWPPPPPPWPWWPPPW........",
+    "...WWPPWPWPPPPPPWWPPWPWW........",
     "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
     "...WPPPWWWPPPPPPPPWWWPPPPW......",
     "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
-    "...WPPPPPPPPWBBWPPPPPPPPPW......",
+    "...WPPPPPPPPPPPPPPPPPPPPPW......",
     "...WWPPPPPPPPPPPPPPPPPPPWW......",
     "....WPPPPPPPPPPPPPPPPPWW....WWW.",
     "....WWPPPPPPPPPPPPPPPWW....WPPPW",
@@ -2806,13 +2808,6 @@ class PetWidget(QWidget):
 
     def trigger_hunger(self):
         self.is_hungry = True
-        self.track_bubble_message = "Nyx is hungry! 🐟\n(Click 🪫 to feed)"
-        if hasattr(self, '_track_bubble_timer') and self._track_bubble_timer:
-            self._track_bubble_timer.stop()
-        self._track_bubble_timer = QTimer(self)
-        self._track_bubble_timer.setSingleShot(True)
-        self._track_bubble_timer.timeout.connect(self.clear_track_bubble)
-        self._track_bubble_timer.start(5000)
         self.update()
 
     def feed_fish(self):
@@ -2828,11 +2823,9 @@ class PetWidget(QWidget):
         pixel_sz = max(2, int(getattr(self, 'scale_factor', 3)))
         scale_r = pixel_sz / 3.0
         cx = self.width() // 2
-        cy = self.height() // 2
-        floor_y = cy + int(16 * pixel_sz)
-        dest_y = floor_y - 33 * pixel_sz
+        top_y = max(14, int(18 * scale_r))
         self.fish_x = float(cx)
-        self.fish_y = float(dest_y - 120 * scale_r)
+        self.fish_y = float(top_y + 16 * scale_r)
         self.fish_vy = 1.0 * scale_r
         self.fish_rotation = 0.0
         self.update()
@@ -3835,25 +3828,25 @@ class PetWidget(QWidget):
         # Restore coordinate space for speech bubble and HUD
         painter.restore()
 
-        # 6.5 Hunger HUD: Low Battery Icon or Charged Battery Glow
+        # 6.5 Hunger HUD: Low Battery Icon or Charged Battery Glow in Center Top
         self.battery_interactive_rect = QRect()
         is_hungry = getattr(self, 'is_hungry', False)
         charged_frames = getattr(self, 'battery_charged_frames', 0)
         feeding_phase = getattr(self, 'feeding_phase', None)
         
         has_battery_hud = (is_hungry and feeding_phase != "EATING") or (charged_frames > 0)
-        bw = int(32 * scale_r)
-        bh = int(16 * scale_r)
+        bw = int(36 * scale_r)
+        bh = int(14 * scale_r)
         pw = max(2, int(3 * scale_r))
         ph = max(4, int(6 * scale_r))
-        bob_y = int(math.sin(self.tick_count * 0.18) * 3 * scale_r) if is_hungry else 0
+        bob_y = int(math.sin(self.tick_count * 0.18) * 2 * scale_r) if is_hungry else 0
         bat_x = cx - (bw // 2)
-        bat_y = dest_y - bh - int(8 * scale_r) + bob_y
+        bat_y = max(14, int(20 * scale_r)) + bob_y
 
         if has_battery_hud:
             # Interactive hit rect for user to click and drop fish
             if is_hungry and not feeding_phase:
-                self.battery_interactive_rect = QRect(int(bat_x - 6), int(bat_y - 6), int(bw + pw + 12), int(bh + 12))
+                self.battery_interactive_rect = QRect(int(bat_x - 10), int(bat_y - 10), int(bw + pw + 20), int(bh + 20))
             
             painter.save()
             painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
@@ -3864,7 +3857,7 @@ class PetWidget(QWidget):
             
             # Battery body shell
             shell_bg = QColor(20, 24, 32, int(220 * alpha_mult))
-            shell_border = QColor(230, 235, 245, int(240 * alpha_mult))
+            shell_border = QColor(240, 245, 255, int(240 * alpha_mult))
             pen_w = max(1, int(1.5 * scale_r))
             
             painter.setPen(QPen(shell_border, pen_w))
@@ -3875,7 +3868,7 @@ class PetWidget(QWidget):
             pole_y = bat_y + (bh - ph) / 2.0
             painter.drawRoundedRect(QRectF(bat_x + bw, pole_y, pw, ph), 1 * scale_r, 1 * scale_r)
             
-            # Inner charge indicator
+            # Inner charge indicator - JUST THE BAR
             inner_pad = max(2, int(2.5 * scale_r))
             inner_x = bat_x + inner_pad
             inner_y = bat_y + inner_pad
@@ -3884,29 +3877,17 @@ class PetWidget(QWidget):
             
             painter.setPen(Qt.PenStyle.NoPen)
             if charged_frames > 0 and not is_hungry:
-                # Fully charged emerald green bar with lightning bolt
-                green_col = QColor(46, 204, 113, int(240 * alpha_mult))
+                # Fully charged emerald green bar filling 100% - JUST THE BAR
+                green_col = QColor(46, 204, 113, int(245 * alpha_mult))
                 painter.setBrush(green_col)
-                painter.drawRoundedRect(QRectF(inner_x, inner_y, inner_w, inner_h), 2 * scale_r, 2 * scale_r)
-                
-                painter.setPen(QColor(255, 255, 255, int(250 * alpha_mult)))
-                font_bolt = QFont("Segoe UI", max(7, int(9 * scale_r)), QFont.Weight.Black)
-                painter.setFont(font_bolt)
-                painter.drawText(QRectF(bat_x, bat_y, bw, bh), Qt.AlignmentFlag.AlignCenter, "⚡")
+                painter.drawRoundedRect(QRectF(inner_x, inner_y, inner_w, inner_h), 1.5 * scale_r, 1.5 * scale_r)
             else:
-                # Low battery pulsing red bar (~28% charge)
-                pulse = 0.65 + 0.35 * math.sin(self.tick_count * 0.25)
-                red_col = QColor(int(240 * pulse), 40, 40, int(230 * pulse))
+                # Low battery pulsing red bar (~28% charge) - JUST THE BAR
+                pulse = 0.70 + 0.30 * math.sin(self.tick_count * 0.25)
+                red_col = QColor(int(235 * pulse), 45, 45, int(240 * pulse))
                 bar_w = max(4, int(inner_w * 0.28))
                 painter.setBrush(red_col)
                 painter.drawRoundedRect(QRectF(inner_x, inner_y, bar_w, inner_h), 1.5 * scale_r, 1.5 * scale_r)
-                
-                # Blinking red exclamation mark
-                if (self.tick_count // 6) % 2 == 0:
-                    painter.setPen(QColor(255, 60, 60, 240))
-                    font_ex = QFont("Segoe UI", max(7, int(8.5 * scale_r)), QFont.Weight.Bold)
-                    painter.setFont(font_ex)
-                    painter.drawText(QRectF(inner_x + bar_w, inner_y, inner_w - bar_w, inner_h), Qt.AlignmentFlag.AlignCenter, "!")
             
             painter.restore()
 
@@ -3930,11 +3911,17 @@ class PetWidget(QWidget):
                     if fch == 'W':
                         col = QColor(255, 255, 255)
                     elif fch == 'S':
-                        col = QColor(255, 126, 103)
-                    elif fch == 'M':
-                        col = QColor(220, 90, 80)
+                        col = QColor(255, 120, 85)
+                    elif fch == 'D':
+                        col = QColor(215, 80, 55)
+                    elif fch == 'L':
+                        col = QColor(255, 190, 170)
+                    elif fch == 'E':
+                        col = QColor(25, 25, 30)
+                    elif fch == 'Y':
+                        col = QColor(255, 255, 255)
                     elif fch == 'O':
-                        col = QColor(255, 225, 60)
+                        col = QColor(255, 220, 60)
                     else:
                         continue
                     painter.setBrush(col)
