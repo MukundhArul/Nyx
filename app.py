@@ -316,9 +316,9 @@ EAT_FRAME_0 = [
     "....WPPPPPPPPPPPPPPPPPWW........",
     "....WPPPPPPPPPPPPPPPPPPW........",
     "...WWPPWWWPPPPPPPWWWPPPW........",
-    "...WPPWPWWPPPPPPWPWWPPPW........",
-    "...WPWWPPWPPPPPPWPPWWPPWW.......",
-    "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+    "...WPPWPWPWPPPPPPWPWPWPPW.......",
+    "...WPPWWPWWPPPPPPWWPWWPPW.......",
+    "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
     "...WPPPWWWPPPPPPPPWWWPPPPW......",
     "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
     "...WPPPPPPPPPPPPPPPPPPPPPW......",
@@ -352,9 +352,9 @@ EAT_FRAME_1 = [
     "....WPPPPPPPPPPPPPPPPPWW........",
     "....WPPPPPPPPPPPPPPPPPPW........",
     "...WWPPWWWPPPPPPPWWWPPPW........",
-    "...WPWWPPWPPPPPPWPWWPPPW........",
-    "...WWPPWPWPPPPPPWWPPWPWW........",
-    "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
+    "...WPPWPPPWPPPPPPWPPPWPPW.......",
+    "...WPPWWWWWPPPPPPWWWWWPPW.......",
+    "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
     "...WPPPWWWPPPPPPPPWWWPPPPW......",
     "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
     "...WPPPPPPPPPPPPPPPPPPPPPW......",
@@ -3021,7 +3021,6 @@ class PetWidget(QWidget):
                 self.landing_cushion_frames = 6
                 self.feeding_phase = "EATING"
                 self.eating_timer = 50
-                self.battery_charged_frames = 80
 
         elif feeding == "EATING":
             self.eating_timer -= 1
@@ -3032,6 +3031,7 @@ class PetWidget(QWidget):
                 self.is_hungry = False
                 self.hunger_timer = 0
                 self.current_frame_index = 0
+                self.battery_charged_frames = 90
         
         # Fluid per-state animation speeds
         speed = 10
@@ -3056,10 +3056,10 @@ class PetWidget(QWidget):
         elif anim_name == "EATING":
             speed = 6
             
-        # Natural blinking logic (NEVER while typing, dragged, sleeping, purring, or stretching!)
+        # Natural blinking logic (NEVER while typing, dragged, sleeping, purring, stretching, jump, or eating!)
         if getattr(self, 'state', '') == "WAKING":
             self.is_blinking = True
-        elif getattr(self, 'is_typing', False) or anim_name in ["TYPING", "DRAGGED", "SLEEPING", "PURRING", "STRETCHING"]:
+        elif getattr(self, 'is_typing', False) or anim_name in ["TYPING", "DRAGGED", "SLEEPING", "PURRING", "STRETCHING", "JUMP", "EATING"]:
             self.is_blinking = False
             self.blink_timer = random.randint(300, 500)
         else:
@@ -3140,7 +3140,6 @@ class PetWidget(QWidget):
         if anim_name != "TYPING":
             if self.tick_count % speed == 0:
                 anim_list_len = len(MATRIX_FRAMES.get(anim_name, [0]))
-                self.current_frame_index = (self.current_frame_index + 1) % max(1, anim_list_len)
                 if anim_name == "STRETCHING":
                     next_idx = self.current_frame_index + 1
                     if next_idx >= anim_list_len:
@@ -3570,6 +3569,8 @@ class PetWidget(QWidget):
             dest_y = floor_y - dest_height
             if anim_name == "JUMP":
                 dest_y += int(getattr(self, 'jump_y_offset', 0.0))
+            elif anim_name == "EATING" and self.current_frame_index == 1:
+                dest_y += max(1, int(1 * scale_r))
             
         cat_bottom = max(dest_y + dest_height + 8, floor_y + 12)
         self.cat_interactive_rect = QRect(dest_x - 10, dest_y - 10, dest_width + 20, (cat_bottom - dest_y) + 14)
@@ -3828,32 +3829,23 @@ class PetWidget(QWidget):
         # Restore coordinate space for speech bubble and HUD
         painter.restore()
 
-        # 6.5 Hunger HUD: Low Battery Icon or Charged Battery Glow in Center Top
+        # 6.5 Hunger HUD: Charged Battery Glow right on top of head (appears ONLY after cat has eaten the fish)
         self.battery_interactive_rect = QRect()
-        is_hungry = getattr(self, 'is_hungry', False)
-        charged_frames = getattr(self, 'battery_charged_frames', 0)
         feeding_phase = getattr(self, 'feeding_phase', None)
-        
-        has_battery_hud = (is_hungry and feeding_phase != "EATING") or (charged_frames > 0)
+        charged_frames = getattr(self, 'battery_charged_frames', 0)
+        has_battery_hud = (charged_frames > 0)
         bw = int(36 * scale_r)
         bh = int(14 * scale_r)
         pw = max(2, int(3 * scale_r))
         ph = max(4, int(6 * scale_r))
-        bob_y = int(math.sin(self.tick_count * 0.18) * 2 * scale_r) if is_hungry else 0
         bat_x = cx - (bw // 2)
-        bat_y = max(14, int(20 * scale_r)) + bob_y
+        bat_y = dest_y - bh - int(6 * scale_r)
 
         if has_battery_hud:
-            # Interactive hit rect for user to click and drop fish
-            if is_hungry and not feeding_phase:
-                self.battery_interactive_rect = QRect(int(bat_x - 10), int(bat_y - 10), int(bw + pw + 20), int(bh + 20))
-            
             painter.save()
             painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
             
-            alpha_mult = 1.0
-            if charged_frames > 0 and not is_hungry:
-                alpha_mult = min(1.0, charged_frames / 20.0)
+            alpha_mult = min(1.0, charged_frames / 20.0)
             
             # Battery body shell
             shell_bg = QColor(20, 24, 32, int(220 * alpha_mult))
@@ -3868,7 +3860,7 @@ class PetWidget(QWidget):
             pole_y = bat_y + (bh - ph) / 2.0
             painter.drawRoundedRect(QRectF(bat_x + bw, pole_y, pw, ph), 1 * scale_r, 1 * scale_r)
             
-            # Inner charge indicator - JUST THE BAR
+            # Inner charge indicator - FULL GREEN CHARGE BAR
             inner_pad = max(2, int(2.5 * scale_r))
             inner_x = bat_x + inner_pad
             inner_y = bat_y + inner_pad
@@ -3876,18 +3868,9 @@ class PetWidget(QWidget):
             inner_h = bh - (inner_pad * 2)
             
             painter.setPen(Qt.PenStyle.NoPen)
-            if charged_frames > 0 and not is_hungry:
-                # Fully charged emerald green bar filling 100% - JUST THE BAR
-                green_col = QColor(46, 204, 113, int(245 * alpha_mult))
-                painter.setBrush(green_col)
-                painter.drawRoundedRect(QRectF(inner_x, inner_y, inner_w, inner_h), 1.5 * scale_r, 1.5 * scale_r)
-            else:
-                # Low battery pulsing red bar (~28% charge) - JUST THE BAR
-                pulse = 0.70 + 0.30 * math.sin(self.tick_count * 0.25)
-                red_col = QColor(int(235 * pulse), 45, 45, int(240 * pulse))
-                bar_w = max(4, int(inner_w * 0.28))
-                painter.setBrush(red_col)
-                painter.drawRoundedRect(QRectF(inner_x, inner_y, bar_w, inner_h), 1.5 * scale_r, 1.5 * scale_r)
+            green_col = QColor(46, 204, 113, int(245 * alpha_mult))
+            painter.setBrush(green_col)
+            painter.drawRoundedRect(QRectF(inner_x, inner_y, inner_w, inner_h), 1.5 * scale_r, 1.5 * scale_r)
             
             painter.restore()
 
@@ -4031,9 +4014,18 @@ class PetWidget(QWidget):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            # 0. Click-to-Feed Low Battery Icon
-            if hasattr(self, 'battery_interactive_rect') and not self.battery_interactive_rect.isNull():
-                if self.battery_interactive_rect.contains(event.pos()):
+            # 0. Click-to-Feed when hungry (click Nyx or area directly above Nyx)
+            if getattr(self, 'is_hungry', False) and not getattr(self, 'feeding_phase', None):
+                pixel_sz = max(2, int(getattr(self, 'scale_factor', 3)))
+                cx = self.width() // 2
+                cy = self.height() // 2
+                floor_y = cy + int(16 * pixel_sz)
+                cat_w = 32 * pixel_sz
+                cat_h = 33 * pixel_sz
+                dest_x = cx - (cat_w // 2)
+                dest_y = floor_y - cat_h
+                click_area = QRect(dest_x - 30, dest_y - 120, cat_w + 60, cat_h + 140)
+                if click_area.contains(event.pos()) or (hasattr(self, 'cat_interactive_rect') and self.cat_interactive_rect.contains(event.pos())):
                     self.feed_fish()
                     return
 
