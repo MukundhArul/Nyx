@@ -28,7 +28,6 @@ DEFAULT_SETTINGS = {
     "react_to_typing": True,
     "stretch_interval_min": 30,
     "water_interval_min": 60,
-    "hunger_interval_min": 15,
     "pomodoro_enabled": False,
     "pomo_focus_min": 25,
     "pomo_break_min": 5,
@@ -242,13 +241,11 @@ def is_eye_pupil(anim_name, r, c):
         return (15 <= r <= 17) and ((9 <= c <= 11) or (20 <= c <= 22))
     elif anim_name == "PURRING":
         return (9 <= r <= 10) and ((7 <= c <= 9) or (18 <= c <= 20))
-    elif anim_name == "JUMP":
-        return (r == 9) and ((7 <= c <= 9) or (18 <= c <= 20))
     return False
 
 def is_eye_protected_zone(anim_name, r, c):
     """Zone around eyes and face that should NEVER be overlaid by stripes or patches."""
-    if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING", "EATING", "JUMP"]:
+    if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING"]:
         return (8 <= r <= 15) and (5 <= c <= 23)
     elif anim_name in ["TYPING", "TYPING_MUSIC"]:
         return (11 <= r <= 15) and (10 <= c <= 26)
@@ -257,126 +254,6 @@ def is_eye_protected_zone(anim_name, r, c):
     elif anim_name == "STRETCHING":
         return (14 <= r <= 18) and (7 <= c <= 25)
     return False
-
-FISH_PIXELS = [
-    "....WWWWWW......",
-    "..WWDDDDDDWW..WW",
-    ".WSSSSSSSSSSWWDDW",
-    "WEYSSSSSSSSSSSDDW",
-    "WEYSSSSSSSSSSSSDW",
-    "WSSSSSSSSSSSS...",
-    "WSSSSSSSSSSSSSSDW",
-    ".WLLSSSSSSSSWWDDW",
-    "..WWLLLLLLWW..WW",
-    "....WWWWWW......",
-]
-
-JUMP_FRAME = [
-    ".......WWW.......WWW............",
-    "......WWPW......WWPWW...........",
-    "..WWW.WWPPWW.....WPPPWW..WWW....",
-    ".WPPPWPPPPWWWWWWWPPPPWWPPPW.....",
-    ".WPPPPPPPPPPPPPPPPPPPPPPPPW.....",
-    ".WPPPPPPPPPPPPPPPPPPPPPPPPW.....",
-    "..WPPPPPPPPPPPPPPPPPPPPPPW......",
-    "...WWWWPPPPPPPPPPPPPPWWWW.......",
-    "...WWPPWWWPPPPPPPWWWPPPW........",
-    "...WPPWPPPWPPPPPPWPPPWPPW.......",
-    "...WPPWPPPWPPPPPPWPPPWPPW.......",
-    "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
-    "...WPPPWWWPPPPPPPPWWWPPPPW......",
-    "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
-    "...WPPPPPPPPPPPPPPPPPPPPPW......",
-    "...WWPPPPPPPPPPPPPPPPPPPWW......",
-    "....WWPPPPPPPPPPPPPPPPPWW.......",
-    ".....WPPPPPPPPPPPPPPPPPW........",
-    "....WWPPPPPPPPPPPPPPPPPPW...WWW.",
-    "...WWPPPPPPPPPPPPPPPPPPPW..WPPPW",
-    "...WPPPPPPPPPPPPPPPPPPPPW..WPPPW",
-    "...WPPPPPPPPPPPPPPPPPPPPW..WPPPW",
-    "....WPPPPPPPPPPPPPPPPPPPWWPPPW..",
-    "....WWPPPPPPPPPPPPPPPPPPPPPPW...",
-    ".....WPPPPPPPPPPPPPPPPPPPPPW....",
-    ".....WPPPPPPWWWWPPPPPPW.........",
-    ".....WPPPPPW....WPPPPPW.........",
-    ".....WPPPPPW....WPPPPPW.........",
-    ".....WPPPPPW....WPPPPPW.........",
-    "....WWPPPPPW...WWPPPPPW.........",
-    "....WPPPPPPW...WPPPPPPW.........",
-    ".....WWWWWW.....WWWWWW..........",
-]
-
-EAT_FRAME_0 = [
-    ".......WWW.......WWW............",
-    "......WWPW......WWPWW...........",
-    ".....WWPPWW.....WPPPWW..........",
-    ".....WPPPPWWWWWWWPPPPW..........",
-    "....WWPPPPPPPPPPPPPPPW..........",
-    "....WPPPPPPPPPPPPPPPPWW.........",
-    "....WPPPPPPPPPPPPPPPPPWW........",
-    "....WPPPPPPPPPPPPPPPPPPW........",
-    "...WWPPWWWPPPPPPPWWWPPPW........",
-    "...WPPWPWPWPPPPPPWPWPWPPW.......",
-    "...WPPWWPWWPPPPPPWWPWWPPW.......",
-    "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
-    "...WPPPWWWPPPPPPPPWWWPPPPW......",
-    "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
-    "...WPPPPPPPPPPPPPPPPPPPPPW......",
-    "...WWPPPPPPPPPPPPPPPPPPPWW......",
-    "....WPPPPPPPPPPPPPPPPPWW....WWW.",
-    "....WWPPPPPPPPPPPPPPPWW....WPPPW",
-    "....WPPPPPPPPPPPPPPPPPWW...WPPPW",
-    "...WWPPPPPPPPPPPPPPPPPPW...WPPPW",
-    "...WPPPPPPPPPPPPPPPPPPPW...WPPPW",
-    "...WPPPPPPPPPPPPPPPPPPPW..WPPPW.",
-    "...WPPPPPPPPPPPPPPPPPPPW..WPPPW.",
-    "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
-    "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
-    "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-    "...WWPPPPPPPPPPPPPPPPPPPPPPPPW..",
-    "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
-    "....WPPPPPPPPPPPPPPPPPPPPPPW....",
-    "....WWWWPPPPPPPPPPPPWWWWWWWW....",
-    ".....WWWPPPPWWWWPPPPWWWW........",
-    ".......WPPPPW..WPPPPW...........",
-    ".......WWWWWW..WWWWWW...........",
-]
-
-EAT_FRAME_1 = [
-    ".......WWW.......WWW............",
-    "......WWPW......WWPWW...........",
-    ".....WWPPWW.....WPPPWW..........",
-    ".....WPPPPWWWWWWWPPPPW..........",
-    "....WWPPPPPPPPPPPPPPPW..........",
-    "....WPPPPPPPPPPPPPPPPWW.........",
-    "....WPPPPPPPPPPPPPPPPPWW........",
-    "....WPPPPPPPPPPPPPPPPPPW........",
-    "...WWPPWWWPPPPPPPWWWPPPW........",
-    "...WPPWPPPWPPPPPPWPPPWPPW.......",
-    "...WPPWWWWWPPPPPPWWWWWPPW.......",
-    "WWWWPPWPPPWPPPPPPWPPPWPPWWWW....",
-    "...WPPPWWWPPPPPPPPWWWPPPPW......",
-    "WWWWPPPPPPPPPPPPPPPPPPPPPWWWW...",
-    "...WPPPPPPPPPPPPPPPPPPPPPW......",
-    "...WWPPPPPPPPPPPPPPPPPPPWW......",
-    "....WPPPPPPPPPPPPPPPPPWW....WWW.",
-    "....WWPPPPPPPPPPPPPPPWW....WPPPW",
-    "....WPPPPPPPPPPPPPPPPPWW...WPPPW",
-    "...WWPPPPPPPPPPPPPPPPPPW...WPPPW",
-    "...WPPPPPPPPPPPPPPPPPPPW...WPPPW",
-    "...WPPPPPPPPPPPPPPPPPPPW..WPPPW.",
-    "...WPPPPPPPPPPPPPPPPPPPW..WPPPW.",
-    "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
-    "...WPPPPPPPPPPPPPPPPPPPPW.WPPPW.",
-    "...WPPPPPPPPPPPPPPPPPPPPWWPPPW..",
-    "...WWPPPPPPPPPPPPPPPPPPPPPPPPW..",
-    "....WPPPPPPPPPPPPPPPPPPPPPPPW...",
-    "....WPPPPPPPPPPPPPPPPPPPPPPW....",
-    "....WWWWPPPPPPPPPPPPWWWWWWWW....",
-    ".....WWWPPPPWWWWPPPPWWWW........",
-    ".......WPPPPW..WPPPPW...........",
-    ".......WWWWWW..WWWWWW...........",
-]
 
 MATRIX_FRAMES = {
 'IDLE': [
@@ -1521,8 +1398,6 @@ MATRIX_FRAMES = {
             "........WWWWWWW..WWWWWWW...............................",
         ],
     ],
-    'JUMP': [JUMP_FRAME],
-    'EATING': [EAT_FRAME_0, EAT_FRAME_1],
 }
 
 def load_settings():
@@ -1809,34 +1684,6 @@ class SettingsWindow(QWidget):
         w_row.addWidget(self.water_spin)
         int_layout.addLayout(w_row)
         
-        h_row = QHBoxLayout()
-        h_row.addWidget(QLabel("Hunger interval (min, 0 = off)"))
-        self.hunger_spin = QSpinBox()
-        self.hunger_spin.setMaximum(999)
-        self.hunger_spin.setValue(self.pet.settings.get("hunger_interval_min", 15))
-        self.hunger_spin.valueChanged.connect(self.on_hunger_changed)
-        h_row.addWidget(self.hunger_spin)
-        
-        feed_fish_btn = QPushButton("🐟 Feed Fish")
-        feed_fish_btn.setCursor(Qt.CursorShape.PointingHandCursor)
-        feed_fish_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #2a2d3d;
-                color: #ff8a65;
-                border: 1px solid #ff7043;
-                border-radius: 5px;
-                padding: 4px 8px;
-                font-size: 11px;
-            }
-            QPushButton:hover {
-                background-color: #33364a;
-                border: 1px solid #ff8a65;
-            }
-        """)
-        feed_fish_btn.clicked.connect(self.pet.feed_fish)
-        h_row.addWidget(feed_fish_btn)
-        int_layout.addLayout(h_row)
-        
         self.pomo_cb = QCheckBox("Pomodoro enabled")
         self.pomo_cb.setChecked(self.pet.settings["pomodoro_enabled"])
         self.pomo_cb.stateChanged.connect(self.on_pomo_cb_changed)
@@ -2043,10 +1890,6 @@ class SettingsWindow(QWidget):
         
     def on_water_changed(self, val):
         self.pet.settings["water_interval_min"] = val
-        self.pet.save_and_apply_settings()
-
-    def on_hunger_changed(self, val):
-        self.pet.settings["hunger_interval_min"] = val
         self.pet.save_and_apply_settings()
 
     def on_pomo_cb_changed(self, val):
@@ -2274,23 +2117,6 @@ class PetWidget(QWidget):
         self.stretch_timer = 0
         self.water_timer = 0
         
-        # Hunger & Feeding states
-        self.hunger_timer = 0
-        self.is_hungry = False
-        self.feeding_phase = None
-        self.feeding_frame_count = 0
-        self.fish_x = 0.0
-        self.fish_y = 0.0
-        self.fish_vy = 0.0
-        self.fish_rotation = 0.0
-        self.fish_caught = False
-        self.fish_sparkles = []
-        self.jump_progress = 0.0
-        self.jump_y_offset = 0.0
-        self.eating_timer = 0
-        self.battery_charged_frames = 0
-        self.battery_interactive_rect = QRect()
-        
         # Phase 5 Sprite states
         self.setup_sprites()
         self.scale_factor = self.settings["scale_factor"]
@@ -2441,7 +2267,6 @@ class PetWidget(QWidget):
         # Actions
         show_action = QAction("Show", self)
         stretch_action = QAction("Stretch Nyx 🐾", self)
-        feed_action = QAction("Feed Fish 🐟", self)
         set_task_action = QAction("Set Pomodoro Task...", self)
         toggle_alarm_action = QAction("Toggle Pomodoro", self)
         set_pin_action = QAction("Set Pinned Message...", self)
@@ -2455,7 +2280,6 @@ class PetWidget(QWidget):
         
         show_action.triggered.connect(self.show)
         stretch_action.triggered.connect(self.trigger_stretch)
-        feed_action.triggered.connect(self.feed_fish)
         set_task_action.triggered.connect(self.set_pomodoro_task)
         set_pin_action.triggered.connect(self.prompt_pinned_message)
         clear_pin_action.triggered.connect(self.clear_pinned_message)
@@ -2493,7 +2317,6 @@ class PetWidget(QWidget):
         """)
         tray_menu.addAction(show_action)
         tray_menu.addAction(stretch_action)
-        tray_menu.addAction(feed_action)
         
         # Wardrobe Submenu
         wardrobe_menu = tray_menu.addMenu("Wardrobe 🎩")
@@ -2784,8 +2607,6 @@ class PetWidget(QWidget):
         self.update_active_app_state()
 
     def get_current_animation_name(self):
-        if getattr(self, 'feeding_phase', None) == "JUMPING": return "JUMP"
-        if getattr(self, 'feeding_phase', None) == "EATING": return "EATING"
         if self.state == "DRAGGED": return "DRAGGED"
         if self.state == "STRETCHING": return "STRETCHING"
         if hasattr(self, 'is_petting') and self.is_petting: return "PURRING"
@@ -2805,37 +2626,6 @@ class PetWidget(QWidget):
             return "IDLE"
             
         return self.state
-
-    def trigger_hunger(self):
-        self.is_hungry = True
-        self.update()
-
-    def feed_fish(self):
-        if getattr(self, 'feeding_phase', None):
-            return
-        self.clear_track_bubble()
-        self.feeding_phase = "FALLING"
-        self.feeding_frame_count = 0
-        self.fish_caught = False
-        self.jump_progress = 0.0
-        self.jump_y_offset = 0.0
-        self.fish_sparkles = []
-        pixel_sz = max(2, int(getattr(self, 'scale_factor', 3)))
-        scale_r = pixel_sz / 3.0
-        cx = self.width() // 2
-        top_y = max(14, int(18 * scale_r))
-        self.fish_x = float(cx)
-        self.fish_y = float(top_y + 16 * scale_r)
-        self.fish_vy = 1.0 * scale_r
-        self.fish_rotation = 0.0
-        self.update()
-
-    def play_bite_sound(self):
-        try:
-            import winsound
-            winsound.PlaySound("SystemAsterisk", winsound.SND_ALIAS | winsound.SND_ASYNC)
-        except Exception:
-            pass
 
     # --- Logic Updates ---
     def update_logic(self):
@@ -2887,13 +2677,6 @@ class PetWidget(QWidget):
                 self.water_timer = 0
                 self.pinned_message = "Drink some water!"
                 self.play_alarm_sound()
-
-        # Hunger logic
-        h_min = self.settings.get("hunger_interval_min", 15)
-        if h_min > 0 and not getattr(self, 'is_hungry', False) and not getattr(self, 'feeding_phase', None):
-            self.hunger_timer += 1
-            if self.hunger_timer >= h_min * 60:
-                self.trigger_hunger()
 
         # Productivity Logic
         if self.pomo_active:
@@ -2964,75 +2747,6 @@ class PetWidget(QWidget):
                 n[2] -= 4.0   # fade out
             self.music_notes = [n for n in self.music_notes if n[2] > 0]
 
-        # Update fish catch sparkle particles
-        if hasattr(self, 'fish_sparkles') and self.fish_sparkles:
-            for s in self.fish_sparkles:
-                s[0] += s[2]
-                s[1] += s[3]
-                s[3] += 0.25
-                s[4] -= 6.5
-            self.fish_sparkles = [s for s in self.fish_sparkles if s[4] > 0]
-
-        # Battery charged glow frames countdown
-        if getattr(self, 'battery_charged_frames', 0) > 0:
-            self.battery_charged_frames -= 1
-
-        # Interactive Feeding & Fish Catch Physics
-        feeding = getattr(self, 'feeding_phase', None)
-        pixel_sz = max(2, int(getattr(self, 'scale_factor', 3)))
-        scale_r = pixel_sz / 3.0
-        cy = self.height() // 2
-        floor_y = cy + int(16 * pixel_sz)
-        dest_cat_y = floor_y - 33 * pixel_sz
-
-        if feeding == "FALLING":
-            self.feeding_frame_count += 1
-            self.fish_vy += 0.55 * scale_r
-            self.fish_y += self.fish_vy
-            self.fish_rotation = math.sin(self.feeding_frame_count * 0.25) * 16.0
-            
-            # When fish reaches jump trigger height (~45px above cat), cat springs up!
-            if self.fish_y >= dest_cat_y - 48 * scale_r:
-                self.feeding_phase = "JUMPING"
-                self.jump_progress = 0.0
-
-        elif feeding == "JUMPING":
-            self.jump_progress += 0.055
-            jump_h = 44.0 * scale_r
-            self.jump_y_offset = -jump_h * math.sin(self.jump_progress * math.pi)
-
-            # Apex interception: catch fish & burst sparkles
-            if self.jump_progress >= 0.48 and not getattr(self, 'fish_caught', False):
-                self.fish_caught = True
-                self.play_bite_sound()
-                for _ in range(12):
-                    angle = random.uniform(0, 2 * math.pi)
-                    spd = random.uniform(2.0, 5.5) * scale_r
-                    self.fish_sparkles.append([
-                        self.fish_x, self.fish_y,
-                        math.cos(angle) * spd, math.sin(angle) * spd,
-                        255.0,
-                        random.choice([QColor(255, 215, 0), QColor(255, 126, 103), QColor(255, 255, 255), QColor(100, 220, 255)])
-                    ])
-
-            # Landed!
-            if self.jump_progress >= 1.0:
-                self.jump_y_offset = 0.0
-                self.landing_cushion_frames = 6
-                self.feeding_phase = "EATING"
-                self.eating_timer = 50
-
-        elif feeding == "EATING":
-            self.eating_timer -= 1
-            if self.tick_count % 16 == 0:
-                self.hearts.append([random.randint(-8, 8), random.randint(-28, -16), 255.0, random.uniform(0.8, 1.3)])
-            if self.eating_timer <= 0:
-                self.feeding_phase = None
-                self.is_hungry = False
-                self.hunger_timer = 0
-                self.current_frame_index = 0
-                self.battery_charged_frames = 90
-        
         # Fluid per-state animation speeds
         speed = 10
         if anim_name == "TYPING":
@@ -3051,15 +2765,11 @@ class PetWidget(QWidget):
             speed = 16 # ~320ms per frame (calm, attentive screen gazing)
         elif anim_name == "STRETCHING":
             speed = 10 # ~200ms per frame (smooth satisfying cat stretch)
-        elif anim_name == "JUMP":
-            speed = 1
-        elif anim_name == "EATING":
-            speed = 6
             
-        # Natural blinking logic (NEVER while typing, dragged, sleeping, purring, stretching, jump, or eating!)
+        # Natural blinking logic (NEVER while typing, dragged, sleeping, purring, or stretching!)
         if getattr(self, 'state', '') == "WAKING":
             self.is_blinking = True
-        elif getattr(self, 'is_typing', False) or anim_name in ["TYPING", "DRAGGED", "SLEEPING", "PURRING", "STRETCHING", "JUMP", "EATING"]:
+        elif getattr(self, 'is_typing', False) or anim_name in ["TYPING", "DRAGGED", "SLEEPING", "PURRING", "STRETCHING"]:
             self.is_blinking = False
             self.blink_timer = random.randint(300, 500)
         else:
@@ -3209,7 +2919,7 @@ class PetWidget(QWidget):
         # 6. Tuxedo Skin: Sleek black with organic chest bib, belly stream, and white mittens
         if coat == 'tuxedo':
             is_white = False
-            if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING", "EATING"]:
+            if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING"]:
                 # Organic white throat, chest bib, and belly stream
                 if (r in [14, 15] and 11 <= c <= 15) or \
                    (r in [16, 17, 18] and 9 <= c <= 17) or \
@@ -3221,13 +2931,6 @@ class PetWidget(QWidget):
                 elif (29 <= r <= 32 and ((8 <= c <= 12) or (15 <= c <= 19))):
                     is_white = True
                 elif (r in [28, 29] and 20 <= c <= 24):
-                    is_white = True
-            elif anim_name == "JUMP":
-                if (16 <= r <= 24 and 10 <= c <= 16):
-                    is_white = True
-                elif (2 <= r <= 6 and ((1 <= c <= 5) or (22 <= c <= 26))):
-                    is_white = True
-                elif (28 <= r <= 31 and ((5 <= c <= 9) or (16 <= c <= 20))):
                     is_white = True
             elif anim_name in ["TYPING", "TYPING_MUSIC"]:
                 # Throat, chest, and belly
@@ -3270,7 +2973,7 @@ class PetWidget(QWidget):
                 return g_orange
 
             is_stripe = False
-            if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING", "EATING"]:
+            if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING"]:
                 # Forehead stripes (above eyes)
                 if (r == 4 and ((10 <= c <= 12) or (14 <= c <= 16))) or \
                    (r == 5 and 10 <= c <= 16) or \
@@ -3291,13 +2994,6 @@ class PetWidget(QWidget):
                 # Leg bars
                 elif (r == 29 and ((8 <= c <= 11) or (15 <= c <= 18))):
                     is_stripe = True
-
-            elif anim_name == "JUMP":
-                if (r in [4, 5] and 10 <= c <= 16): is_stripe = True
-                if (r in [18, 21, 24] and 8 <= c <= 20): is_stripe = True
-                if (r in [19, 21, 23] and 25 <= c <= 29): is_stripe = True
-                if (r in [28, 30] and ((5 <= c <= 9) or (16 <= c <= 20))): is_stripe = True
-                if (r in [4, 6] and ((1 <= c <= 5) or (22 <= c <= 26))): is_stripe = True
 
             elif anim_name in ["TYPING", "TYPING_MUSIC"]:
                 # Forehead stripes
@@ -3339,7 +3035,7 @@ class PetWidget(QWidget):
             c_orange = QColor(230, 115, 30)
             c_black = QColor(28, 28, 32)
 
-            if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING", "EATING"]:
+            if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING"]:
                 # 1. Left Ear & Temple (Orange) - organic curved contour
                 if (1 <= r <= 3 and 6 <= c <= 9): return c_orange
                 if (4 <= r <= 6 and 5 <= c <= 13): return c_orange
@@ -3382,24 +3078,6 @@ class PetWidget(QWidget):
                 if (20 <= r <= 23 and 25 <= c <= 30): return c_black
                 if (24 <= r <= 26 and 24 <= c <= 30): return c_orange
 
-                return c_grey
-
-            elif anim_name == "JUMP":
-                # Head:
-                if (1 <= r <= 6 and 6 <= c <= 11): return c_orange
-                if (1 <= r <= 6 and 16 <= c <= 22): return c_black
-                # Reaching paws:
-                if (2 <= r <= 7 and c <= 6): return c_orange
-                if (2 <= r <= 7 and c >= 21): return c_black
-                # Torso:
-                if (16 <= r <= 24 and 4 <= c <= 12): return c_orange
-                if (16 <= r <= 24 and 14 <= c <= 23): return c_black
-                # Dangling hind legs:
-                if (27 <= r <= 31 and 5 <= c <= 10): return c_black
-                if (27 <= r <= 31 and 15 <= c <= 21): return c_orange
-                # Tail:
-                if (18 <= r <= 21 and 25 <= c <= 30): return c_orange
-                if (22 <= r <= 25 and 24 <= c <= 30): return c_black
                 return c_grey
 
             elif anim_name in ["TYPING", "TYPING_MUSIC"]:
@@ -3567,10 +3245,6 @@ class PetWidget(QWidget):
             dest_height = grid_h * pixel_size
             dest_x = cx - (dest_width // 2)
             dest_y = floor_y - dest_height
-            if anim_name == "JUMP":
-                dest_y += int(getattr(self, 'jump_y_offset', 0.0))
-            elif anim_name == "EATING" and self.current_frame_index == 1:
-                dest_y += max(1, int(1 * scale_r))
             
         cat_bottom = max(dest_y + dest_height + 8, floor_y + 12)
         self.cat_interactive_rect = QRect(dest_x - 10, dest_y - 10, dest_width + 20, (cat_bottom - dest_y) + 14)
@@ -3829,100 +3503,7 @@ class PetWidget(QWidget):
         # Restore coordinate space for speech bubble and HUD
         painter.restore()
 
-        # 6.5 Hunger HUD: Charged Battery Glow right on top of head (appears ONLY after cat has eaten the fish)
-        self.battery_interactive_rect = QRect()
-        feeding_phase = getattr(self, 'feeding_phase', None)
-        charged_frames = getattr(self, 'battery_charged_frames', 0)
-        has_battery_hud = (charged_frames > 0)
-        bw = int(36 * scale_r)
-        bh = int(14 * scale_r)
-        pw = max(2, int(3 * scale_r))
-        ph = max(4, int(6 * scale_r))
-        bat_x = cx - (bw // 2)
-        bat_y = dest_y - bh - int(6 * scale_r)
-
-        if has_battery_hud:
-            painter.save()
-            painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-            
-            alpha_mult = min(1.0, charged_frames / 20.0)
-            
-            # Battery body shell
-            shell_bg = QColor(20, 24, 32, int(220 * alpha_mult))
-            shell_border = QColor(240, 245, 255, int(240 * alpha_mult))
-            pen_w = max(1, int(1.5 * scale_r))
-            
-            painter.setPen(QPen(shell_border, pen_w))
-            painter.setBrush(shell_bg)
-            painter.drawRoundedRect(QRectF(bat_x, bat_y, bw, bh), 3 * scale_r, 3 * scale_r)
-            
-            # Battery terminal pole (on right side)
-            pole_y = bat_y + (bh - ph) / 2.0
-            painter.drawRoundedRect(QRectF(bat_x + bw, pole_y, pw, ph), 1 * scale_r, 1 * scale_r)
-            
-            # Inner charge indicator - FULL GREEN CHARGE BAR
-            inner_pad = max(2, int(2.5 * scale_r))
-            inner_x = bat_x + inner_pad
-            inner_y = bat_y + inner_pad
-            inner_w = bw - (inner_pad * 2)
-            inner_h = bh - (inner_pad * 2)
-            
-            painter.setPen(Qt.PenStyle.NoPen)
-            green_col = QColor(46, 204, 113, int(245 * alpha_mult))
-            painter.setBrush(green_col)
-            painter.drawRoundedRect(QRectF(inner_x, inner_y, inner_w, inner_h), 1.5 * scale_r, 1.5 * scale_r)
-            
-            painter.restore()
-
-        # 6.6 Falling Fish during Feeding
-        if feeding_phase in ["FALLING", "JUMPING"] and not getattr(self, 'fish_caught', False):
-            fx = getattr(self, 'fish_x', float(cx))
-            fy = getattr(self, 'fish_y', float(dest_y - 80))
-            f_rot = getattr(self, 'fish_rotation', 0.0)
-            
-            fish_w = len(FISH_PIXELS[0]) * pixel_size
-            fish_h = len(FISH_PIXELS) * pixel_size
-            
-            painter.save()
-            painter.translate(fx, fy)
-            painter.rotate(f_rot)
-            painter.translate(-fish_w / 2.0, -fish_h / 2.0)
-            
-            painter.setPen(Qt.PenStyle.NoPen)
-            for fr_idx, frow in enumerate(FISH_PIXELS):
-                for fc_idx, fch in enumerate(frow):
-                    if fch == 'W':
-                        col = QColor(255, 255, 255)
-                    elif fch == 'S':
-                        col = QColor(255, 120, 85)
-                    elif fch == 'D':
-                        col = QColor(215, 80, 55)
-                    elif fch == 'L':
-                        col = QColor(255, 190, 170)
-                    elif fch == 'E':
-                        col = QColor(25, 25, 30)
-                    elif fch == 'Y':
-                        col = QColor(255, 255, 255)
-                    elif fch == 'O':
-                        col = QColor(255, 220, 60)
-                    else:
-                        continue
-                    painter.setBrush(col)
-                    painter.drawRect(fc_idx * pixel_size, fr_idx * pixel_size, pixel_size, pixel_size)
-            painter.restore()
-
-        # 6.7 Fish Catch Sparkle Bursts
-        if hasattr(self, 'fish_sparkles') and self.fish_sparkles:
-            painter.setPen(Qt.PenStyle.NoPen)
-            for s in self.fish_sparkles:
-                alpha = max(0, min(255, int(s[4])))
-                scol = QColor(s[5])
-                scol.setAlpha(alpha)
-                painter.setBrush(scol)
-                sp_sz = max(2, int(pixel_size * 0.9))
-                painter.drawRect(int(s[0]), int(s[1]), sp_sz, sp_sz)
-
-        # 7. Speech Bubble / Reminders / Pomodoro / Now Playing
+        # 6. Speech Bubble / Reminders / Pomodoro / Now Playing
         self.bubble_interactive_rect = QRect()
         msg_to_draw = None
         if hasattr(self, 'track_bubble_message') and self.track_bubble_message:
@@ -3947,7 +3528,7 @@ class PetWidget(QWidget):
             bubble_w = max(max_w + (pad_x * 2), 70)
             bubble_h = len(lines) * fm.height() + (pad_y * 2)
             
-            base_bubble_y = (bat_y if has_battery_hud else dest_y) - 6
+            base_bubble_y = dest_y - 6
             bx = cx - (bubble_w / 2)
             by = base_bubble_y - bubble_h - 10
             self.bubble_interactive_rect = QRect(int(bx - 6), int(by - 6), int(bubble_w + 12), int(bubble_h + 16))
@@ -3957,7 +3538,7 @@ class PetWidget(QWidget):
             painter.setPen(QColor(180, 185, 200, 180))
             painter.drawRoundedRect(int(bx), int(by), int(bubble_w), int(bubble_h), 12, 12)
             
-            # Pointer tail pointing down to cat head / battery
+            # Pointer tail pointing down to cat head
             pointer = QPolygonF([
                 QPointF(cx - 7, by + bubble_h),
                 QPointF(cx + 7, by + bubble_h),
@@ -3979,8 +3560,8 @@ class PetWidget(QWidget):
                 painter.drawText(text_x, y_start, l)
                 y_start += fm.height()
 
-        # 8. Floating Love Hearts (during purring, petting, or eating)
-        if (anim_name in ["PURRING", "EATING"] or getattr(self, 'is_petting', False) or getattr(self, 'feeding_phase', None) == "EATING") and hasattr(self, 'hearts') and self.hearts:
+        # 7. Floating Love Hearts (during purring or petting)
+        if (anim_name == "PURRING" or getattr(self, 'is_petting', False)) and hasattr(self, 'hearts') and self.hearts:
             heart_matrix = [
                 ".XX.XX.",
                 "XXXXXXX",
@@ -4014,21 +3595,6 @@ class PetWidget(QWidget):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            # 0. Click-to-Feed when hungry (click Nyx or area directly above Nyx)
-            if getattr(self, 'is_hungry', False) and not getattr(self, 'feeding_phase', None):
-                pixel_sz = max(2, int(getattr(self, 'scale_factor', 3)))
-                cx = self.width() // 2
-                cy = self.height() // 2
-                floor_y = cy + int(16 * pixel_sz)
-                cat_w = 32 * pixel_sz
-                cat_h = 33 * pixel_sz
-                dest_x = cx - (cat_w // 2)
-                dest_y = floor_y - cat_h
-                click_area = QRect(dest_x - 30, dest_y - 120, cat_w + 60, cat_h + 140)
-                if click_area.contains(event.pos()) or (hasattr(self, 'cat_interactive_rect') and self.cat_interactive_rect.contains(event.pos())):
-                    self.feed_fish()
-                    return
-
             # 1. Click-to-Dismiss Speech Bubbles ("Now Playing" or sticky reminders)
             if hasattr(self, 'bubble_interactive_rect') and not self.bubble_interactive_rect.isNull():
                 if self.bubble_interactive_rect.contains(event.pos()):
