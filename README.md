@@ -1,82 +1,124 @@
 <div align="center">
-  <h1>✨ Nyx ✨<br>Your Cozy Desktop Companion 🐾</h1>
-  <p>A lightweight, interactive pixel pet that lives on your screen to keep you company, help you focus, and vibe with your daily workflow!</p>
-  <img src="https://img.shields.io/badge/Windows-Supported-blue.svg?style=flat-square&logo=windows" alt="Windows">
-  <img src="https://img.shields.io/badge/Python-3.10+-blue.svg?style=flat-square&logo=python" alt="Python">
-  <img src="https://img.shields.io/badge/PyQt6-UI-green.svg?style=flat-square&logo=qt" alt="PyQt6">
+
+# ✨ Nyx ✨
+### *Your Cozy, Interactive Desktop Pet Companion* 🐾
+
+<p align="center">
+  A lightweight, frameless, transparent pixel cat that lives on your screen to keep you company, vibe with your music, react to your workflow, and help you stay focused!
+</p>
+
+[![Windows Supported](https://img.shields.io/badge/Platform-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/MukundhArul/Nyx/releases)
+[![Python Version](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![PyQt6 Framework](https://img.shields.io/badge/GUI-PyQt6-41CD52?style=for-the-badge&logo=qt&logoColor=white)](https://riverbankcomputing.com/software/pyqt/)
+[![License](https://img.shields.io/badge/License-MIT-F5A623?style=for-the-badge)](LICENSE)
+
+---
+
+[✨ Key Features](#-features--animations) •
+[🚀 Quick Start](#-how-to-run-easy-way) •
+[🛠️ Developer Setup](#-for-developers-build-from-source) •
+[🎨 Customization](#-coats-skins--wardrobe) •
+[⚙️ Controls & Settings](#️-settings--controls) •
+[📐 Architecture](#-architecture--how-it-works)
+
+---
+
 </div>
-
----
-
-## 🌟 What's New in v1.3.0?
-
-Nyx has received a major visual polish and feline grace upgrade, featuring extended resting paws, an organic scruff-drag redesign, seamless connected tail anatomy, and hand-crafted feline coats!
-
-- **🐾 Extended Front Paws & Rounded Mittens:**
-  - Front paws extend forward naturally in `IDLE`, `SLEEPING`, `VIBING` (music), `WATCHING`, and `PURRING` animations.
-  - Features individual rounded kitten mitten paw contours and clean floor seals behind the paws for a relaxed, resting loaf posture.
-- **🐱 Organic Dragged Scruff Animation Redesign:**
-  - Soft feline waist taper (`width 18 → 16`) and rounded hips (`width 20`) replacing the rigid 5-row rectangular column.
-  - Symmetrical 7-pixel dangling legs with cute rounded mitten paws (`..WWWWW..`) replacing the flat wooden blocks.
-  - Fluid bicycle pedaling kick cycle across 3 frames with 1-pixel vertical stepping (`Frame 0: Left 38, Right 36` → `Frame 1: Mid-swing 37` → `Frame 2: Left 36, Right 38`).
-  - Glitch-free curving tail swaying naturally by 1 pixel per frame with zero internal white streak artifacts.
-- **✨ Pixel-Perfect Connected Sitting Tail:**
-  - Completely re-engineered tail base across rows 25–28 in all sitting poses.
-  - 100% physically connected body-to-tail pixels (verified via BFS graph traversal).
-  - Completely eliminated both the disconnected floating tail gap and the jagged rectangular bottom-right rump shelf.
-- **🎨 7 Curated Coats & Feline Skins (with Crisp Protected Eyes):**
-  - Choose between sleek solid shades and hand-crafted feline coats:
-    - 🌑 **Black:** Classic sleek obsidian midnight shade.
-    - 🌪️ **Slate:** Cool smoky graphite slate shade.
-    - 🌊 **Navy:** Deep oceanic midnight starlight blue.
-    - ☕ **Espresso:** Rich roasted coffee mocha brown.
-    - 🎩 **Tuxedo:** Dapper black cat with a neat white chest ascot and cute white ankle socks on dangling paws.
-    - 🧡 **Ginger:** Warm marmalade tabby with sweet cinnamon stripes and bright white eye rings.
-    - 🎨 **Calico:** Soft light grey coat with ginger and black ear-to-eye split, colored legs, and sparkling anime eyes.
-  - 👁️ **Eye Protection:** Face and eye zones are strictly protected—stripes and patches never cut across the eyes, paws, or keyboard.
-  - Pick between 3 crisp pixel sizes: **Small (2x)**, **Medium (3x)**, and **Large (4x)**.
-- **👑 Scaled-Up Royal Accessories:**
-  - 👑 **Grand Golden Crown:** A majestic, larger royal gold crown with ruby and sapphire jewel insets, centered proudly on Nyx's head.
-  - 🧙 **Grand Wizard Hat:** A stylish, larger pointed mystical violet wizard hat with a celestial golden sash and glowing star tip.
-  - 🎉 **Party Hat:** A joyful festive cone party hat featuring colorful confetti stripes and a fluffy white pom-pom.
-  - 🧠 **Smart Context Hiding:** Accessories automatically tuck away while typing on the keyboard or jamming with headphones so there is never visual clutter.
-- **🎵 "Now Playing" Track Pop-Up:**
-  - When you listen to music on Spotify or supported media players, Nyx automatically pops up a cute speech bubble announcing the song title (e.g. `🎵 Now Playing: Starboy`) as soon as the track changes. Click directly on the bubble to dismiss it immediately!
-- **🧘 Authentic Stretch Break Reminder & Animation:**
-  - Nyx reminds you to stretch every 30 minutes with a dedicated 6-frame Comnyang stretching animation (arched back, anchored front paws, squint eyes `><`, and curled tail).
-  - Includes a **"Stretch Now"** button in settings to trigger your break anytime.
-
----
 
 ## 🌟 What is Nyx?
 
-Nyx is a completely free, open-source desktop overlay inspired by cozy virtual pets and companions. Nyx sits happily on your desktop, fully transparent and frameless, reacting to your mouse, keystrokes, and active apps without ever getting in your way! 🧡
+**Nyx** is a cozy, open-source desktop overlay companion inspired by classic virtual desktop pets. Built with Python and PyQt6, Nyx rests comfortably above your open windows, floating seamlessly across your desktop without borders or title bars.
+
+Nyx is deeply reactive to how you work:
+- Tap away on your keyboard, and Nyx kneads along with your keystrokes.
+- Turn on Spotify or your favorite music, and Nyx puts on retro coral headphones to bob to the beat.
+- Switch to YouTube or video streams, and Nyx widens its eyes to watch with you.
+- Step away from your computer, and Nyx curls up for a peaceful nap with soft floating Zzzs.
+- Need a healthy reminder? Nyx alerts you to take posture stretch breaks and hydrate, and features a built-in Pomodoro study timer!
+
+---
+
+## 🐈 Features & Animations
+
+### 🎮 Living, Reactive Feline Behaviors
+* **🐾 Cozy Resting Paws:** In sitting loaf postures (`IDLE`, `SLEEPING`, `VIBING`, `WATCHING`, and `PURRING`), Nyx extends its front paws forward into soft, rounded kitten mittens (`..WWWWW..`) anchored cleanly to the desktop floor.
+* **⌨️ Real-Time Keyboard Kneading:** Start typing code or writing documents, and Nyx taps its paws synchronously with your keystrokes. Sustained typing speeds over 60 WPM even trigger hot typing heat steam!
+* **👀 Dynamic Cursor Following & Natural Blinks:** Nyx's pupils smoothly track your mouse cursor across multi-monitor setups, complete with gentle natural blinking intervals when resting.
+* **🖱️ Fluid Mochi Drag Physics:** Click and pick Nyx up by the scruff! Nyx dangles with an organic feline waist taper (`width 18 → 16`), rounded hips (`width 20`), symmetrical 7-pixel dangling legs, soft mitten paws, and a fluid 3-frame bicycle pedaling kick cycle with inertia pendulum tilt.
+* **✨ Pixel-Perfect Connected Tail:** Seamless body-to-tail connection across rows 25–28 with zero floating gaps or jagged artifacts.
+* **💕 Purring & Petting:** Click or gently pet Nyx to make it happy! Nyx closes its eyes in bliss and floats soft pink pixel hearts.
+* **🎙️ Voice Reactions (Microphone Audio):** Talk into your microphone and Nyx opens its mouth in real-time to chirp and chat back with you.
+* **💤 Automatic Nap Mode:** Inactive for more than 30 seconds? Nyx curls up into a peaceful sleep with floating cyan Zzz particles, waking up gently as soon as you move your mouse.
+
+---
+
+### 📱 Smart App & Media Detection
+* **🎧 Vibing to Music:** Automatically detects **Spotify** or active media players. Nyx equips retro coral headphones and bobs rhythmically while colorful pastel music notes drift upward.
+* **🎵 "Now Playing" Song Pop-Ups:** Whenever your track changes, a clean speech bubble pops up over Nyx's head showing the new song title (e.g. `🎵 Now Playing: Starboy`). Click directly on the bubble anytime to dismiss it instantly!
+* **📺 Watching Videos:** Detects when you're watching video in browsers or media players, prompting Nyx to widen its eyes in attentive screen gazing.
+
+---
+
+### ⏱️ Productivity & Health Reminders
+* **🧘 Posture Stretch Breaks:** Nyx reminds you to take a stretch break every 30 minutes with an authentic 6-frame Comnyang stretching animation (arched back, anchored front paws, squint eyes `><`, and curled tail). Includes a **"Stretch Nyx 🐾"** manual trigger in the menu.
+* **💧 Hydration Reminders:** Gentle periodic reminders to drink water so you stay refreshed while working or gaming.
+* **🍅 Pomodoro Study Clock:** Configurable focus intervals (default: 25 min) and short break intervals (default: 5 min) displayed in a tidy floating countdown bubble above Nyx's head.
+* **💬 Pinned Sticky Reminders:** Pin any quick task, goal, or inspirational memo into a permanent speech bubble over Nyx.
+
+---
+
+## 🎨 Coats, Skins & Wardrobe
+
+### 🐾 7 Curated Feline Coats
+Nyx features hand-crafted feline coat patterns with strictly protected eye and face zones:
+
+| Coat | Icon | Description |
+|---|:---:|---|
+| **Black** | 🌑 | Classic sleek obsidian midnight coat with crisp white outlines. |
+| **Slate** | 🌪️ | Cool smoky graphite slate shade with clean modern tones. |
+| **Navy** | 🌊 | Deep oceanic midnight starlight blue. |
+| **Espresso** | ☕ | Rich roasted coffee mocha brown. |
+| **Tuxedo** | 🎩 | Dapper black cat with an organic white chest ascot and cute white mitten socks. |
+| **Ginger** | 🧡 | Warm marmalade tabby with sweet cinnamon tiger stripes on forehead, cheeks, flanks, and tail with bright white eye rings. |
+| **Calico** | 🎨 | Soft light grey coat with abstract organic ginger and black blotches, ear-to-eye split, and dual-colored paw socks. |
+
+*Choose between 3 crisp pixel scale factors in Settings:* **Small (2x)**, **Medium (3x)**, or **Large (4x)**.
+
+---
+
+### 🎩 Smart Context-Aware Wardrobe
+Nyx features royal and festive headwear designed to fit comfortably atop Nyx's head:
+- 👑 **Grand Golden Crown:** Majestic royal gold crown with sparkling ruby and sapphire jewel insets.
+- 🧙 **Grand Wizard Hat:** Mystical violet pointed wizard hat with celestial golden sash and glowing star tip.
+- 🎉 **Party Hat:** Festive party cone featuring vibrant confetti stripes and a fluffy pom-pom.
+
+> **🧠 Smart Auto-Hiding:** Equipped accessories automatically tuck away while typing on the keyboard, wearing music headphones, or stretching, preventing visual overlap.
 
 ---
 
 ## 📐 Architecture & How It Works
 
-Nyx runs asynchronously with low CPU usage, combining Windows OS hooks, an event-driven state machine, and a procedural pixel engine:
+Nyx is engineered for near-zero idle CPU usage (~0.1% CPU) using non-polling system event hooks and an event-driven PyQt6 graphics pipeline:
 
 ```mermaid
 flowchart TD
     subgraph Inputs ["System & User Inputs"]
-        KBD["Keyboard & Mouse Activity<br>(pynput hook)"]
-        WIN["Active Windows & Media Titles<br>(Windows API / ctypes)"]
-        MIC["Microphone Audio Stream<br>(PyAudio)"]
-        CFG["User Config & Timers<br>(settings.json)"]
+        KBD["Keyboard & Mouse Hooks<br>(pynput)"]
+        WIN["Active Window & Media Monitor<br>(Windows API / ctypes)"]
+        MIC["Audio Input Stream<br>(PyAudio)"]
+        CFG["Persistent Configuration<br>(settings.json)"]
     end
 
     subgraph Core ["Nyx Core Engine (PetWidget)"]
-        TRACK["Context & Activity Monitor<br>• Typing Heat / WPM<br>• Idle / Sleep Tracker<br>• Pomodoro & 30m Stretch Clock"]
-        SM["Interactive State Machine<br>(IDLE, TYPING, VIBING, DRAGGED,<br>SLEEPING, PURRING, STRETCHING)"]
-        WARD["Smart Wardrobe Controller<br>• Dynamic Offsets<br>• Typing & Music Suppression"]
+        TRACK["Context & Activity Monitor<br>• Typing WPM & Heat Sprints<br>• Idle / Nap Clock<br>• Pomodoro & Stretch Clocks"]
+        SM["Feline State Machine<br>(IDLE, TYPING, VIBING, DRAGGED,<br>SLEEPING, PURRING, STRETCHING)"]
+        WARD["Smart Wardrobe Controller<br>• Context Auto-Hiding<br>• Coat Pattern Mappers"]
     end
 
     subgraph Rendering ["Procedural Matrix Canvas"]
-        MAT["String Matrix Frame Engine<br>(Procedural ASCII to Pixel Grid)"]
-        PARTS["Particle & Overlay Engine<br>• Floating Hearts & Zzzs<br>• Retro Coral Headphones<br>• Track Title Speech Bubbles"]
-        CANVAS["Transparent Frameless Desktop Window<br>(PyQt6 Canvas)"]
+        MAT["String Matrix Frame Engine<br>(Procedural ASCII Grid to Pixels)"]
+        PARTS["Particle & Overlay Engine<br>• Floating Hearts & Zzzs<br>• Music Notes & Headphones<br>• Speech & Timer Bubbles"]
+        CANVAS["Transparent Frameless Overlay<br>(PyQt6 Canvas)"]
     end
 
     Inputs --> TRACK
@@ -89,100 +131,64 @@ flowchart TD
     PARTS --> CANVAS
 ```
 
----
-
-## 🐈 Features & Animations
-
-Nyx is powered by a custom procedural string matrix engine: every frame is drawn natively with crisp pixel edges and full dynamic color support!
-
-### 🔄 Reactive State Machine
-
-Nyx continuously monitors system activity and transitions smoothly between states:
+### 🔄 Interactive State Machine
 
 ```mermaid
 stateDiagram-v2
     [*] --> IDLE
-    IDLE --> TYPING : User types on keyboard
-    TYPING --> IDLE : Typing pauses
-    IDLE --> VIBING : Spotify or media playing
+    IDLE --> TYPING : Keystrokes detected
+    TYPING --> IDLE : Typing pauses (>1.5s)
+    IDLE --> VIBING : Spotify / media active
     VIBING --> IDLE : Media pauses
-    IDLE --> WATCHING : Video or browser focused
-    WATCHING --> IDLE : Window minimized / unfocused
-    IDLE --> DRAGGED : Left-click & drag
-    DRAGGED --> IDLE : Release mouse button
-    IDLE --> SLEEPING : Inactive > 30 seconds
-    SLEEPING --> IDLE : Mouse move or key press
+    IDLE --> WATCHING : Video window focused
+    WATCHING --> IDLE : Window minimized / changed
+    IDLE --> DRAGGED : Left-click & drag scruff
+    DRAGGED --> IDLE : Mouse button released
+    IDLE --> SLEEPING : Idle > 30 seconds
+    SLEEPING --> IDLE : Mouse movement or keypress
     IDLE --> PURRING : Clicked or petted
     PURRING --> IDLE : Petting finishes
-    IDLE --> STRETCHING : 30-min timer or manual trigger
-    STRETCHING --> IDLE : Stretch routine completes
+    IDLE --> STRETCHING : 30-min break or manual trigger
+    STRETCHING --> IDLE : Stretch routine completes (6 frames)
 ```
-
-### 🎮 Interactive Animations
-* **🖱️ Drag & Drop:** Click and hold to pick Nyx up. Nyx dangles cutely with organic body tapering, soft rounded kitten mitten paws, and a fluid bicycle pedaling kick cycle as you move it across the desktop.
-* **🐾 Resting Paws:** When sitting idle, resting, sleeping, or vibing to music, Nyx extends its front paws forward into cozy rounded mittens.
-* **⌨️ Keyboard Kneading:** Start typing code or writing documents, and Nyx taps its paws along with your keystrokes. Fast typing even makes Nyx sweat heat steam!
-* **👀 Cursor Tracking & Blinking:** Nyx's eyes follow your mouse cursor smoothly around your monitors, with natural blinking intervals when idle.
-* **💕 Purring:** Click or pet Nyx to make it happy! It will close its eyes in bliss and float gentle pink hearts.
-* **🎙️ Voice Reactions (Mic Support):** Speak into your microphone and Nyx opens its mouth in real-time to talk back with you.
-* **💤 Sleep Mode:** Step away from your computer for 30 seconds, and Nyx curls up into a peaceful nap with floating blue Zzzs.
-
-### 🎩 Wardrobe & Context-Aware Accessories
-
-Accessories automatically adjust and suppress themselves depending on what Nyx is currently doing:
-
-```mermaid
-flowchart LR
-    ACC["Equipped Accessory<br>(Crown, Wizard Hat, Party Hat)"] --> CHECK{"Current State?"}
-    CHECK -->|"Typing (Keyboard)"| HIDE1["❌ Auto-Hidden<br>(Clear view of typing)"]
-    CHECK -->|"Music (Headphones)"| HIDE2["❌ Auto-Hidden<br>(No headphone collision)"]
-    CHECK -->|"Stretching (Break)"| HIDE3["❌ Auto-Hidden<br>(Clean body posture)"]
-    CHECK -->|"Idle / Sleeping / Dragged"| SHOW["✅ Rendered<br>(Accurate head/neck placement)"]
-```
-
-### 📱 App & Media Reactions
-* **🎧 Vibing:** Open **Spotify** or a music player, and Nyx throws on retro coral headphones to bob to the beat.
-* **🎵 Now Playing Speech Bubble:** Track changes pop up right above Nyx's head so you always know what song is playing.
-* **📺 Watching:** Switch to **YouTube** or a video player, and Nyx widens its eyes to watch videos attentively with you.
-
-### ⏰ Productivity & Health Tools
-* **🍅 Pomodoro Timers:** Toggle customizable focus intervals and break timers right from the settings window.
-* **🧘 Posture & Stretch Reminders:** Set reminders every 30 minutes to stretch alongside Nyx.
-* **💬 Pinned Sticky Notes:** Keep a quick task or reminder pinned in a speech bubble above Nyx's head.
 
 ---
 
 ## 🚀 How to Run (Easy Way)
 
-You do not need to know how to code to enjoy Nyx!
+You do **not** need Python installed to use Nyx!
 
-1. Go to the [Releases](https://github.com/MukundhArul/Nyx/releases) page on GitHub.
-2. Download `Nyx_Cat.exe` (or `Nyx.exe`).
-3. Place it anywhere on your computer (e.g. your Desktop or Startup folder).
-4. Double-click `Nyx_Cat.exe` to run it!
-*(Note: Windows SmartScreen may show an unrecognized app banner on first launch. Click "More info" and "Run anyway").*
+1. Head to the **[Releases](https://github.com/MukundhArul/Nyx/releases)** page on GitHub.
+2. Download **`Nyx_Cat.exe`** (or grab the zip bundle).
+3. Place `Nyx_Cat.exe` in any folder (or drop a shortcut into your Windows Startup folder: `shell:startup`).
+4. Double-click **`Nyx_Cat.exe`** to launch!
+
+> *Note: Windows SmartScreen may show an unrecognized application prompt on first launch. Click **"More info"** → **"Run anyway"**.*
 
 ---
 
 ## 🛠️ For Developers (Build From Source)
 
-### 1. Clone the repository
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/MukundhArul/Nyx.git
 cd Nyx
 ```
 
-### 2. Set up your virtual environment
+### 2. Set Up Virtual Environment
 ```bash
 python -m venv venv
 
-# Windows (Command Prompt / PowerShell):
-.\venv\Scripts\activate
+# Windows PowerShell:
+.\venv\Scripts\Activate.ps1
+
+# Windows Command Prompt:
+.\venv\Scripts\activate.bat
 ```
 
-### 3. Install dependencies
+### 3. Install Dependencies
 ```bash
-pip install PyQt6 pynput psutil Pillow PyAudio PyGetWindow
+pip install PyQt6 pynput psutil Pillow PyAudio pygetwindow
 ```
 
 ### 4. Run Nyx
@@ -200,21 +206,35 @@ pyinstaller --noconfirm --onefile --windowed --name Nyx_Cat --icon=cat.ico app.p
 
 ## ⚙️ Settings & Controls
 
-* **Right-Click Nyx or System Tray Icon**:
-  - Open **Settings** dialog
-  - Quick-switch **Wardrobe Accessories** (None, Golden Crown, Wizard Hat, Party Hat)
-  - Quick-switch **Coat Presets & Skins** (Black, Slate, Navy, Espresso, Tuxedo, Ginger, Calico)
-  - Quick-trigger **Stretch Now**
-  - Toggle **Always on Top**
-  - Reset to Default or Exit Nyx
+### 🖱️ Mouse Controls
+* **Left-Click & Drag:** Grab Nyx by the scruff and move it anywhere across your monitors.
+* **Left-Click Once:** Pet Nyx to trigger happy purring and floating hearts!
+* **Click Speech Bubble:** Dismiss any active track announcement or reminder instantly.
+* **Right-Click Nyx:** Opens the quick context menu.
 
-* **Tabbed Settings Window**:
-  - **🎩 Wardrobe**: Preview and equip head accessories in a clean 2x2 card grid.
-  - **🎨 Appearance**: Choose between 7 coats and feline skins (Black, Slate, Navy, Espresso, Tuxedo, Ginger, Calico); select Small (2x), Medium (3x), or Large (4x) cat sizes; toggle typing paw tap reactions.
-  - **⏱️ Timers**: Configure Pomodoro study/work intervals, break reminders, and pinned message bubbles.
+### 📋 System Tray & Context Menu
+* **Settings...:** Opens the full tabbed settings dialog.
+* **Stretch Nyx 🐾:** Immediately triggers the 6-frame Comnyang stretching break routine.
+* **Wardrobe 🎩:** Quick-toggle hats (None, Golden Crown, Wizard Hat, Party Hat).
+* **Coat Presets 🐾:** Quick-switch cat coats (Black, Slate, Navy, Espresso, Tuxedo, Ginger, Calico).
+* **Always on Top:** Toggle desktop overlay pinning.
+* **Set Pinned Message... / Clear Pinned Message:** Pin a task or note above Nyx.
+* **Toggle Pomodoro / Set Pomodoro Task...:** Start, pause, or configure your Pomodoro session.
+* **Exit Nyx:** Closes the application cleanly.
+
+### 🎛️ Tabbed Settings Window
+* **🎩 Wardrobe Tab:** Visual card selector to equip and preview accessories.
+* **🎨 Appearance Tab:** Select coats, change pixel size (Small 2x / Medium 3x / Large 4x), and toggle keystroke paw kneading.
+* **⏱️ Timers Tab:** Configure Pomodoro focus & break intervals, water reminders, and stretch timer intervals.
 
 ---
 
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE) — free for personal and commercial use.
+
 <div align="center">
-  <i>Built with ❤️ for a cozier desktop experience.</i>
+  <br>
+  <b>Crafted with ❤️ for a cozier, happier desktop workspace.</b><br>
+  <i>If you enjoy Nyx, consider starring ⭐ the repository on GitHub!</i>
 </div>
