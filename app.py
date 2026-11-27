@@ -1,6 +1,5 @@
 import sys
 import time
-import psutil
 import os
 import json
 import math
@@ -10,19 +9,21 @@ import ctypes
 from ctypes import wintypes
 # pyrefly: ignore [missing-import]
 from PyQt6.QtWidgets import (QApplication, QWidget, QMenu, QInputDialog, QSystemTrayIcon,
-                             QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QSlider, QCheckBox, 
+                             QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QCheckBox, 
                              QLineEdit, QPushButton, QDateTimeEdit, QSpinBox, QGroupBox,
-                             QTabWidget, QTabBar)
+                             QTabWidget)
 # pyrefly: ignore [missing-import]
 from PyQt6.QtGui import (QPainter, QCursor, QColor, QAction, QFont, QPixmap,
-                         QIcon, QPolygonF, QPen, QRadialGradient, QRegion)
+                         QIcon, QPolygonF, QPen, QRadialGradient)
 # pyrefly: ignore [missing-import]
-from PyQt6.QtCore import Qt, QPoint, QPointF, QRect, QRectF, QTimer, pyqtSignal, QThread, QDateTime
+from PyQt6.QtCore import Qt, QPoint, QPointF, QRect, QTimer, pyqtSignal, QThread, QDateTime
 from pynput import mouse, keyboard
 # pyrefly: ignore [missing-import]
 import pygetwindow as gw
 
-SETTINGS_FILE = "settings.json"
+APP_DIR = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(os.path.abspath(__file__))
+RESOURCE_DIR = getattr(sys, '_MEIPASS', APP_DIR)
+SETTINGS_FILE = os.path.join(APP_DIR, "settings.json")
 DEFAULT_SETTINGS = {
     "scale_factor": 3.0,
     "react_to_typing": True,
@@ -217,16 +218,13 @@ COAT_PRESETS = {
 MATRIX_COLORS = {
     'P': QColor(26, 26, 26),     # Comnyang official dark body (#1A1A1A, overridden by settings)
     'W': QColor(255, 255, 255),  # Pure white eyes, whiskers, markings
-    'E': QColor(26, 26, 26),     # Eye socket interior (tracks pupil)
     'B': QColor(10, 10, 10),     # Dark pupil / mouth
     'K': QColor(153, 151, 151),  # Official keycap top (#999797)
     'k': QColor(96, 94, 94),     # Official keycap side bevel (#605E5E)
     'D': QColor(34, 34, 34),     # Official keycap bottom bevel (#222222)
     'S': QColor(20, 20, 20),     # Outline / shading
     'N': QColor(255, 140, 165),  # Pink nose & inner ears
-    'Z': QColor(110, 180, 255),  # Sleeping Zzzs
     'M': QColor(255, 75, 95),    # Coral red headphones
-    'L': QColor(42, 42, 42),     # Subtle fur highlight
 }
 
 def is_eye_pupil(anim_name, r, c):
@@ -253,6 +251,20 @@ def is_eye_protected_zone(anim_name, r, c):
         return (8 <= r <= 13) and (5 <= c <= 23)
     elif anim_name == "STRETCHING":
         return (14 <= r <= 18) and (7 <= c <= 25)
+    return False
+
+def is_typing_keycap_bevel(frame_idx, r, c):
+    """Dark 3D keycap shadow pixels encoded as 'P' in TYPING/TYPING_MUSIC frames."""
+    if frame_idx == 0:
+        if (r == 34 and c == 18) or (35 <= r <= 40 and 15 <= c <= 18):
+            return True
+        if 37 <= r <= 40 and 35 <= c <= 38:
+            return True
+    else:
+        if (27 <= r <= 29 and 18 <= c <= 19) or (30 <= r <= 35 and 17 <= c <= 19) or (36 <= r <= 40 and 15 <= c <= 18):
+            return True
+        if 37 <= r <= 40 and 35 <= c <= 38:
+            return True
     return False
 
 MATRIX_FRAMES = {
@@ -1403,7 +1415,7 @@ MATRIX_FRAMES = {
 def load_settings():
     if os.path.exists(SETTINGS_FILE):
         try:
-            with open(SETTINGS_FILE, "r") as f:
+            with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
                 s = json.load(f)
                 for k, v in DEFAULT_SETTINGS.items():
                     if k not in s:
@@ -1414,7 +1426,7 @@ def load_settings():
     return DEFAULT_SETTINGS.copy()
 
 def save_settings(settings):
-    with open(SETTINGS_FILE, "w") as f:
+    with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
         json.dump(settings, f, indent=4)
 
 class SettingsWindow(QWidget):
@@ -1727,7 +1739,7 @@ class SettingsWindow(QWidget):
         rem_row.addWidget(add_btn)
         rem_layout.addLayout(rem_row)
         
-        help_label = QLabel("Nyx holds the message above its head. Drag it to acknowledge and clear the reminder.")
+        help_label = QLabel("Nyx displays reminders in a speech bubble above its head. Click the bubble to dismiss it.")
         help_label.setWordWrap(True)
         help_label.setStyleSheet("color: #888;")
         rem_layout.addWidget(help_label)
@@ -1743,6 +1755,11 @@ class SettingsWindow(QWidget):
         
         root_layout.addWidget(self.tabs)
         self.setLayout(root_layout)
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        if hasattr(self, 'rem_date'):
+            self.rem_date.setDateTime(QDateTime.currentDateTime())
 
     def set_accessory(self, acc_key):
         self.pet.settings["accessory"] = acc_key
@@ -1849,14 +1866,6 @@ class SettingsWindow(QWidget):
             self.pet.update_tray_coat_checks()
         self.pet.update()
 
-    def set_preset_color(self, r, g, b):
-        self.pet.settings["matrix_r"] = r
-        self.pet.settings["matrix_g"] = g
-        self.pet.settings["matrix_b"] = b
-        self.update_preset_buttons_ui()
-        self.pet.save_and_apply_settings()
-        self.pet.update()
-
     def update_preset_buttons_ui(self):
         curr_preset = self.pet.settings.get("coat_preset", "black")
         if curr_preset == "charcoal":
@@ -1893,7 +1902,13 @@ class SettingsWindow(QWidget):
         self.pet.save_and_apply_settings()
 
     def on_pomo_cb_changed(self, val):
-        self.pet.settings["pomodoro_enabled"] = bool(val)
+        enabled = bool(val)
+        self.pet.settings["pomodoro_enabled"] = enabled
+        if not enabled:
+            self.pet.pomo_active = False
+            self.pet.pomo_seconds = 0
+            self.pet.pomo_mode = "focus"
+            self.pet.update()
         self.pet.save_and_apply_settings()
 
     def on_pomo_f_changed(self, val):
@@ -1906,7 +1921,8 @@ class SettingsWindow(QWidget):
 
     def add_reminder(self):
         msg = self.rem_input.text().strip()
-        if not msg: return
+        if not msg:
+            return
         dt = self.rem_date.dateTime().toPyDateTime()
         
         if "reminders" not in self.pet.settings:
@@ -1917,8 +1933,6 @@ class SettingsWindow(QWidget):
             "message": msg
         })
         self.pet.save_and_apply_settings()
-        self.rem_input.setText("")
-        self.pet.save_and_apply_settings()
         self.rem_input.clear()
 
 
@@ -1928,6 +1942,23 @@ class MonitorThread(QThread):
     active_window = pyqtSignal(str)
     spotify_status = pyqtSignal(bool)
     track_changed = pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._running = True
+        self._mouse_listener = None
+        self._keyboard_listener = None
+
+    def stop(self):
+        self._running = False
+        try:
+            if self._mouse_listener:
+                self._mouse_listener.stop()
+            if self._keyboard_listener:
+                self._keyboard_listener.stop()
+        except Exception:
+            pass
+        self.wait(1500)
 
     def run(self):
         last_move_time = 0.0
@@ -1946,14 +1977,12 @@ class MonitorThread(QThread):
             self.input_activity.emit()
             self.typing_activity.emit()
         
-        mouse_listener = mouse.Listener(on_move=on_move, on_click=on_click)
-        keyboard_listener = keyboard.Listener(on_press=on_press)
+        self._mouse_listener = mouse.Listener(on_move=on_move, on_click=on_click)
+        self._keyboard_listener = keyboard.Listener(on_press=on_press)
         
-        mouse_listener.start()
-        keyboard_listener.start()
+        self._mouse_listener.start()
+        self._keyboard_listener.start()
         
-        import ctypes
-        from ctypes import wintypes
         user32 = ctypes.windll.user32
         kernel32 = ctypes.windll.kernel32
         psapi = ctypes.windll.psapi
@@ -1961,7 +1990,7 @@ class MonitorThread(QThread):
         WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, wintypes.HWND, wintypes.LPARAM)
         last_track = ""
         
-        while True:
+        while self._running:
             try:
                 hwnd = user32.GetForegroundWindow()
                 title = ""
@@ -1984,7 +2013,7 @@ class MonitorThread(QThread):
                 detected_track = ""
                 is_spotify = False
                 
-                # 1. Enumerate top-level windows to check if Spotify is playing (even in background)
+                # 1. Enumerate top-level windows to check if Spotify is actively playing (even in background)
                 def enum_spotify_cb(w_hwnd, lparam):
                     nonlocal detected_track, is_spotify
                     try:
@@ -1997,13 +2026,13 @@ class MonitorThread(QThread):
                                 psapi.GetModuleBaseNameW(h_p, None, p_name, ctypes.sizeof(p_name))
                                 kernel32.CloseHandle(h_p)
                                 if p_name.value.lower() == "spotify.exe":
-                                    is_spotify = True
                                     length = user32.GetWindowTextLengthW(w_hwnd)
                                     if length > 0:
                                         t_buf = ctypes.create_unicode_buffer(length + 1)
                                         user32.GetWindowTextW(w_hwnd, t_buf, length + 1)
                                         val = t_buf.value.strip()
                                         if val and not val.lower().startswith("spotify") and not val.lower().startswith("gdi+"):
+                                            is_spotify = True
                                             detected_track = val
                                             return False # found playing track, stop enumeration
                     except Exception:
@@ -2047,10 +2076,10 @@ class MonitorThread(QThread):
 def generate_mochi_sprite(base_matrix, stretch_rows=0):
     if stretch_rows <= 0:
         return base_matrix
-    top = base_matrix[0:26] # Rows 0 to 25 (Head, arms, paws)
-    bottom = base_matrix[29:] # Rows 29 to end (Pelvis, tail, legs)
+    top = base_matrix[:27]     # Rows 0 to 26 (Head, arms, tapering upper waist)
+    bottom = base_matrix[28:]  # Rows 28 to end (Tail cap, pelvis, dangling legs)
     
-    total_mid_rows = 3 + stretch_rows
+    total_mid_rows = 1 + stretch_rows
     mid = []
     for i in range(total_mid_rows):
         t = i / max(1, total_mid_rows - 1)
@@ -2061,6 +2090,14 @@ def generate_mochi_sprite(base_matrix, stretch_rows=0):
         mid.append(row)
         
     return top + mid + bottom
+
+def map_mochi_row(r, stretch_rows=0):
+    """Map a rendered mochi-stretched row index back to the canonical DRAGGED row index."""
+    if stretch_rows <= 0 or r < 27:
+        return r
+    if r <= 27 + stretch_rows:
+        return 27
+    return r - stretch_rows
 
 class PetWidget(QWidget):
     def __init__(self):
@@ -2088,10 +2125,9 @@ class PetWidget(QWidget):
         self.hearts = []
         self.sleeping_zzzs = []
         self.music_notes = []
-        self.is_petting = False
         self.drag_has_started = False
+        self._press_active = False
         self.mouse_press_pos = None
-        self.oldPos = self.pos()
         self.tick_count = 0
         
         self.active_app_state = ""
@@ -2103,22 +2139,26 @@ class PetWidget(QWidget):
         self.is_angry = False
         self.is_listening_to_music = False
         
-        self.cat_interactive_rect = QRect()
         self.bubble_interactive_rect = QRect()
         self.track_bubble_message = None
         self._track_bubble_timer = None
+        self._purr_timer = QTimer(self)
+        self._purr_timer.setSingleShot(True)
+        self._purr_timer.timeout.connect(self.reset_to_idle)
         self.landing_cushion_frames = 0
         self.waking_frames = 0
         
         # Phase 4 Productivity states
         self.pinned_message = ""
+        self.current_task = ""
         self.pomo_active = False
+        self.pomo_mode = "focus"
         self.pomo_seconds = 0
         self.stretch_timer = 0
         self.water_timer = 0
         
         # Phase 5 Sprite states
-        self.setup_sprites()
+        self.current_frame_index = 0
         self.scale_factor = self.settings["scale_factor"]
         
         self.settings_window = SettingsWindow(self)
@@ -2143,105 +2183,16 @@ class PetWidget(QWidget):
         self.monitor.track_changed.connect(self.on_track_changed)
         self.monitor.start()
 
+    def cleanup(self):
+        for t_attr in ('anim_timer', 'logic_timer', '_purr_timer', '_track_bubble_timer'):
+            t = getattr(self, t_attr, None)
+            if t:
+                t.stop()
+        if hasattr(self, 'monitor') and self.monitor:
+            self.monitor.stop()
+
     def save_and_apply_settings(self):
         save_settings(self.settings)
-
-    def setup_sprites(self):
-        asset_path = os.path.join(os.path.dirname(__file__), "assets", "Cat Sprite Sheet.png")
-        self.sprite_sheet = QPixmap(asset_path)
-        
-        alarm_path = os.path.join(os.path.dirname(__file__), "assets", "updated clock.png")
-        full_pixmap = QPixmap(alarm_path)
-        self.alarm_pixmap = full_pixmap.copy(470, 158, 997, 725)
-        
-        self.frame_width = 32
-        self.frame_height = 32
-        
-        self.animations = {
-            "IDLE": [(c, 0) for c in range(4)],          # Row 0
-            "IDLE_2": [(c, 2) for c in range(4)],        # Row 2 (Unused 1)
-            "IDLE_3": [(c, 3) for c in range(4)],        # Row 3 (Unused 2)
-            "IDLE_4": [(c, 5) for c in range(8)],        # Row 5 (Unused 3)
-            "SLEEPING": [(c, 6) for c in range(4)],      # Row 6
-            "DRAGGED": [(c, 1) for c in range(4)],       # Row 1
-            "TYPING": [(c, 7) for c in range(6)],        # Row 7
-        "CODING_IDLE": [
-        [
-            "....................",
-            ".....PH......HP.....",
-            "....PPSP....PPSP....",
-            "....HPPPHHHPPPHS....",
-            "...HGGGGGGGGGGGGGS..",
-            "...SPGGGGGGGGGGGS...",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "...SSPPPPPPPPPPS..S.",
-            "...SSPPPPPPPPPPS.S..",
-            "...SSPPPPPPPPPPSSS..",
-            "...SSPPPPPPPPPPS....",
-            ".............SS.....",
-            "...................."
-        ]
-    ],
-    "CODING_TYPING": [
-        [
-            "....................",
-            ".....PH......HP.....",
-            "....PPSP....PPSP....",
-            "....HPPPHHHPPPHS....",
-            "...HGGGGGGGGGGGGGS..",
-            "...SPGGGGGGGGGGGS...",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "...SSPPPPPPPPPPS..S.",
-            "...SSPPPPPPPPPPS.S..",
-            "...SSPPPPPPPPPPSSS..",
-            "...SSPPPPPPPPPPS....",
-            ".............SS.....",
-            "...................."
-        ],
-        [
-            "....................",
-            ".....PH......HP.....",
-            "....PPSP....PPSP....",
-            "....HPPPHHHPPPHS....",
-            "...HGGGGGGGGGGGGGS..",
-            "...SPGGGGGGGGGGGS...",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "....SPPPPPPPPSS...S.",
-            "....SPPPPPPPPSS..S..",
-            "....SPPPPPPPPSS.SS..",
-            "....SPPS............",
-            ".....SS.............",
-            "...................."
-        ]
-    ],
-    "PURRING": [
-        [
-            "....................",
-            ".....PH......HP.....",
-            "....PPSP....PPSP....",
-            "....HPPPHHHPPPHS....",
-            "...HPPBBBBPPBBBBS...",
-            "...SPPBBBBPPBBBBS...",
-            "...SPPPPPPPPPPPPS..S",
-            "...SPPPPPPPPPPPPS.S.",
-            "....SPPPPPPPPPPS..S.",
-            "....SPPPPPPPPPPS.S..",
-            "....SPPPPPPPPPPSSS..",
-            "....SPPPPPPPPPPS....",
-            "....SPPS....SPPS....",
-            "....SPPS....SPPS....",
-            ".....SS......SS.....",
-            "...................."
-        ]
-    ],
-    "VIBING": [(c, 8) for c in range(7)],        # Row 8
-            "WATCHING": [(c, 9) for c in range(8)],      # Row 9
-            "SCROLLING": [(c, 4) for c in range(8)]      # Row 4
-        }
-        self.current_frame_index = 0
 
     def initUI(self):
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -2253,9 +2204,9 @@ class PetWidget(QWidget):
 
     def setupTray(self):
         self.tray_icon = QSystemTrayIcon(QApplication.instance())
-        icon = self.style().standardIcon(self.style().StandardPixmap.SP_ComputerIcon)
-        self.tray_icon.setIcon(icon)
-        icon_path = os.path.join(os.path.dirname(__file__), "cat.ico")
+        icon_path = os.path.join(RESOURCE_DIR, "cat.ico")
+        if not os.path.exists(icon_path):
+            icon_path = os.path.join(APP_DIR, "cat.ico")
         if os.path.exists(icon_path):
             cat_icon = QIcon(icon_path)
             self.tray_icon.setIcon(cat_icon)
@@ -2418,7 +2369,7 @@ class PetWidget(QWidget):
         if self.settings.get("always_on_top", True):
             flags |= Qt.WindowType.WindowStaysOnTopHint
             
-        if int(self.windowFlags()) != int(flags):
+        if self.windowFlags() != flags:
             # Temporarily hide tray to avoid ghosting on Windows
             if hasattr(self, 'tray_icon') and self.tray_icon.isVisible():
                 self.tray_icon.hide()
@@ -2429,13 +2380,19 @@ class PetWidget(QWidget):
 
     # --- Productivity Prompts ---
     def set_pomodoro_task(self):
-        from PyQt6.QtWidgets import QInputDialog
         task, ok = QInputDialog.getText(self, "Set Task", "What are you working on right now?")
         if ok:
-            self.current_task = task
+            self.current_task = task.strip()
+            self.settings["pomodoro_enabled"] = True
+            self.save_and_apply_settings()
+            if hasattr(self, 'settings_window') and hasattr(self.settings_window, 'pomo_cb'):
+                self.settings_window.pomo_cb.blockSignals(True)
+                self.settings_window.pomo_cb.setChecked(True)
+                self.settings_window.pomo_cb.blockSignals(False)
             self.pomo_active = True
-            if self.pomo_seconds == 0:
-                self.pomo_seconds = self.settings.get("pomo_focus_min", 25) * 60
+            self.pomo_mode = "focus"
+            self.pomo_seconds = max(1, self.settings.get("pomo_focus_min", 25)) * 60
+            self.update()
 
     def toggle_pin(self, checked):
         self.settings["always_on_top"] = checked
@@ -2444,23 +2401,27 @@ class PetWidget(QWidget):
 
     def prompt_pinned_message(self):
         text, ok = QInputDialog.getText(self, "Pinned Message", "Enter your reminder:")
-        if ok and text:
-            self.pinned_message = text
+        if ok and text.strip():
+            self.pinned_message = text.strip()
+            self.update()
 
     def clear_pinned_message(self):
         self.pinned_message = ""
+        self.update()
 
     def toggle_alarm(self):
-
-        if not self.settings["pomodoro_enabled"]:
-            self.pinned_message = "Pomodoro disabled in Settings"
+        if not self.settings.get("pomodoro_enabled", False):
+            self._show_temp_bubble("Pomodoro is disabled in Settings", 3500)
             return
             
         self.pomo_active = not self.pomo_active
         if self.pomo_active:
-            self.pomo_seconds = self.settings.get("pomo_focus_min", 25) * 60
+            self.pomo_mode = "focus"
+            self.pomo_seconds = max(1, self.settings.get("pomo_focus_min", 25)) * 60
         else:
             self.pomo_seconds = 0
+            self.pomo_mode = "focus"
+        self.update()
 
     def wake_up(self):
         if self.state == "SLEEPING":
@@ -2564,6 +2525,16 @@ class PetWidget(QWidget):
         self._raw_is_spotify = is_spotify
         self.update_active_app_state()
 
+    def _show_temp_bubble(self, msg, duration_ms=5500):
+        self.track_bubble_message = msg
+        self.update()
+        if hasattr(self, '_track_bubble_timer') and self._track_bubble_timer:
+            self._track_bubble_timer.stop()
+        self._track_bubble_timer = QTimer(self)
+        self._track_bubble_timer.setSingleShot(True)
+        self._track_bubble_timer.timeout.connect(self.clear_track_bubble)
+        self._track_bubble_timer.start(duration_ms)
+
     def on_track_changed(self, track_name):
         if not track_name:
             return
@@ -2572,15 +2543,7 @@ class PetWidget(QWidget):
         if len(display_track) > 34:
             display_track = display_track[:31] + "..."
             
-        self.track_bubble_message = f"🎵 Now Playing:\n{display_track}"
-        self.update()
-        
-        if hasattr(self, '_track_bubble_timer') and self._track_bubble_timer:
-            self._track_bubble_timer.stop()
-        self._track_bubble_timer = QTimer(self)
-        self._track_bubble_timer.setSingleShot(True)
-        self._track_bubble_timer.timeout.connect(self.clear_track_bubble)
-        self._track_bubble_timer.start(5500)
+        self._show_temp_bubble(f"🎵 Now Playing:\n{display_track}", 5500)
 
     def clear_track_bubble(self):
         self.track_bubble_message = None
@@ -2589,18 +2552,14 @@ class PetWidget(QWidget):
     def trigger_stretch(self):
         if getattr(self, 'is_dragging', False):
             return
+        if hasattr(self, '_purr_timer') and self._purr_timer:
+            self._purr_timer.stop()
+        self.is_petting = False
         self.state = "STRETCHING"
         self.current_frame_index = 0
         self.idle_time = 0
         self.stretch_cycles_left = 3
-        self.track_bubble_message = "Time to stretch! 🐾\nTake a quick break"
-        if hasattr(self, '_track_bubble_timer') and self._track_bubble_timer:
-            self._track_bubble_timer.stop()
-        self._track_bubble_timer = QTimer(self)
-        self._track_bubble_timer.setSingleShot(True)
-        self._track_bubble_timer.timeout.connect(self.clear_track_bubble)
-        self._track_bubble_timer.start(5500)
-        self.update()
+        self._show_temp_bubble("Time to stretch! 🐾\nTake a quick break", 5500)
 
     def on_active_window(self, title):
         self.current_window_title = title.lower()
@@ -2633,12 +2592,10 @@ class PetWidget(QWidget):
             self.idle_time = 0
             if self.state == "SLEEPING":
                 self.wake_up()
-        elif not self.is_dragging:
+        elif self.state not in ("DRAGGED", "STRETCHING", "PURRING", "WAKING"):
             self.idle_time += 1
-            if self.idle_time > self.SLEEP_THRESHOLD:
+            if self.idle_time > self.SLEEP_THRESHOLD and self.state != "SLEEPING":
                 self.state = "SLEEPING"
-            elif self.idle_time % 6 == 0:
-                self.state = "IDLE"
                 self.current_frame_index = 0
 
         # Reminders
@@ -2652,7 +2609,7 @@ class PetWidget(QWidget):
                     self.play_alarm_sound()
                 else:
                     reminders_to_keep.append(r)
-            except:
+            except Exception:
                 pass
         
         if len(reminders_to_keep) != len(self.settings.get("reminders", [])):
@@ -2665,7 +2622,6 @@ class PetWidget(QWidget):
             self.stretch_timer += 1
             if self.stretch_timer >= s_min * 60:
                 self.stretch_timer = 0
-                self.pinned_message = "Time to Stretch!"
                 self.trigger_stretch()
                 self.play_alarm_sound()
                 
@@ -2678,14 +2634,25 @@ class PetWidget(QWidget):
                 self.pinned_message = "Drink some water!"
                 self.play_alarm_sound()
 
-        # Productivity Logic
+        # Productivity Logic (Focus -> Break cycle)
         if self.pomo_active:
             if self.pomo_seconds > 0:
                 self.pomo_seconds -= 1
             else:
-                self.pomo_active = False
-                self.pinned_message = "ΓÅ░ POMODORO DONE! ΓÅ░"
                 self.play_alarm_sound()
+                if getattr(self, 'pomo_mode', 'focus') == "focus":
+                    break_min = self.settings.get("pomo_break_min", 5)
+                    if break_min > 0:
+                        self.pomo_mode = "break"
+                        self.pomo_seconds = break_min * 60
+                        self._show_temp_bubble("⏰ Focus Done!\nTime for a break ☕", 5500)
+                    else:
+                        self.pomo_active = False
+                        self.pinned_message = "⏰ POMODORO DONE! ⏰"
+                else:
+                    self.pomo_active = False
+                    self.pomo_mode = "focus"
+                    self.pinned_message = "⏰ Break Over! Ready to focus!"
 
     def update_animation(self):
         self.tick_count += 1
@@ -2873,7 +2840,7 @@ class PetWidget(QWidget):
         self.update() 
 
     # --- Drawing ---
-    def get_matrix_pixel_color(self, coat, anim_name, r, c, char, cat_body_color, custom_r, custom_g, custom_b):
+    def get_matrix_pixel_color(self, coat, anim_name, r, c, char, cat_body_color, custom_r, custom_g, custom_b, frame_idx=0):
         if char == '.':
             return None
 
@@ -2908,6 +2875,10 @@ class PetWidget(QWidget):
         if char == 'S':
             return MATRIX_COLORS.get('S', QColor(20, 20, 20))
 
+        # Keep 3D keycap border pixels crisp dark charcoal across all coats while typing
+        if anim_name in ["TYPING", "TYPING_MUSIC"] and char == 'P' and is_typing_keycap_bevel(frame_idx, r, c):
+            return MATRIX_COLORS.get('D', QColor(34, 34, 34))
+
         # 5. Solid Dark Coats (Black, Slate, Navy, Espresso)
         if coat not in ['tuxedo', 'ginger', 'calico']:
             if char == 'L':
@@ -2933,14 +2904,27 @@ class PetWidget(QWidget):
                 elif (r in [28, 29] and 20 <= c <= 24):
                     is_white = True
             elif anim_name in ["TYPING", "TYPING_MUSIC"]:
-                # Throat, chest, and belly
-                if (r in [15, 16] and 17 <= c <= 21) or \
-                   (r in [17, 18, 19] and 16 <= c <= 22) or \
-                   (r in [20, 21, 22] and 17 <= c <= 21):
+                # Sleek tapered white chest ascot cleanly below the chin
+                if (r == 18 and 19 <= c <= 20) or \
+                   (r in [19, 20] and 18 <= c <= 21) or \
+                   (r in [21, 22] and 19 <= c <= 20) or \
+                   (r == 23 and c == 19):
                     is_white = True
-                # White mittens tapping on the keys!
-                elif (28 <= r <= 33 and ((14 <= c <= 18) or (22 <= c <= 26))):
-                    is_white = True
+                # Frame-accurate rounded white mittens on the active typing paws
+                elif frame_idx == 0:
+                    if (r == 30 and 12 <= c <= 16) or \
+                       (31 <= r <= 32 and 11 <= c <= 17) or \
+                       (r == 33 and 12 <= c <= 16):
+                        is_white = True
+                else:
+                    if (r == 25 and 12 <= c <= 15) or \
+                       (26 <= r <= 28 and 11 <= c <= 16) or \
+                       (r == 29 and 12 <= c <= 15):
+                        is_white = True
+                    elif (r == 32 and 23 <= c <= 27) or \
+                         (33 <= r <= 35 and 22 <= c <= 28) or \
+                         (r == 36 and 23 <= c <= 27):
+                        is_white = True
             elif anim_name == "DRAGGED":
                 if (15 <= r <= 23 and 10 <= c <= 17):
                     is_white = True
@@ -2996,20 +2980,22 @@ class PetWidget(QWidget):
                     is_stripe = True
 
             elif anim_name in ["TYPING", "TYPING_MUSIC"]:
-                # Forehead stripes
-                if (r in [6, 7] and ((14 <= c <= 16) or (18 <= c <= 20))) or \
-                   (r in [8, 9] and 15 <= c <= 19):
+                # Subtle tabby forehead crown above eyes
+                if (r in [4, 5] and c in [14, 15, 17, 19, 20]) or \
+                   (r == 6 and 15 <= c <= 19):
                     is_stripe = True
-                # Cheeks
-                elif (r in [13, 14] and ((8 <= c <= 10) or (25 <= c <= 27))):
+                # Clean symmetric cheek bars outside eye protected zone
+                elif (r in [13, 15] and 6 <= c <= 8) or \
+                     (r in [12, 14] and 27 <= c <= 29):
                     is_stripe = True
-                # Back & flank tiger stripes
-                elif (r in [17, 18] and 26 <= c <= 33) or \
-                     (r in [20, 21] and 26 <= c <= 33) or \
-                     (r in [23, 24] and 25 <= c <= 32):
+                # Natural arched back & shoulder tiger stripes
+                elif (r in [17, 18] and 25 <= c <= 33) or \
+                     (r in [20, 21] and 26 <= c <= 35) or \
+                     (r in [23, 24] and 27 <= c <= 36) or \
+                     (r in [26, 27] and 30 <= c <= 36):
                     is_stripe = True
-                # Tail
-                elif (r in [11, 13, 15] and 39 <= c <= 44):
+                # Tail tiger rings (consistent across both tail frames)
+                elif (r in [10, 12, 14, 16] and c >= 39):
                     is_stripe = True
 
             elif anim_name == "DRAGGED":
@@ -3035,7 +3021,7 @@ class PetWidget(QWidget):
             c_orange = QColor(230, 115, 30)
             c_black = QColor(28, 28, 32)
 
-            if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING"]:
+            if anim_name in ["IDLE", "VIBING", "WATCHING", "PURRING", "SLEEPING"]:
                 # 1. Left Ear & Temple (Orange) - organic curved contour
                 if (1 <= r <= 3 and 6 <= c <= 9): return c_orange
                 if (4 <= r <= 6 and 5 <= c <= 13): return c_orange
@@ -3081,35 +3067,41 @@ class PetWidget(QWidget):
                 return c_grey
 
             elif anim_name in ["TYPING", "TYPING_MUSIC"]:
-                # Head left ear & temple (Orange)
-                if (0 <= r <= 3 and 11 <= c <= 15): return c_orange
-                if (4 <= r <= 9 and 8 <= c <= 16): return c_orange
-                if (10 <= r <= 15 and 7 <= c <= 14): return c_orange
-                # Forehead abstract splash
-                if (3 <= r <= 6 and 15 <= c <= 18): return c_orange
+                # 1. Left Ear & Left Cheek (Orange) - curved contour including full whiskers
+                if (0 <= r <= 3 and 11 <= c <= 16): return c_orange
+                if (4 <= r <= 6 and 10 <= c <= 15): return c_orange
+                if (7 <= r <= 10 and 8 <= c <= 13): return c_orange
+                if (11 <= r <= 17 and 5 <= c <= 14): return c_orange
 
-                # Head right ear & temple (Black)
-                if (0 <= r <= 3 and 22 <= c <= 27): return c_black
-                if (4 <= r <= 9 and 20 <= c <= 29): return c_black
-                if (10 <= r <= 15 and 21 <= c <= 28): return c_black
+                # 2. Right Ear & Temple (Black) - wraps ear & temple cleanly without vertical bar
+                if (0 <= r <= 3 and 22 <= c <= 28): return c_black
+                if (4 <= r <= 7 and 20 <= c <= 29): return c_black
+                if (8 <= r <= 11 and 23 <= c <= 31): return c_black
+                if (12 <= r <= 14 and 25 <= c <= 32): return c_black
 
-                # Body:
-                # Chest left side (Orange)
-                if (16 <= r <= 23 and 8 <= c <= 15): return c_orange
-                # Center chest blaze (Grey)
-                if (16 <= r <= 23 and 16 <= c <= 19): return c_grey
-                # Upper back & shoulder (Black)
-                if (16 <= r <= 23 and 20 <= c <= 30): return c_black
-                # Mid/lower back flank (Orange)
-                if (17 <= r <= 23 and 30 <= c <= 38): return c_orange
+                # 3. Playful asymmetrical Calico Paw Socks (frame-accurate)
+                if frame_idx == 0 and (28 <= r <= 34 and 10 <= c <= 18): return c_black
+                if frame_idx == 1 and (26 <= r <= 29 and 10 <= c <= 17): return c_black
+                if frame_idx == 1 and (31 <= r <= 36 and 21 <= c <= 28): return c_orange
 
-                # Typing paws:
-                if (24 <= r <= 34 and 13 <= c <= 19): return c_orange
-                if (24 <= r <= 34 and 20 <= c <= 28): return c_black
+                # 4. Left shoulder & upper left arm (Orange)
+                if (18 <= r <= 27 and 11 <= c <= 17): return c_orange
 
-                # Tail
-                if (9 <= r <= 13 and 39 <= c <= 44): return c_black
-                if (14 <= r <= 17 and 39 <= c <= 44): return c_orange
+                # 5. Bold Black saddle arching across shoulder & mid-back
+                if (16 <= r <= 18 and 24 <= c <= 32): return c_black
+                if (19 <= r <= 22 and 21 <= c <= 30): return c_black
+                if (23 <= r <= 25 and 21 <= c <= 27): return c_black
+
+                # 6. Warm Orange flank sweeping cleanly down the hip behind right keycap
+                if (r == 19 and 32 <= c <= 38): return c_orange
+                if (20 <= r <= 22 and 30 <= c <= 38): return c_orange
+                if (23 <= r <= 27 and 28 <= c <= 39): return c_orange
+                if (28 <= r <= 36 and 32 <= c <= 39): return c_orange
+
+                # 7. Tail (3-part calico)
+                if (9 <= r <= 11 and c >= 38): return c_black
+                if (12 <= r <= 14 and c >= 38): return c_orange
+                if (15 <= r <= 18 and c >= 38): return c_grey
 
                 return c_grey
 
@@ -3136,40 +3128,6 @@ class PetWidget(QWidget):
 
                 # Tail
                 if (27 <= r <= 34 and 23 <= c <= 30): return c_black
-
-                return c_grey
-
-            elif anim_name == "SLEEPING":
-                # Head:
-                if (1 <= r <= 3 and 6 <= c <= 9): return c_orange
-                if (4 <= r <= 6 and 5 <= c <= 13): return c_orange
-                if (7 <= r <= 9 and 4 <= c <= 11): return c_orange
-                if (10 <= r <= 14 and 4 <= c <= 8): return c_orange
-                if (13 <= r <= 15 and 9 <= c <= 11): return c_orange
-
-                if (1 <= r <= 3 and 18 <= c <= 21): return c_black
-                if (4 <= r <= 6 and 16 <= c <= 22): return c_black
-                if (7 <= r <= 10 and 17 <= c <= 25): return c_black
-                if (11 <= r <= 14 and 19 <= c <= 24): return c_black
-
-                # Body:
-                if (15 <= r <= 17 and 5 <= c <= 10): return c_orange
-                if (18 <= r <= 21 and 5 <= c <= 12): return c_orange
-                if (20 <= r <= 23 and 6 <= c <= 14): return c_orange
-
-                if (16 <= r <= 19 and 13 <= c <= 22): return c_black
-                if (19 <= r <= 21 and 16 <= c <= 23): return c_black
-
-                if (23 <= r <= 27 and 4 <= c <= 11): return c_black
-                if (24 <= r <= 26 and 13 <= c <= 15): return c_orange
-                if (22 <= r <= 27 and 17 <= c <= 25): return c_orange
-
-                if (27 <= r <= 32 and 8 <= c <= 12): return c_black
-                if (27 <= r <= 32 and 15 <= c <= 19): return c_orange
-
-                if (16 <= r <= 19 and 25 <= c <= 30): return c_orange
-                if (20 <= r <= 23 and 25 <= c <= 30): return c_black
-                if (24 <= r <= 26 and 24 <= c <= 30): return c_orange
 
                 return c_grey
 
@@ -3228,9 +3186,11 @@ class PetWidget(QWidget):
         scale_r = pixel_size / 3.0
         floor_y = cy + int(16 * pixel_size)
         
+        stretch_rows_int = 0
         if anim_name == "DRAGGED":
+            stretch_rows_int = int(getattr(self, 'current_stretch_rows', 0.0))
             active_drag_frame = anim_list[self.current_frame_index % len(anim_list)]
-            frame_data = generate_mochi_sprite(active_drag_frame, int(getattr(self, 'current_stretch_rows', 0.0)))
+            frame_data = generate_mochi_sprite(active_drag_frame, stretch_rows_int)
             grid_w = len(frame_data[0])
             grid_h = len(frame_data)
             dest_width = grid_w * pixel_size
@@ -3246,9 +3206,6 @@ class PetWidget(QWidget):
             dest_x = cx - (dest_width // 2)
             dest_y = floor_y - dest_height
             
-        cat_bottom = max(dest_y + dest_height + 8, floor_y + 12)
-        self.cat_interactive_rect = QRect(dest_x - 10, dest_y - 10, dest_width + 20, (cat_bottom - dest_y) + 14)
-        
         # Override body, outline, and cute pink colors from settings
         custom_r = self.settings.get("matrix_r", 26)
         custom_g = self.settings.get("matrix_g", 26)
@@ -3329,9 +3286,11 @@ class PetWidget(QWidget):
         coat = self.settings.get("coat_preset", "black")
         if coat == "charcoal":
             coat = "slate"
+        active_frame_idx = self.current_frame_index % len(anim_list)
         for r, row_str in enumerate(frame_data):
+            logic_r = map_mochi_row(r, stretch_rows_int) if anim_name == "DRAGGED" else r
             for c, char in enumerate(row_str):
-                color = self.get_matrix_pixel_color(coat, anim_name, r, c, char, cat_body_color, custom_r, custom_g, custom_b)
+                color = self.get_matrix_pixel_color(coat, anim_name, logic_r, c, char, cat_body_color, custom_r, custom_g, custom_b, active_frame_idx)
                 if color:
                     painter.setBrush(color)
                     px_x = int(dest_x + c * pixel_size)
@@ -3342,7 +3301,7 @@ class PetWidget(QWidget):
         # Suppress accessories while typing, listening to music, or stretching
         is_typing_active = (anim_name in ["TYPING", "TYPING_MUSIC"] or getattr(self, 'is_typing', False))
         is_music_active = (anim_name in ["VIBING", "TYPING_MUSIC"] or getattr(self, 'is_listening_to_music', False))
-        is_stretching_active = (anim_name == "STRETCHING" or getattr(self, 'is_stretching', False))
+        is_stretching_active = (anim_name == "STRETCHING")
         
         acc_key = self.settings.get("accessory", "none")
         if is_typing_active or is_music_active or is_stretching_active:
@@ -3513,7 +3472,16 @@ class PetWidget(QWidget):
         elif hasattr(self, 'pomo_active') and self.pomo_active:
             mins = self.pomo_seconds // 60
             secs = self.pomo_seconds % 60
-            msg_to_draw = f"🍅 {mins:02d}:{secs:02d}"
+            if getattr(self, 'pomo_mode', 'focus') == "break":
+                msg_to_draw = f"☕ Break {mins:02d}:{secs:02d}"
+            else:
+                task = getattr(self, 'current_task', '').strip()
+                if task:
+                    if len(task) > 24:
+                        task = task[:21] + "..."
+                    msg_to_draw = f"🍅 {task}\n{mins:02d}:{secs:02d}"
+                else:
+                    msg_to_draw = f"🍅 {mins:02d}:{secs:02d}"
 
         if msg_to_draw:
             font = QFont("Segoe UI", 10, QFont.Weight.Bold)
@@ -3595,6 +3563,7 @@ class PetWidget(QWidget):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
+            self._press_active = False
             # 1. Click-to-Dismiss Speech Bubbles ("Now Playing" or sticky reminders)
             if hasattr(self, 'bubble_interactive_rect') and not self.bubble_interactive_rect.isNull():
                 if self.bubble_interactive_rect.contains(event.pos()):
@@ -3609,6 +3578,7 @@ class PetWidget(QWidget):
             if self.state == "SLEEPING":
                 self.wake_up()
 
+            self._press_active = True
             self.mouse_press_pos = event.globalPosition().toPoint()
             self.last_drag_pos = event.globalPosition().toPoint()
             self.drag_has_started = False
@@ -3626,6 +3596,8 @@ class PetWidget(QWidget):
                     self.drag_has_started = True
                     self.is_dragging = True
                     self.is_petting = False
+                    if hasattr(self, '_purr_timer') and self._purr_timer:
+                        self._purr_timer.stop()
                     self.state = "DRAGGED"
                     self.setCursor(Qt.CursorShape.SizeAllCursor)
             
@@ -3641,6 +3613,9 @@ class PetWidget(QWidget):
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
+            if not getattr(self, '_press_active', False):
+                return
+            self._press_active = False
             was_dragging = getattr(self, 'drag_has_started', False)
             self.is_dragging = False
             self.drag_has_started = False
@@ -3657,25 +3632,27 @@ class PetWidget(QWidget):
                     self.is_petting = True
                     self.idle_time = 0
                     self.hearts.append([random.randint(-8, 8), random.randint(-28, -16), 255.0, random.uniform(0.8, 1.4)])
-                    QTimer.singleShot(3000, self.reset_to_idle)
+                    self._purr_timer.start(3000)
             self.update()
 
     def reset_to_idle(self):
+        self.is_petting = False
         if self.state == "PURRING":
             self.state = "IDLE"
-            self.is_petting = False
-            self.update()
+        self.update()
 
 if __name__ == '__main__':
     import traceback
     def excepthook(exc_type, exc_value, exc_tb):
-        with open("error.log", "w") as f:
+        log_path = os.path.join(APP_DIR, "error.log")
+        with open(log_path, "w", encoding="utf-8") as f:
             traceback.print_exception(exc_type, exc_value, exc_tb, file=f)
     sys.excepthook = excepthook
 
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
     pet = PetWidget()
+    app.aboutToQuit.connect(pet.cleanup)
     pet.show()
     sys.exit(app.exec())
 

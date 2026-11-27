@@ -47,7 +47,6 @@ Nyx is deeply reactive to how you work:
 * **🖱️ Fluid Mochi Drag Physics:** Click and pick Nyx up by the scruff! Nyx dangles with an organic feline waist taper (`width 18 → 16`), rounded hips (`width 20`), symmetrical 7-pixel dangling legs, soft mitten paws, and a fluid 3-frame bicycle pedaling kick cycle with inertia pendulum tilt.
 * **✨ Pixel-Perfect Connected Tail:** Seamless body-to-tail connection across rows 25–28 with zero floating gaps or jagged artifacts.
 * **💕 Purring & Petting:** Click or gently pet Nyx to make it happy! Nyx closes its eyes in bliss and floats soft pink pixel hearts.
-* **🎙️ Voice Reactions (Microphone Audio):** Talk into your microphone and Nyx opens its mouth in real-time to chirp and chat back with you.
 * **💤 Automatic Nap Mode:** Inactive for more than 30 seconds? Nyx curls up into a peaceful sleep with floating cyan Zzz particles, waking up gently as soon as you move your mouse.
 
 ---
@@ -105,7 +104,6 @@ flowchart TD
     subgraph Inputs ["System & User Inputs"]
         KBD["Keyboard & Mouse Hooks<br>(pynput)"]
         WIN["Active Window & Media Monitor<br>(Windows API / ctypes)"]
-        MIC["Audio Input Stream<br>(PyAudio)"]
         CFG["Persistent Configuration<br>(settings.json)"]
     end
 
@@ -188,7 +186,7 @@ python -m venv venv
 
 ### 3. Install Dependencies
 ```bash
-pip install PyQt6 pynput psutil Pillow PyAudio pygetwindow
+pip install PyQt6 pynput pygetwindow
 ```
 
 ### 4. Run Nyx
